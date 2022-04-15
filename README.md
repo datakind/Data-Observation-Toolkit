@@ -3,7 +3,7 @@
 The Data Observation Toolkit (DOT) can
 be configured to monitor data integrity issues such as blank values, duplicates and referential consistency 
 as well as more advanced tests such as outlier detection and domain-specific issues identified using custom SQL. 
-The code base includes a DOT database with support for test taxonomy, domain area, and priority. Multiple projects can 
+The codebase includes a DOT database with support for test taxonomy, domain area, and priority. Multiple projects can 
 be defined and results can be tracked over time.
 
 ![ER diagram](./images/dot.png) 
@@ -80,7 +80,9 @@ below.
 
 ## Running DOT
 
-**Note:** If using Docker, you will first need to exec into the DOT container with: `docker exec -it dot /bin/bash`
+**Note:** If using Docker, you will first need to exec into the DOT container with: 
+
+`docker exec -it dot /bin/bash`
 
 Then to run DOT:
 
