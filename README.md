@@ -608,9 +608,10 @@ To see progress, and/or logs ...
 8. Click on top 'Dag Id'
 9. Click on task and then 'Log', you should now see logs
 
-To use Airflow CLI for debugging a task (assuming you are getting object ancview_danger_sign) ...
-
-`airflow tasks test run_dot_project sync_object_ancview_danger_sign  2022-03-01`
+To use Airflow CLI for debugging a task (assuming you are getting object ancview_danger_sign):
+ 
+ 1. `docker exec -it docker-airflow-worker-1 /bin/bash`
+ 2. `airflow tasks test run_dot_project sync_object_ancview_danger_sign  2022-03-01`
 
 Or to run just DOT stage ...
 
