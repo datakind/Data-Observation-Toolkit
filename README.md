@@ -547,6 +547,8 @@ be to copy data from the source production db into the DOT DB data_<project> sch
 8. `cd /app/dot && ./install_dot.sh` 
 9. Load a source data dump (see 'Getting started' above, steps 3/4)
 
+**Note:** If using Docker on AWS, you might need to use `docker-compose` instead of `docker compose`.
+
 Now, to set up DB connection for the DOT  ...
 
 9. Connect to the DOT DB as mentioned above in section 'Testing your database connection'
