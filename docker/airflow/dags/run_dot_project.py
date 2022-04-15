@@ -280,9 +280,9 @@ with DAG(
             if i > 0:
                 af_tasks[i - 1] >> af_tasks[i]
 
-        run_DOT = PythonOperator(
+        run_dot = PythonOperator(
             task_id="run_dot",
-            python_callable=run_DOT,
+            python_callable=run_dot,
             op_kwargs={"project_id_in": project_id},
             dag=dag,
         )
