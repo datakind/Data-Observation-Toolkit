@@ -191,7 +191,8 @@ WHERE
 LIMIT 10
 ```
 
-This returns a json record for the data that was tested.
+This returns a json record for the data that was tested. **Note:** If using the airflow environment, change `public_tests`
+to the schema where the data is, for example `data_musoapp`.
 
 # Configuring DOT
 ## How to add new entities
