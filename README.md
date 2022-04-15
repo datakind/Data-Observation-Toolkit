@@ -616,6 +616,11 @@ Or to run just DOT stage ...
 
 `airflow tasks test run_dot_project run_dot  2022-03-01`
 
+#### Adding more projects
+
+If configuring Airflow in production, you will need to adjust `./docker/dot/dot_config.yml` accordingly. You can also 
+add new projects by extending the projects array in the [Airflow configuration JSON](https://github.com/datakind/Data-Observation-Toolkit/blob/master/docker/airflow/dags/dot_projects.json)
+
 ## How the DOT works 
 
 The Data Observation Toolkit (DOT) uses the open source projects [DBT](https://docs.getdbt.com/docs/introduction/) and [Great Expectations](https://greatexpectations.io/)
