@@ -214,7 +214,7 @@ def default_config():
     """
 
     # All files will be relative to $AIRFLOW_HOME
-    with open("./dags/DOT_projects.json") as file:
+    with open("./dags/dot_projects.json") as file:
         config = json.load(file)
 
     print(config)
@@ -222,7 +222,7 @@ def default_config():
 
 
 with DAG(
-    dag_id="run_DOT_project",
+    dag_id="run_dot_project",
     schedule_interval="@daily",
     start_date=datetime(year=2022, month=3, day=1),
     catchup=False,
@@ -238,7 +238,7 @@ with DAG(
 
     target_conn = config["target_connid"]
 
-    for project in config["DOT_projects"]:
+    for project in config["dot_projects"]:
 
         """
         project_id  - Project ID, as found in dot.projects table
