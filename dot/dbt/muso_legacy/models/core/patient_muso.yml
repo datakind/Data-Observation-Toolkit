@@ -1,0 +1,11 @@
+version: 2
+
+models:
+    - name: patient_muso
+      description: "list of patiens for muso"
+
+      columns:
+          -   name: patient_id
+              tests:
+                  - not_null
+                  - unique

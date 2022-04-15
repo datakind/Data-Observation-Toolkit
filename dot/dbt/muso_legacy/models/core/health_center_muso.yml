@@ -1,0 +1,21 @@
+version: 2
+
+models:
+    - name: health_center_muso
+      description: "Health center ids and household ids for Muso"
+
+      columns:
+          -   name: health_center_uuid
+              description: "id of the health center"
+              tests:
+                  - not_null
+
+          -   name: household_id
+              description: "id of the household"
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: health_centers_with_no_household
+                          to: ref('household_muso')
+                          field: household_id
+                          table_specific_uuid: health_center_uuid

@@ -1,0 +1,11 @@
+version: 2
+
+models:
+    - name: household_muso
+      description: "list of households for muso"
+
+      columns:
+          -   name: household_id
+              tests:
+                  - not_null
+                  - unique

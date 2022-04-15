@@ -1,0 +1,30 @@
+version: 2
+
+models:
+    -   name: household_visit_muso
+        description: "household_visit model w specific tests for Muso"
+        columns:
+            -   name: reported_by_parent
+                description: "health center id"
+                tests:
+                    - not_null
+                    -   relationships:
+                            name: hhvisits_with_no_health_center
+                            to: ref('health_center_muso')
+                            field: health_center_uuid
+                            table_specific_uuid: index
+
+            -   name: household_id
+                description: "hh id"
+                tests:
+                    - not_null
+                    -   relationships:
+                            name: hhvisits_with_no_household_alternative
+                            to: ref('health_center_muso')
+                            field: household_id
+                            table_specific_uuid: index
+                    -   relationships:
+                            name: hhvisits_with_no_household
+                            to: ref('household_muso')
+                            field: household_id
+                            table_specific_uuid: index

@@ -1,0 +1,9 @@
+DB_HOST=dot_db
+DB_PORT=5432
+DB_USER=postgres
+# DB_PASSWORD passed in via environment
+DB_DATABASE=dot_db
+DB_SCHEMA=dot
+DB_DEBUG=true
+PORT=3002
+WHITELIST=http://localhost:3000

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+    - name: malnutrition_follow_up_muso
+      description: "malnutrition follow up for musodb"
+
+      columns:
+          -   name: patient_id
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: pregnancy_danger_sign_with_no_patient
+                          to: ref('patient_muso')
+                          field: patient_id
+                          table_specific_uuid: index
+
+          -   name: reported_by_parent
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: pregnancy_danger_sign_with_no_household
+                          to: ref('household_muso')
+                          field: household_id
+                          table_specific_uuid: index

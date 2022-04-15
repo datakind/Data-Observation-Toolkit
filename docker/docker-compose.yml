@@ -1,0 +1,59 @@
+version: '3.1'
+
+services:
+  dot_db:
+      image: postgres:9.6.23-buster
+      container_name: dot-db
+      ports:
+          - "5433:5432"
+      environment:
+          POSTGRES_DB: dot_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      volumes:
+          - .:/db_dumps
+          - ../db/dot:/docker-entrypoint-initdb.d
+
+  dot:
+    build:
+        context: ..
+        dockerfile: ./docker/dot/Dockerfile
+    image: dot
+    container_name: dot
+    environment:
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ../dot:/app
+      - ./dot/dot_config.yml:/app/config/dot_config.yml
+
+  superset:
+    image: apache/superset
+    ports:
+        - "8080:8088"
+    container_name: superset
+
+  #dot-webapp-server:
+  #  build:
+  #      context: ..
+  #      dockerfile: ./docker/webapp/server/Dockerfile
+  #  image: dot-webapp-server
+  #  container_name: dot-web-app-server
+  #  environment:
+  #      DB_PASSWORD: ${POSTGRES_PASSWORD}
+  #  ports:
+  #        - "3002:3002"
+  #  volumes:
+  #    - ../webapp/server:/usr/src/app
+  #    - ./webapp/server/env:/usr/src/app/.env
+
+  #dot-webapp-frontend:
+  #  build:
+  #      context: ..
+  #      dockerfile: ./docker/webapp/frontend/Dockerfile
+  #  image: dot-webapp-frontend
+  #  container_name: dot-web-app-frontend
+  #  ports:
+  #        - "3000:3000"
+  #  volumes:
+  #    - ../webapp/frontend:/usr/src/app
+  #    - ./webapp/frontend/env:/usr/src/app/.env

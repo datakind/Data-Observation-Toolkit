@@ -1,0 +1,64 @@
+version: 2
+
+models:
+    - name: assessment_muso
+      description: "assessement model for musodb impact view with additional columns"
+      tests:
+          -   expression_is_true:
+                  name: "t_referral_follow_up_negative"
+                  expression: "not(treat_malnutrition and danger_sign)"
+                  condition: "not(fu_ref_rec or fu_rec)"
+
+          -   expression_is_true:
+                  name: "malnutrition_ref_negative"
+                  expression: "not(muac_strip_color_red)"
+                  condition: "not(treat_malnutrition)"
+
+      columns:
+          -   name: patient_age_in_months
+              tests:
+                  - not_null
+                  -   not_negative_string_column:
+                          name: patient_age_in_months
+
+          -   name: cough
+              description: "cough symptoms"
+              tests:
+                  -   associated_columns_not_null:
+                          name: cough_has_duration
+                          col_value: TRUE
+                          associated_columns: [ "max_symptom_duration" ]
+
+          -   name: fever
+              tests:
+                  -   associated_columns_not_null:
+                          name: fever_has_duration
+                          col_value: TRUE
+                          associated_columns: [ "max_symptom_duration" ]
+
+          -   name: patient_sex
+              tests:
+                  - not_null
+
+          -   name: muac_strip_color_red
+              description: "MUAC strip is red"
+              tests:
+                  - not_null
+
+          -   name: reported_by_parent
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: assessments_with_no_health_center
+                          to: ref('health_center_muso')
+                          field: health_center_uuid
+                          table_specific_uuid: uuid
+
+          -   name: patient_id
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: assessments_with_no_patient
+                          to: ref('patient_muso')
+                          field: patient_id
+                          table_specific_uuid: uuid

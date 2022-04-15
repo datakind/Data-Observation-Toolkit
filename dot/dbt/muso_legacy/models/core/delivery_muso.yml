@@ -1,0 +1,32 @@
+version: 2
+
+models:
+    - name: delivery_muso
+      description: "deliveries for muso"
+
+      columns:
+          -   name: postnatal_follow_up
+              tests:
+                  - not_null
+                  -   associated_columns_not_null:
+                          name: postnatal_follow_up_has_date
+                          col_value: TRUE
+                          associated_columns: [ "first_pnc_visit_date" ]
+
+          -   name: reported_by_parent
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: deliveries_with_no_health_center
+                          to: ref('health_center_muso')
+                          field: health_center_uuid
+                          table_specific_uuid: uuid
+
+          -   name: patient_id
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: deliveries_with_no_patient
+                          to: ref('patient_muso')
+                          field: patient_id
+                          table_specific_uuid: uuid

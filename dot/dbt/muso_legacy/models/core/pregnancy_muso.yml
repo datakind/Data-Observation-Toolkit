@@ -1,0 +1,15 @@
+version: 2
+
+models:
+    - name: pregnancy_muso
+      description: "pregancy model for muso"
+
+      columns:
+          -   name: patient_id
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: pregnancies_with_no_patient
+                          to: ref('patient_muso')
+                          field: patient_id
+                          table_specific_uuid: index

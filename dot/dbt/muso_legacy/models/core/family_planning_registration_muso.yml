@@ -1,0 +1,24 @@
+version: 2
+
+models:
+    - name: family_planning_registration_muso
+      description: "family_planning_registration model for muso"
+
+      columns:
+          -   name: patient_id
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: fp_registration_with_no_patient
+                          to: ref('patient_muso')
+                          field: patient_id
+                          table_specific_uuid: index
+
+          -   name: reported_by_parent
+              tests:
+                  - not_null
+                  -   relationships:
+                          name: fp_registration_with_no_heath_center
+                          to: ref('health_center_muso')
+                          field: health_center_uuid
+                          table_specific_uuid: index

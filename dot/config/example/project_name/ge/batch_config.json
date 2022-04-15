@@ -1,0 +1,5 @@
+{
+    "datasource_name": "mm",
+    "query": "select 1 as c",
+    "expectation_suite_name": "ge_test"
+}

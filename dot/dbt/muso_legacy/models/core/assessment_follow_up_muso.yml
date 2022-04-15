@@ -1,0 +1,13 @@
+version: 2
+
+models:
+    - name: assessment_follow_up_muso
+      description: "Raw output of assessment_follow_up for muso"
+
+      columns:
+          -   name: reported_by_parent
+              tests:
+                  -   relationships:
+                          name: assessments_with_no_health_center
+                          to: ref('health_center_muso')
+                          field: health_center_uuid
