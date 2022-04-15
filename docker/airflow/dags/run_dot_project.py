@@ -187,7 +187,7 @@ def sync_object(
     save_object(object_name_in, target_conn_in, data, column_list, source_conn_in)
 
 
-def run_DOT(project_id_in):
+def run_dot(project_id_in):
     """
     Method to run the DOT.
     """
