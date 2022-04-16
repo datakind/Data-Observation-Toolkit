@@ -4,7 +4,7 @@
 ./dot/dbt/models/
 ./dot/dbt/tests/
 ./dot/generated_files/
-../dot/great_expectations/batch_config.json
-../dot/great_expectations/great_expectations.yml
-../dot/great_expectations/plugins/custom_expectations/__pycache__/
-	../dot/utils/__pycache__/
+./dot/great_expectations/batch_config.json
+./dot/great_expectations/great_expectations.yml
+./dot/great_expectations/plugins/custom_expectations/__pycache__/
+./dot/utils/__pycache__/
