@@ -175,21 +175,32 @@ dot.test_results column `view_name` provides the name of the DB view which holds
 columns `id_column_name` and `id_column_value` provide the columns to match in the DB entity view, ie the data that was
 tested. Finally, you can query to get the underlying data for each test using function `get_dot_data_record`
 
+
+
 ```
 SELECT 
    ct.*,
    tr.*,
-   dot.get_test_result_data_record('dot_model__fpview_registration', 'uuid', 
-   '3d1ae20770e73b6e88d368d4ab775a4f','public_tests')
+   dot.get_test_result_data_record(ce.entity_name, tr.id_column_name, 
+   tr.id_column_value,'public_tests')
 FROM
    dot.scenarios s,
    dot.configured_tests ct,
+   dot.configured_entities ce,
    dot.test_results tr
 WHERE 
    s.scenario_id=ct.scenario_id AND
-   tr.test_id=ct.test_id
+   tr.test_id=ct.test_id and 
+   ce.entity_id=ct.entity_id
 LIMIT 10
 ```
+
+Where the function parameters are:
+
+- Test entity name
+- Test result ID column name (in entity view)
+- Test Result ID column value
+- Test results schema name
 
 This returns a json record for the data that was tested. **Note:** If using the airflow environment, change `public_tests`
 to the schema where the data is, for example `data_musoapp`.
