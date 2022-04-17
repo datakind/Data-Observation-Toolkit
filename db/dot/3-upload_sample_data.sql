@@ -2,12 +2,12 @@ INSERT INTO dot.projects SELECT 'Muso', 'Muso project', '2021-12-07 00:00:00+00'
 INSERT INTO dot.projects SELECT 'Brac', 'Brac project', '2021-12-07 00:00:00+00', 'true', 'public';
 
 -- entity categories
-INSERT INTO dot.entity_categories VALUES('anc', 'antenatal care');
-INSERT INTO dot.entity_categories VALUES('fp', 'family planning');
-INSERT INTO dot.entity_categories VALUES('core', 'core entities such as chw, patient, etc');
-INSERT INTO dot.entity_categories VALUES('iccm', 'integrated community case management on child mortality');
-INSERT INTO dot.entity_categories VALUES('mn', 'malnutitrion');
-INSERT INTO dot.entity_categories VALUES('pnc', 'postnatal care');
+INSERT INTO dot.entity_categories VALUES('anc', 'Antenatal care');
+INSERT INTO dot.entity_categories VALUES('fp', 'Family planning');
+INSERT INTO dot.entity_categories VALUES('core', 'Core entities such as chw, patient, etc');
+INSERT INTO dot.entity_categories VALUES('iccm', 'Integrated community case management on child mortality');
+INSERT INTO dot.entity_categories VALUES('mn', 'Malnutitrion');
+INSERT INTO dot.entity_categories VALUES('pnc', 'Postnatal care');
 
 -- configured entities - sql definitions of DBT base objects
 INSERT INTO dot.configured_entities VALUES('b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'ancview_danger_sign', 'anc', '{{ config(materialized=''view'') }}
