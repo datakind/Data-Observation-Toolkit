@@ -181,7 +181,7 @@ tested. Finally, you can query to get the underlying data for each test using fu
 SELECT 
    ct.*,
    tr.*,
-   dot.get_test_result_data_record(CONCAT('dot_model__', ce.entity_name), tr.id_column_name, 
+   dot.get_test_result_data_record(ce.entity_name, tr.id_column_name, 
    tr.id_column_value,'public_tests')
 FROM
    dot.scenarios s,

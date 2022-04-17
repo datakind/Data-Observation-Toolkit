@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS dot.remediation_log(
 CREATE OR REPLACE FUNCTION dot.get_test_result_data_record(entity varchar(300), id_col text, id_col_val text, results_schema text)
 RETURNS table (j json) as $$
 BEGIN
-	RETURN QUERY EXECUTE 'SELECT row_to_json(' || entity || ') from ' || results_schema || '.' || entity || ' WHERE ' || id_col || '=''' || id_col_val || '''';
+	RETURN QUERY EXECUTE 'SELECT row_to_json(dot_model__'|| entity || ') from ' || results_schema || '.dot_model__' || entity || ' WHERE ' || id_col || '=''' || id_col_val || '''';
 END; $$ LANGUAGE 'plpgsql';
 
 
