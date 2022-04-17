@@ -179,8 +179,8 @@ tested. Finally, you can query to get the underlying data for each test using fu
 
 ```
 SELECT 
-   ct.*,
-   tr.*,
+   tr.test_id,
+   tr.status,
    dot.get_test_result_data_record(ce.entity_name, tr.id_column_name, 
    tr.id_column_value,'public_tests')
 FROM

@@ -208,4 +208,24 @@ join
 on cnt.days_since_lmp = ap.days_since_lmp
 where cnt.proportion>1','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Rahul');
 
+-- Required for Airflow deployment and easier access to uynderlying data
+CREATE SCHEMA data_musoapp;
+CREATE OR REPLACE MATERIALIZED VIEW data_musoapp.dot__test_results_with_data
+as SELECT
+   ct.test_id,
+   ce.entity_name, tr.id_column_name,
+   tr.status,
+   dot.get_test_result_data_record(ce.entity_name, tr.id_column_name,
+   tr.id_column_value,'data_musoapp')
+FROM
+   dot.scenarios s,
+   dot.configured_tests ct,
+   dot.configured_entities ce,
+   dot.test_results tr
+WHERE
+   s.scenario_id=ct.scenario_id AND
+   tr.test_id=ct.test_id and
+   ce.entity_id=ct.entity_id
+WITH DATA;
+
 COMMIT;
