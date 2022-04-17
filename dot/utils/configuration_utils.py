@@ -440,7 +440,7 @@ def get_dbt_config_custom_schema_output_objects(
                   schema suffix for test objects
     """
     if dot_config is None:
-        with open(dot_config_FILENAME) as f:
+        with open(_get_config_filename(dot_config_FILENAME)) as f:
             dot_config = yaml.load(f, Loader=yaml.FullLoader)
 
     return dot_config.get("dot", {}).get("output_schema_suffix", None)

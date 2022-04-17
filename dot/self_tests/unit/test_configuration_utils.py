@@ -707,9 +707,11 @@ class ConfigUtilsTest(BaseSelfTestClass):
             )
         assert isinstance(exec_info.value, Exception)
 
-    @staticmethod
-    def test_dbt_config_custom_schema_output_objects():
+    @patch("utils.configuration_utils._get_config_filename")
+    def test_dbt_config_custom_schema_output_objects(self, mock_get_config_filename):
         """test get_dbt_config_custom_schema_output_objects"""
+        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        
         assert get_dbt_config_custom_schema_output_objects() == "tests"
         assert get_dbt_config_custom_schema_output_objects() == "tests"
         assert get_dbt_config_custom_schema_output_objects() == "tests"
