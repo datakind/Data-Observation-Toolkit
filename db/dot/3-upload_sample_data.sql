@@ -126,14 +126,16 @@ select *
 from source_data');
 
 -- Note these UUIDs get reset by the trigger
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: delivery_date| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, '', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 3, '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 'name: patient_age_in_years', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '52d7352e-56ee-3084-9c67-e5ab24afc3a3', 'DUPLICATE-1', 3, '', '', '', '6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'unique', 'uuid', 'alternative index?', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 'values: [''oral mini-pill (progestogen)'', ''male condom'', ''female sterilization'', ''iud'', ''oral combination pill'', ''implants'', ''injectible'']', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', '', 'b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'relationships', 'pregnancy_uuid', '', 'name: danger_signs_with_no_pregnancy| to: ref(''dot_model__ancview_pregnancy'')| field: uuid', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8b3f974c-16f2-4048-920c-f28086b9b411', 'MISSED-3', 3, '', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', 'name: missed_danger_sign_followup| to: ref(''dot_model__ancview_danger_sign'')| field: pregnancy_uuid | where: ''danger_sign_at_reg=True'' ', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lydia'); -- MDSF-2
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2bb57f104357', 'MISSED-3', 3, '', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', 'name: missed_anc_visit_followup| to: ref(''dot_model__ancview_pregnancy_visit'')| field: pregnancy_uuid', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lydia'); -- MAVF-1
+-- MDSF-2
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8b3f974c-16f2-4048-920c-f28086b9b411', 'MISSED-3', 3, '', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', 'name: missed_danger_sign_followup| to: ref(''dot_model__ancview_danger_sign'')| field: pregnancy_uuid | where: ''danger_sign_at_reg=True'' ', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lydia'); 
+-- MAVF-1
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2bb57f104357', 'MISSED-3', 3, '', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', 'name: missed_anc_visit_followup| to: ref(''dot_model__ancview_pregnancy_visit'')| field: pregnancy_uuid', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lydia'); 
+-- GE-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 3, 'Test for miscalibrated thermometer', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 'child_temperature_pre_chw', '', '{"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Rahul');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MULTIEVENTS-1', 3, '', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', 'with patient_no_assessment as (
     select
@@ -207,5 +209,19 @@ join
 {{ ref(''dot_model__ancview_pregnancy'') }} ap
 on cnt.days_since_lmp = ap.days_since_lmp
 where cnt.proportion>1','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Rahul');
+-- PDF-1
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'baadb20f-7efb-3ebd-bfc8-57561466f310', 'DUPLICATE-1', 3, 'PDF-1', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
+-- PDF-2
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '36d33837-bd92-370a-963a-264a4d5b2bac', 'DUPLICATE-1', 3, 'PDF-2', '', '', '8ccab0bf-383e-4e41-9437-2b1c5007ba80', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
+-- PDF-3
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'ab59ada1-5cfd-3f1b-9549-aa93c3d575ae', 'DUPLICATE-1', 3, 'PDF-3', '', '', '6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
+-- PDF-4
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '68ea1480-b6b0-33b1-adc4-71a843ecb437', 'DUPLICATE-1', 3, 'PDF-4', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
+-- PDF-5
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'eeafde14-6515-30dc-a51c-c5079209bcdb', 'DUPLICATE-1', 3, 'PDF-5', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
+-- PDF-6
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '2660b519-9946-3e12-9b92-46d4321b1d56', 'DUPLICATE-1', 3, 'PDF-6', '', '', '50f31569-f2fc-4dc6-af49-4268381e7c13', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
+-- PDF-7
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '99ac4950-13df-3777-bd27-923e74be9dcb', 'DUPLICATE-1', 3, 'PDF-7', '', '', 'eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Rahul');
 
 COMMIT;
