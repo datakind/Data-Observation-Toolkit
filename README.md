@@ -3,7 +3,7 @@
 The Data Observation Toolkit (DOT) can
 be configured to monitor data integrity issues such as blank values, duplicates and referential consistency 
 as well as more advanced tests such as outlier detection and domain-specific issues identified using custom SQL. 
-The code base includes a DOT database with support for test taxonomy, domain area, and priority. Multiple projects can 
+The codebase includes a DOT database with support for test taxonomy, domain area, and priority. Multiple projects can 
 be defined and results can be tracked over time.
 
 ![ER diagram](./images/dot.png) 
@@ -80,7 +80,9 @@ below.
 
 ## Running DOT
 
-**Note:** If using Docker, you will first need to exec into the DOT container with: `docker exec -it dot /bin/bash`
+**Note:** If using Docker, you will first need to exec into the DOT container with: 
+
+`docker exec -it dot /bin/bash`
 
 Then to run DOT:
 
@@ -173,23 +175,35 @@ dot.test_results column `view_name` provides the name of the DB view which holds
 columns `id_column_name` and `id_column_value` provide the columns to match in the DB entity view, ie the data that was
 tested. Finally, you can query to get the underlying data for each test using function `get_dot_data_record`
 
+
+
 ```
 SELECT 
-   ct.*,
-   tr.*,
-   dot.get_test_result_data_record('dot_model__fpview_registration', 'uuid', 
-   '3d1ae20770e73b6e88d368d4ab775a4f','public_tests')
+   tr.test_id,
+   tr.status,
+   dot.get_test_result_data_record(ce.entity_name, tr.id_column_name, 
+   tr.id_column_value,'public_tests')
 FROM
    dot.scenarios s,
    dot.configured_tests ct,
+   dot.configured_entities ce,
    dot.test_results tr
 WHERE 
    s.scenario_id=ct.scenario_id AND
-   tr.test_id=ct.test_id
+   tr.test_id=ct.test_id and 
+   ce.entity_id=ct.entity_id
 LIMIT 10
 ```
 
-This returns a json record for the data that was tested.
+Where the function parameters are:
+
+- Test entity name
+- Test result ID column name (in entity view)
+- Test Result ID column value
+- Test results schema name
+
+This returns a json record for the data that was tested. **Note:** If using the airflow environment, change `public_tests`
+to the schema where the data is, for example `data_musoapp`.
 
 # Configuring DOT
 ## How to add new entities
@@ -545,6 +559,8 @@ be to copy data from the source production db into the DOT DB data_<project> sch
 8. `cd /app/dot && ./install_dot.sh` 
 9. Load a source data dump (see 'Getting started' above, steps 3/4)
 
+**Note:** If using Docker on AWS, you might need to use `docker-compose` instead of `docker compose`.
+
 Now, to set up DB connection for the DOT  ...
 
 9. Connect to the DOT DB as mentioned above in section 'Testing your database connection'
@@ -604,13 +620,19 @@ To see progress, and/or logs ...
 8. Click on top 'Dag Id'
 9. Click on task and then 'Log', you should now see logs
 
-To use Airflow CLI for debugging a task (assuming you are getting object ancview_danger_sign) ...
-
-`airflow tasks test run_dot_project sync_object_ancview_danger_sign  2022-03-01`
+To use Airflow CLI for debugging a task (assuming you are getting object ancview_danger_sign):
+ 
+ 1. `docker exec -it docker-airflow-worker-1 /bin/bash`
+ 2. `airflow tasks test run_dot_project sync_object_ancview_danger_sign  2022-03-01`
 
 Or to run just DOT stage ...
 
 `airflow tasks test run_dot_project run_dot  2022-03-01`
+
+#### Adding more projects
+
+If configuring Airflow in production, you will need to adjust `./docker/dot/dot_config.yml` accordingly. You can also 
+add new projects by extending the projects array in the [Airflow configuration JSON](https://github.com/datakind/Data-Observation-Toolkit/blob/master/docker/airflow/dags/dot_projects.json)
 
 ## How the DOT works 
 

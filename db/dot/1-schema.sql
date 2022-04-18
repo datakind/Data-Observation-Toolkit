@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
     project_id VARCHAR(300) NOT NULL,
     test_id UUID PRIMARY KEY,
     scenario_id VARCHAR(300) NOT NULL,
-    priority INT NOT NULL CHECK (priority in (1,2,3,4,5)),
-    description VARCHAR(1000) NULL,
+    priority INT NOT NULL CHECK (priority in (1,2,3,4,5,6,7,8,9,10)),
+    description VARCHAR(1000) NOT NULL,
     impact VARCHAR(1000) NULL,
     proposed_remediation VARCHAR(1000) NULL,
     entity_id UUID NOT NULL,
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS dot.remediation_log(
 CREATE OR REPLACE FUNCTION dot.get_test_result_data_record(entity varchar(300), id_col text, id_col_val text, results_schema text)
 RETURNS table (j json) as $$
 BEGIN
-	RETURN QUERY EXECUTE 'SELECT row_to_json(' || entity || ') from ' || results_schema || '.' || entity || ' WHERE ' || id_col || '=''' || id_col_val || '''';
+	RETURN QUERY EXECUTE 'SELECT row_to_json(dot_model__'|| entity || ') from ' || results_schema || '.dot_model__' || entity || ' WHERE ' || id_col || '=''' || id_col_val || '''';
 END; $$ LANGUAGE 'plpgsql';
 
 

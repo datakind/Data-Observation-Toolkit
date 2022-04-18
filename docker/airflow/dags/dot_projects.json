@@ -3,7 +3,7 @@
     "dot_projects":[
         {
             "project_id":"Muso",
-            "source_connid": "data_muso",
+            "source_connid": "musoapp",
             "earliest_date_to_sync":"2021-03-01",
             "objects":[
                 {

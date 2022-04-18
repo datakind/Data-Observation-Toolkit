@@ -7,6 +7,5 @@ dot/great_expectations/batch_config.json
 dot/great_expectations/great_expectations.yml
 dot/self_tests/data/base_self_test/dot_config.yml
 
-.idea
+.idea*
 __pycache__
-
