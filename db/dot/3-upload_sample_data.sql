@@ -232,22 +232,26 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '99ac4950-13df-3777-bd27-9
 
 -- Required for Airflow deployment and easier access to uynderlying data
 -- CREATE SCHEMA data_musoapp;
--- CREATE OR REPLACE MATERIALIZED VIEW data_musoapp.dot__test_results_with_data
--- as SELECT
---    ct.test_id,
---    ce.entity_name, tr.id_column_name,
---   tr.status,
---   dot.get_test_result_data_record(ce.entity_name, tr.id_column_name,
---   tr.id_column_value,'data_musoapp')
+-- CREATE MATERIALIZED VIEW data_musoapp.dot__test_results_latest_with_data
+-- AS
+-- SELECT
+--    tr.*,
+--    dot.get_test_result_data_record(ce.entity_name, tr.id_column_name, tr.id_column_value,'data_musoapp')
 -- FROM
---   dot.scenarios s,
---   dot.configured_tests ct,
---   dot.configured_entities ce,
---   dot.test_results tr
+--    dot.scenarios s,
+--    dot.configured_tests ct,
+--    dot.configured_entities ce,
+--    dot.test_results tr,
+--    dot.run_log rl,
+--    (
+--     SELECT MAX(run_start) AS last_run_date
+--     FROM dot.run_log where project_id = 'Muso'
+--   ) last_run
 -- WHERE
 --   s.scenario_id=ct.scenario_id AND
 --   tr.test_id=ct.test_id and
---   ce.entity_id=ct.entity_id
+--   ce.entity_id=ct.entity_id and
+--   tr.run_id = rl.run_id
 -- WITH DATA;
 
 COMMIT;
