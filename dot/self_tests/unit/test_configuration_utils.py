@@ -602,9 +602,9 @@ class ConfigUtilsTest(BaseSelfTestClass):
             "  password: pass\n",
             "  database: dbname\n",
         ]
-        for r, e in zip(lines, expected_lines):
-            r_clean = r.replace("\n", "")
-            e_clean = e.replace("\n", "")
+        for res, exp in zip(lines, expected_lines):
+            r_clean = res.replace("\n", "")
+            e_clean = exp.replace("\n", "")
             assert (
                 r_clean == e_clean
             ), f"\nresult  : '{r_clean}'\nexpected: '{e_clean}'\n"
@@ -617,7 +617,7 @@ class ConfigUtilsTest(BaseSelfTestClass):
         ):  # pylint: disable=unused-argument
             output_lines = []
             for line in input_lines:
-                for k, v in replace_dict.items():
+                for k, v in replace_dict.items():  # pylint: disable=invalid-name
                     output_lines.append(line.replace(k, v))
             return output_lines
 
@@ -664,7 +664,7 @@ class ConfigUtilsTest(BaseSelfTestClass):
             config_file_lines_trans = transformation(
                 config_file_lines, replace_dict=kwargs["inverse_replace_dict"]
             )
-            with open(final_config_file_name, "w") as f:
+            with open(final_config_file_name, "w") as f:  # pylint: disable=invalid-name
                 f.writelines(config_file_lines_trans)
 
         _create_config_file(
@@ -693,16 +693,16 @@ class ConfigUtilsTest(BaseSelfTestClass):
     ):  # pylint: disable=no-value-for-parameter
         """Test exceptions for create_config_file function"""
 
-        def f(path):
+        def fake(path):
             raise Exception
 
-        mock_get_config_filename.side_effect = f
+        mock_get_config_filename.side_effect = fake
         with pytest.raises(Exception) as exec_info:
             _create_config_file(
                 "non_existing_path",
                 "./self_tests/data/test_configuration_utils/dot_config.yml",
                 "./self_tests/output/dot_config_x.yml",
-                transform_example_file_function=f,
+                transform_example_file_function=fake,
                 replace_dict={"Muso_db": "x_db"},
             )
         assert isinstance(exec_info.value, Exception)
@@ -711,7 +711,7 @@ class ConfigUtilsTest(BaseSelfTestClass):
     def test_dbt_config_custom_schema_output_objects(self, mock_get_config_filename):
         """test get_dbt_config_custom_schema_output_objects"""
         mock_get_config_filename.side_effect = self.mock_get_config_filename
-        
+
         assert get_dbt_config_custom_schema_output_objects() == "tests"
         assert get_dbt_config_custom_schema_output_objects() == "tests"
         assert get_dbt_config_custom_schema_output_objects() == "tests"

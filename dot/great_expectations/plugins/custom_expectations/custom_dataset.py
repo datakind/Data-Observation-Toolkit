@@ -5,6 +5,7 @@ from great_expectations.dataset import SqlAlchemyDataset
 import pandas as pd
 import numpy as np
 
+
 class CustomSqlAlchemyDataset(SqlAlchemyDataset):
     """
     Extension of SqlAlchemyDataset including custom expectations for the DOT
@@ -23,7 +24,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
             "id_column",
         ]
     )
-    def expect_similar_means_across_reporters(
+    def expect_similar_means_across_reporters(  # pylint: disable=too-many-arguments
         self,
         quantity,
         key,
@@ -33,7 +34,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         schema_source,  # pylint: disable=unused-argument
         threshold=0.01,
         samples=10000,
-        id_column="chv_uuid"
+        id_column="chv_uuid",
     ):
         """Compares distributions of measurements across CHWs to detect ouliers.
         This expectation produces warnings rather than pointing out errors due to its
@@ -44,16 +45,20 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
             sa.Table(form_name, self._table.metadata, schema=schema_core)
         )
 
-        def get_bs_p_scores(table, col, grouping_key, N_samp):
+        def get_bs_p_scores(
+            table, col, grouping_key, N_samp
+        ):  # pylint: disable=invalid-name
             group = (
                 table.dropna(subset=[col])
                 .groupby(grouping_key)[col]
                 .agg(["mean", "std", "count"])
             )
             np.random.seed(42)
-            bs = np.random.choice(table[col].dropna(), size=(group.shape[0], N_samp))
+            bs = np.random.choice(
+                table[col].dropna(), size=(group.shape[0], N_samp)
+            )  # pylint: disable=invalid-name
 
-            def bootstrap_p(g):
+            def bootstrap_p(g):  # pylint: disable=invalid-name
                 return (g["mean"] < bs[: int(g["count"]), :].mean(axis=0)).mean()
 
             group["bs_p_score"] = group.apply(bootstrap_p, axis=1)
@@ -83,7 +88,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
     @DataAsset.expectation(
         ["patient_key", "time_key", "first_form_name", "second_form_name"]
     )
-    def expect_proper_form_sequence_across_tables(
+    def expect_proper_form_sequence_across_tables(  # pylint: disable=too-many-arguments, too-many-locals
         self,
         patient_key,
         time_key,
@@ -92,6 +97,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         maximum_days=-1,
         minimum_days=-80,
     ):
+        """custom expectation"""
         first_rows = sa.select(
             [sa.column(patient_key), sa.column(time_key)]
         ).select_from(sa.Table(first_form_name, self._table.metadata))
@@ -117,7 +123,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         breaks = []
         breaking_dates = []
         failing_uuids = []
-        for i, r in joined.iterrows():
+        for i, r in joined.iterrows():  # pylint: disable=invalid-name
             if r[time_key] is np.nan:
                 continue
             for date in r[time_key]:
@@ -142,10 +148,25 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         }
 
     @DataAsset.expectation(["form_name", "patient_key", "unpack_key", "key"])
-    # notebooks/MT - Immunization Exploration
-    # Patients are given OPV 1, 2, or 3 immunizations too early
     def immunization_opv_given_too_early(self, form_name, patient_key, unpack_key, key):
-        df = sa.select(["*"]).select_from(sa.Table(form_name, self._table.metadata))
+        """
+        notebooks/MT - Immunization Exploration
+        Patients are given OPV 1, 2, or 3 immunizations too early
+
+        Parameters
+        ----------
+        form_name
+        patient_key
+        unpack_key
+        key
+
+        Returns
+        -------
+
+        """
+        df = sa.select(["*"]).select_from(  # pylint: disable=invalid-name
+            sa.Table(form_name, self._table.metadata)
+        )  # pylint: disable=invalid-name
 
         df = pd.read_sql(df, self.engine)
 
@@ -166,12 +187,12 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         count = 0
         all_temps = []
         while i < len(df_sub):
-            if df_sub[unpack_key][i] != None:
+            if df_sub[unpack_key][i] is not None:
                 try:
                     df_temp = rapidjson.loads(df_sub[unpack_key][i])
                     uuid = df_sub[key][i]
                     if isinstance(df_temp, list):
-                        for d in df_temp:
+                        for d in df_temp:  # pylint: disable=invalid-name
                             d[key] = uuid
                             all_temps.append(d)
                     else:
@@ -310,7 +331,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
     ) -> dict:
         """
         Fake expectation for test purpuses. The test takes the first 5 rows of the
-        entity and condiders them failed rows
+        entity and considers them failed rows
 
             Parameters
             ----------
@@ -331,7 +352,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
                     - table: table name
                     - ...
         """
-        df = sa.select(["*"]).select_from(
+        df = sa.select(["*"]).select_from(  # pylint: disable=invalid-name
             sa.Table(
                 form_name,
                 self._table.metadata,
