@@ -143,7 +143,7 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2
 -- GE-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 6, 'Test for miscalibrated thermometer (GE-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 'child_temperature_pre_chw', '', '{"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Medic unknown');
 -- ??
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MULTIEVENTS-1', 3, '', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', 'with patient_no_assessment as (
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MULTIEVENTS-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', 'with patient_no_assessment as (
     select
         patient.uuid as uuid,
         patient.reported as patient_reported
