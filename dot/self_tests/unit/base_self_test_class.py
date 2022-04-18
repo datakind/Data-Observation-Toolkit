@@ -154,7 +154,7 @@ class BaseSelfTestClass(unittest.TestCase):
         cursor.execute(query_create)
         conn.commit()
 
-        with open("../db/dot/1-schema.sql", "r") as f:
+        with open("self_tests/data/queries/1-schema.sql", "r") as f:
             queries = []
             query_lines = []
             all_query_lines = []
