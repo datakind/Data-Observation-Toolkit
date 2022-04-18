@@ -187,7 +187,7 @@ def sync_object(
     save_object(object_name_in, target_conn_in, data, column_list, source_conn_in)
 
 
-def run_DOT(project_id_in):
+def run_dot(project_id_in):
     """
     Method to run the DOT.
     """
@@ -214,7 +214,7 @@ def default_config():
     """
 
     # All files will be relative to $AIRFLOW_HOME
-    with open("./dags/DOT_projects.json") as file:
+    with open("./dags/dot_projects.json") as file:
         config = json.load(file)
 
     print(config)
@@ -222,7 +222,7 @@ def default_config():
 
 
 with DAG(
-    dag_id="run_DOT_project",
+    dag_id="run_dot_project",
     schedule_interval="@daily",
     start_date=datetime(year=2022, month=3, day=1),
     catchup=False,
@@ -238,7 +238,7 @@ with DAG(
 
     target_conn = config["target_connid"]
 
-    for project in config["DOT_projects"]:
+    for project in config["dot_projects"]:
 
         """
         project_id  - Project ID, as found in dot.projects table
@@ -280,11 +280,11 @@ with DAG(
             if i > 0:
                 af_tasks[i - 1] >> af_tasks[i]
 
-        run_DOT = PythonOperator(
-            task_id="run_DOT",
-            python_callable=run_DOT,
+        run_dot = PythonOperator(
+            task_id="run_dot",
+            python_callable=run_dot,
             op_kwargs={"project_id_in": project_id},
             dag=dag,
         )
 
-        af_tasks[-1] >> run_DOT
+        af_tasks[-1] >> run_dot
