@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
     test_id UUID PRIMARY KEY,
     scenario_id VARCHAR(300) NOT NULL,
     priority INT NOT NULL CHECK (priority in (1,2,3,4,5)),
-    description VARCHAR(1000) NULL,
+    description VARCHAR(1000) NOT NULL,
     impact VARCHAR(1000) NULL,
     proposed_remediation VARCHAR(1000) NULL,
     entity_id UUID NOT NULL,
