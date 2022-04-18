@@ -2,12 +2,12 @@ INSERT INTO dot.projects SELECT 'Muso', 'Muso project', '2021-12-07 00:00:00+00'
 INSERT INTO dot.projects SELECT 'Brac', 'Brac project', '2021-12-07 00:00:00+00', 'true', 'public';
 
 -- entity categories
-INSERT INTO dot.entity_categories VALUES('anc', 'antenatal care');
-INSERT INTO dot.entity_categories VALUES('fp', 'family planning');
-INSERT INTO dot.entity_categories VALUES('core', 'core entities such as chw, patient, etc');
-INSERT INTO dot.entity_categories VALUES('iccm', 'integrated community case management on child mortality');
-INSERT INTO dot.entity_categories VALUES('mn', 'malnutitrion');
-INSERT INTO dot.entity_categories VALUES('pnc', 'postnatal care');
+INSERT INTO dot.entity_categories VALUES('anc', 'Antenatal care');
+INSERT INTO dot.entity_categories VALUES('fp', 'Family planning');
+INSERT INTO dot.entity_categories VALUES('core', 'Core entities such as chw, patient, etc');
+INSERT INTO dot.entity_categories VALUES('iccm', 'Integrated community case management on child mortality');
+INSERT INTO dot.entity_categories VALUES('mn', 'Malnutitrion');
+INSERT INTO dot.entity_categories VALUES('pnc', 'Postnatal care');
 
 -- configured entities - sql definitions of DBT base objects
 INSERT INTO dot.configured_entities VALUES('b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'ancview_danger_sign', 'anc', '{{ config(materialized=''view'') }}
@@ -229,5 +229,25 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'eeafde14-6515-30dc-a51c-c
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '2660b519-9946-3e12-9b92-46d4321b1d56', 'DUPLICATE-1', 5, 'Multiple forms of the same activity submitted in a day (PDF-6)', '', '', '50f31569-f2fc-4dc6-af49-4268381e7c13', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Medic unknown');
 -- PDF-7
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '99ac4950-13df-3777-bd27-923e74be9dcb', 'DUPLICATE-1', 7, 'Multiple reporting of specific PNC visits (PDF-7)', '', '', 'eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Leah');
+
+-- Required for Airflow deployment and easier access to uynderlying data
+-- CREATE SCHEMA data_musoapp;
+-- CREATE OR REPLACE MATERIALIZED VIEW data_musoapp.dot__test_results_with_data
+-- as SELECT
+--    ct.test_id,
+--    ce.entity_name, tr.id_column_name,
+--   tr.status,
+--   dot.get_test_result_data_record(ce.entity_name, tr.id_column_name,
+--   tr.id_column_value,'data_musoapp')
+-- FROM
+--   dot.scenarios s,
+--   dot.configured_tests ct,
+--   dot.configured_entities ce,
+--   dot.test_results tr
+-- WHERE
+--   s.scenario_id=ct.scenario_id AND
+--   tr.test_id=ct.test_id and
+--   ce.entity_id=ct.entity_id
+-- WITH DATA;
 
 COMMIT;
