@@ -197,24 +197,25 @@ join
 on cnt.days_since_lmp = ap.days_since_lmp
 order by round(ap.days_since_lmp::float)','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
 -- LMP-2
-INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',8,'LMP Date at Beginning of Month (LMP-2)','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
-        ap.uuid,
-        ap.days_since_lmp,
-        cnt.proportion as tot_proportion,
-        ''dot_model__ancview_pregnancy'' as primary_table,
-        ''uuid'' as primary_table_id_field
-from
-(
-        select round(days_since_lmp::float) days_since_lmp,
-                count(*)*100.0/sum(count(*)) over() proportion
-        from {{ ref(''dot_model__ancview_pregnancy'') }} ap
-        where lmp_date is not null
-        group by round(days_since_lmp::float)
-) cnt
-join
-{{ ref(''dot_model__ancview_pregnancy'') }} ap
-on cnt.days_since_lmp = ap.days_since_lmp
-where cnt.proportion>1','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
+-- Deactivating, as logic needs further refinement with Medic 
+-- INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',8,'LMP Date at Beginning of Month (LMP-2)','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
+--         ap.uuid,
+--         ap.days_since_lmp,
+--         cnt.proportion as tot_proportion,
+--         ''dot_model__ancview_pregnancy'' as primary_table,
+--         ''uuid'' as primary_table_id_field
+-- from
+-- (
+--         select round(days_since_lmp::float) days_since_lmp,
+--                 count(*)*100.0/sum(count(*)) over() proportion
+--         from {{ ref(''dot_model__ancview_pregnancy'') }} ap
+--         where lmp_date is not null
+--         group by round(days_since_lmp::float)
+-- ) cnt
+-- join
+-- {{ ref(''dot_model__ancview_pregnancy'') }} ap
+-- on cnt.days_since_lmp = ap.days_since_lmp
+-- where cnt.proportion>1','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
 -- PDF-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'baadb20f-7efb-3ebd-bfc8-57561466f310', 'DUPLICATE-1', 7, 'Some CHWs may mistakenly register a pregnancy more than once (PDF-1)', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Leah');
 -- PDF-2
