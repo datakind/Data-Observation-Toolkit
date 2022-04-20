@@ -820,11 +820,9 @@ by adding a new feature or solving a bug, please follow the following guidelines
 - add a few more relevant tests for your bugfix/improvement
 - implement your changes until the test pass
 
-You'll find more details on self-tests in a separate [README](dot/self_tests/README.md)
-
 #### Running self-tests
 
-As preparation steps, you will need to:
+Assuming you would like to run the tests locally, as preparation steps, you will need to:
 - create a local env for python via either venv or conda
 - run `pip install -r dot/requirements_data_confidence.txt`
 - run `pip install -r dot/requirements_test.txt`
@@ -832,7 +830,7 @@ As preparation steps, you will need to:
 only, or you could use a local instance of a Postgres DB)
 - prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
 `dot/self_tests/data/base_self_test` with the same structure as the [dot_config.yml](dot/config/example/dot_config.yml) 
-for the DOT; should look like something as follows (note that it points to DB in the docker container):
+for the DOT; should look like something as follows (note that the config below points to DB in the docker container):
 ```
 dot:
   save_passed_tests: False
@@ -857,9 +855,23 @@ dot_db:
   threads: 4
 ```
 
-You can run the tests from a terminal as follows:
+And finally you can run the tests from a terminal as follows:
 ```
 pytest dot/self_tests/unit
+```
+
+Alternativelly, if you want to instead run the tests from the docker container itself, you will need to:
+- start a terminal on the container
+```
+docker exec -it dot /bin/bash
+```
+- install test requirements as follows (the tool itself is already installed)
+```
+pip install -r dot/requirements_test.txt
+```
+- and run the tests
+```
+pytest self_tests/unit
 ```
 
 #### Guidelines for adding new tests
