@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
     test_type VARCHAR(300) NOT NULL,
     column_name VARCHAR(300) NULL,
     column_description VARCHAR(1000) NULL,
+    id_column_name VARCHAR(300) NULL,
     test_parameters VARCHAR(1000) NULL,
     date_added TIMESTAMP WITH TIME ZONE NOT NULL,
     date_modified TIMESTAMP WITH TIME ZONE NOT NULL,

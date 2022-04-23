@@ -61,7 +61,9 @@ def run_dot_stages(project_id, logger, run_id):
     ge_test_rows = pd.DataFrame()
 
     # Generate config files from DB
-    if "DISABLE_TEST_GENERATION" not in os.environ:
+    if (
+        "DISABLE_TEST_GENERATION" not in os.environ
+    ):  # TODO if set, `dot_tests` will not exist and the rest will fail
         dot_tests = generate_tests_from_db(project_id=project_id, logger=logger)
 
     # ========================= preparation ============================

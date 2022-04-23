@@ -60,7 +60,9 @@ class BaseSelfTestClass(unittest.TestCase):
 
     @patch("utils.configuration_utils._get_config_filename")
     def get_self_tests_db_conn(
-        self, mock_get_config_filename
+        self,
+        mock_get_config_filename,
+        connection: DbParamsConnection = DbParamsConnection["dot"],
     ) -> Tuple[
         str, sa.engine.base.Engine, pg.extensions.connection
     ]:  # pylint: disable=no-value-for-parameter
@@ -80,7 +82,7 @@ class BaseSelfTestClass(unittest.TestCase):
         mock_get_config_filename.side_effect = self.mock_get_config_filename
         schema, engine, conn = get_db_params_from_config(
             DbParamsConfigFile["dot_config.yml"],
-            DbParamsConnection["dot"],
+            connection,
             "Muso",
         )
         return schema, engine, conn
