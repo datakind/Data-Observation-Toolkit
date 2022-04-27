@@ -95,9 +95,15 @@ For example, if you used the provided Medic Muso database dump, you would run wi
 Now time for some real fun!
 
 # Viewing test results
-Your test results will be in the `dot-db`. You can access this from the command line by:
+
+Your test results will be in the `dot-db` container. You can view the results by opening a shell in the dot-db container:
+
+`docker exec -it dot-db /bin/bash`
+
+Then running the psql client locally in that container:
 
 `psql -U postgres -d dot_db`
+
 
 Or if you prefer a database client (like [DBeaver](https://dbeaver.io)), you can use there settings:
 ```
