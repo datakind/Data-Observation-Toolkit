@@ -165,7 +165,6 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-3
     a.fp_method_being_used,
     ''dot_model__fpview_registration'' as primary_table,
     ''patient_id'' as primary_table_id_field
-    ''patient_id'' as primary_table_id_field
     from {{ ref(''dot_model__fpview_registration'') }} a
     inner join
     (
