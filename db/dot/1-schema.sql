@@ -157,6 +157,94 @@ CREATE TABLE IF NOT EXISTS dot.test_results_summary (
 	  REFERENCES dot.run_log(run_id)
 );
 
+CREATE OR REPLACE FUNCTION dot.test_validation(test_type text, test_parameters text)
+RETURNS boolean as $$
+DECLARE
+ validation_status boolean;
+BEGIN
+    CASE
+        WHEN test_type = 'custom_sql' THEN
+            -- Enforce mandatory fields in custom_sql select statement
+            CASE
+               WHEN test_parameters ~ 'primary_table[ ",]' AND
+                  test_parameters ~ 'primary_table_id_field[ ",]' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION 'primary_table and primary_table_id_field must be in fields of custom_sql SQL statement';
+          END CASE;
+      WHEN test_type = 'accepted_values' then
+          CASE
+               WHEN test_parameters ~ '^values:\s?\[.*\]' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION  'accepted_values test parameters must be: values:[<LIST>] ';
+          END CASE;
+       WHEN test_type = 'not_negative_string_column' then
+          CASE
+               WHEN test_parameters ~ '^name:' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION  'not_negative_string_column test parameters must be: name:<NAME> ';
+          END CASE;
+      WHEN test_type = 'relationships' then
+          CASE
+               WHEN test_parameters ~ '^name:.*?\|\s?to:\s?ref\(.*?\)\|\s?field:' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION  'relationships test parameters must be: name: <TEST NAME>| to: ref(''<RELATED TABLE/view>'')| field:<FIELD THAT LINKS THEM>';
+          END CASE;
+      WHEN test_type = 'expect_similar_means_across_reporters' then
+          CASE
+               WHEN test_parameters ~ '^\{"key":\s?".*?",".*?":\s?".*?","form_name":\s?".*?","id_column":\s?".*?"\}' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION  'expect_similar_means_across_reporters test parameters must be: {"key": "<UNIQUE ID FIELD>","quantity": "<COLUMN THE MEAN IS FROM>","form_name": "<MODEL VIEW>","id_column": "<ID COLUMN>"}';
+          END CASE;
+      WHEN test_type = 'expression_is_true' then
+          CASE
+               WHEN test_parameters ~ '^name:\s?".*?"\|\s?expression:\s?".*?"\|\s?condition:\s?"' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION  'expression_is_true test parameters must be: name: "<TEST DESCRIPTOR>"| expression: "<EXPRESSION>"| condition: "<CONDITION>"';
+          END CASE;
+      WHEN test_type = 'possible_duplicate_forms' then
+          CASE
+               WHEN test_parameters ~ '^table_specific_patient_uuid:.*?\|\s?table_specific_uuid:.*?\|\s?table_specific_period:.*?' THEN
+                SELECT TRUE INTO validation_status;
+             ELSE
+                SELECT FALSE INTO validation_status;
+                RAISE EXCEPTION 'possible_duplicate_forms test parameters must be: table_specific_patient_uuid: <UNIQUE PATIENT ID COLUMN NAME>| table_specific_uuid: <TABLE UUID COLUMN NAME>| table_specific_period: <PERIOD, eg day>';
+          END CASE;
+        ELSE
+          SELECT FALSE into validation_status;
+          RAISE EXCEPTION  'Unknown test_type';
+    END CASE;
+   RETURN validation_status;
+END; $$ LANGUAGE 'plpgsql';
+
+-- TODO these will be added to self-tests
+-- select dot.test_validation('possible_duplicate_forms','table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day');
+-- select dot.test_validation('possible_duplicate_forms','table_specific_patient_uuid: patient_id| tabXle_specific_uuid: uuid| table_specific_period: day');
+-- select dot.test_validation('expression_is_true','name: "t_under_24_months_wrong_dosage"| expression: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"');
+-- select dot.test_validation('expression_is_true','name: "t_under_24_months_wrong_dosage"| exprXession: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"');
+-- select dot.test_validation('expect_similar_means_across_reporters','{"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}');
+-- select dot.test_validation('expect_similar_means_across_reporters','{"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_cXolumn": "reported_by"}');
+-- select dot.test_validation('relationships','name: danger_signs_with_no_pregnancy| to: ref(''dot_model__ancview_pregnancy'')| field: uuid');
+-- select dot.test_validation('relationships','name: danger_signs_with_no_pregnancy| to: ref(''dot_model__ancview_pregnancy'')| fiXeld: uuid');
+-- select dot.test_validation('not_negative_string_column', 'name:patient_age_in_years');
+-- select dot.test_validation('not_negative_string_column', 'namXe:patient_age_in_years');
+-- select dot.test_validation('accepted_values', 'values: [dog]');
+-- select dot.test_validation('accepted_values', 'valuXXes: [dog]');
+-- select dot.test_validation('custom_sql', 'select 1 as primary_table  primary_table_id_field from table');
+-- select dot.test_validation('custom_sql', 'select 1 as prXXimary_table  primary_table_id_field from table');
+-- select dot.test_validation('custom_sql', 'select 1 as primary_table  priXXmary_table_id_field from table');
+
 CREATE OR REPLACE FUNCTION dot.configured_tests_insert()
 RETURNS TRIGGER
 LANGUAGE plpgsql
