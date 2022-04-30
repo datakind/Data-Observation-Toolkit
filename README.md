@@ -287,6 +287,13 @@ last_updated_by | Person who last updated the test
 The UUID in the above example will get overwritten with an automatically generated value. Also, your test must be unique 
 for the project. If you get a key violation it's probably because that test already exists.
 
+#### Test validation
+
+Any insert of update of configured tests will call database function `dot.test_validation`, as defined in 
+[./db/dot/1-schema.sql](./db/dot/1-schema.sql). This function performs some basic validation to ensure test parameters
+are in an expected format. It is not infallable, if there are any issues with test parameters and tests do not execute,
+you can confirm this by looking at columns `test_status` and `test_status_message` in `dot.test_results_summary`.
+
 #### Example `INSERT` statements for adding a new test for each test type:
 
 **Note:** In all of the following examples, the UUID in the insert statement will be replaced with an automatically 
