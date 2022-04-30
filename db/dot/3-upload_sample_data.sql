@@ -199,7 +199,7 @@ on cnt.days_since_lmp = ap.days_since_lmp
 order by round(ap.days_since_lmp::float)','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
 -- LMP-2
 -- Deactivating, as logic needs further refinement with Medic
--- INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',8,'LMP Date at Beginning of Month (LMP-2)','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','','select
+-- INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',8,'LMP Date at Beginning of Month (LMP-2)','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
 --         ap.uuid,
 --         ap.days_since_lmp,
 --         cnt.proportion as tot_proportion,
