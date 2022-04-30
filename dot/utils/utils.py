@@ -12,7 +12,8 @@ import psycopg2 as pg
 
 import pandas as pd
 from pandas import json_normalize
-from utils.connection_utils import get_db_params_from_config
+from sqlalchemy import Table
+from utils.connection_utils import get_db_params_from_config, get_metadata
 from utils.configuration_utils import DbParamsConfigFile, DbParamsConnection
 
 dot_model_PREFIX = "dot_model__"
@@ -278,10 +279,17 @@ def save_tests_to_db(
     schema_dot, engine_dot, _ = get_db_params_from_config(
         DbParamsConfigFile["dot_config.yml"], DbParamsConnection["dot"], project_id
     )
+
     test_rows.to_sql(
         "test_results", engine_dot, index=False, if_exists="append", schema=schema_dot
     )
-    test_summary.to_sql(
+
+    # get current columns from metadata - schema could have less columns than results
+    test_results_summary_columns = [
+        c.name
+        for c in get_metadata().tables.get(f"{schema_dot}.test_results_summary").columns
+    ]
+    test_summary.loc[:, test_results_summary_columns].to_sql(
         "test_results_summary",
         engine_dot,
         index=False,
@@ -553,7 +561,11 @@ def get_test_rows(
 
         if unique_column_name is None:
             # Special handling for custom_sql test type
-            if test_type == "custom_sql":
+            if (
+                test_type == "custom_sql"
+                and id_column_name is not None
+                and id_column_name != ""
+            ):
                 unique_column_name = id_column_name
                 failing_ids = test_results_df[unique_column_name].tolist()
 

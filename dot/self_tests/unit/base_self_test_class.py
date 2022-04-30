@@ -126,7 +126,11 @@ class BaseSelfTestClass(unittest.TestCase):
         cursor.execute(query_drop)
         conn.commit()
 
-    def create_self_tests_db_schema(self, additional_query: str = None):
+    def create_self_tests_db_schema(
+        self,
+        additional_query: str = None,
+        schema_filepath: str = "self_tests/data/queries/1-schema.sql",
+    ):
         """
         Creates the self tests' schema and runs the queries in `additional_query`
         if provided
@@ -135,6 +139,8 @@ class BaseSelfTestClass(unittest.TestCase):
         ----------
         additional_query
             string with valid queries to run
+        schema_filepath
+            path of the file that creates the schema
 
         Returns
         -------
@@ -156,7 +162,7 @@ class BaseSelfTestClass(unittest.TestCase):
         cursor.execute(query_create)
         conn.commit()
 
-        with open("self_tests/data/queries/1-schema.sql", "r") as f:
+        with open(schema_filepath, "r") as f:
             queries = []
             query_lines = []
             all_query_lines = []
