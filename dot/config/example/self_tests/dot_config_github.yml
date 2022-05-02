@@ -5,7 +5,7 @@ dot_db:
   type: postgres
   host: localhost
   user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  pass: postgres
   port: 5432
   dbname: dot_db
   schema: self_tests_dot
@@ -14,7 +14,7 @@ Muso_db:
   type: postgres
   host: localhost
   user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  pass: postgres
   port: 5432
   dbname: dot_db
   schema: public
