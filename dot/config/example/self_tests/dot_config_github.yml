@@ -1,0 +1,21 @@
+dot:
+  save_passed_tests: False
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_dot
+  threads: 4
+Muso_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
