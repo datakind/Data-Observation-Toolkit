@@ -161,7 +161,7 @@ ORDER BY
    ct.test_type,
    ct.description,
    ce.entity_name
-limit 10
+LIMIT 10
 ```
 
 ### Linking DOT Data scenarios with configured tests
