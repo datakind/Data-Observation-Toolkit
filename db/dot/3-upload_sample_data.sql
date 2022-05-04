@@ -125,6 +125,13 @@ with source_data as (
 select *
 from source_data');
 
+-- The test validation code checks tests which refer to columns on entity views, if they don't exist, the test cannot
+-- be inserted. This is the correct behavior. However, it causes issues when loading the sample tests below. The
+-- entities these tests refer to are in the data DB dump, not yet loaded. As a workaround we disable validation then
+-- re-enable afterwards. All this goes away with Synthetic data.
+DROP TRIGGER check_test_parameters_validation_trigger ON dot.configured_tests;
+
+
 -- Note these UUIDs get reset by the trigger
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, 'Patient ID is not null', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
 -- ?
@@ -232,6 +239,11 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'eeafde14-6515-30dc-a51c-c
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '2660b519-9946-3e12-9b92-46d4321b1d56', 'DUPLICATE-1', 5, 'Multiple forms of the same activity submitted in a day (PDF-6)', '', '', '50f31569-f2fc-4dc6-af49-4268381e7c13', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Medic unknown');
 -- PDF-7
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '99ac4950-13df-3777-bd27-923e74be9dcb', 'DUPLICATE-1', 7, 'Multiple reporting of specific PNC visits (PDF-7)', '', '', 'eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Leah');
+
+-- Reinstate validation
+CREATE TRIGGER check_test_parameters_validation_trigger
+AFTER INSERT OR UPDATE ON dot.configured_tests
+FOR EACH ROW EXECUTE PROCEDURE dot.test_validation_trigger_function();
 
 -- Required for Airflow deployment and easier access to uynderlying data
 -- CREATE SCHEMA data_musoapp;

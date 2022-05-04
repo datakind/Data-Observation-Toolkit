@@ -163,7 +163,7 @@ RETURNS boolean as $$
 DECLARE
  validation_status boolean;
  entity_id_in UUID; -- to get around ambiguity
-begin
+BEGIN
 	entity_id_in := entity_id;
     CASE
         WHEN test_type = 'custom_sql' THEN
@@ -249,6 +249,7 @@ begin
     END CASE;
 	RETURN validation_status;
 END; $$ LANGUAGE 'plpgsql';
+
 
 CREATE OR REPLACE FUNCTION dot.test_validation_trigger_function()
 RETURNS TRIGGER AS $$
