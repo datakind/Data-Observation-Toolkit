@@ -12,29 +12,24 @@ INSERT INTO dot.entity_categories VALUES('pnc', 'Postnatal care');
 -- configured entities - sql definitions of DBT base objects
 INSERT INTO dot.configured_entities VALUES('b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'ancview_danger_sign', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.ancview_danger_sign');
 INSERT INTO dot.configured_entities VALUES('66f5d13a-8f74-4f97-836b-334d97932781', 'ancview_delivery', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.ancview_delivery');
 INSERT INTO dot.configured_entities VALUES('638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'ancview_pregnancy', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select ap.*,
         ap.lmp as lmp_date,
         DATE_PART(''day'', reported - lmp) as days_since_lmp
 from {{ schema }}.ancview_pregnancy ap');
 INSERT INTO dot.configured_entities VALUES('8ccab0bf-383e-4e41-9437-2b1c5007ba80', 'ancview_pregnancy_visit', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.ancview_pregnancy_visit');
 INSERT INTO dot.configured_entities VALUES('f41fe8ee-ee1c-49dd-ae3d-c473daf441d5', 'chv', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
     select distinct
         reported_by,
@@ -42,30 +37,24 @@ with source_data as (
     from
         {{ schema }}.iccmview_assessment
 )
-
 select *
 from source_data');
 INSERT INTO dot.configured_entities VALUES('6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'fpview_follow_up', 'fp', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.fpview_follow_up');
 INSERT INTO dot.configured_entities VALUES('95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'fpview_registration', 'fp', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.fpview_registration');
 INSERT INTO dot.configured_entities VALUES('173793ff-491d-4c73-8d0b-3903a82d3796', 'hhview_visits', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.hhview_visits');
 INSERT INTO dot.configured_entities VALUES('baf349c9-c919-40ff-a611-61ddc59c2d52', 'iccmview_assessment', 'iccm', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 -- select *
 -- from iccmview_assessment
-
 select
   ia.*,
   ua.child_temperature::real ,
@@ -83,26 +72,19 @@ where
   and fa.uuid = ua.uuid');
 INSERT INTO dot.configured_entities VALUES('50f31569-f2fc-4dc6-af49-4268381e7c13', 'iccmview_assessment_follow_up', 'iccm', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
-
     select * from {{ schema }}.iccmview_assessment_follow_up
-
 )
-
 select *
 from source_data');
 INSERT INTO dot.configured_entities VALUES('d0645118-bd68-4eba-8ead-fad114be86b7', 'mnview_follow_up', 'mn', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select * from {{ schema }}.mnview_follow_up');
 INSERT INTO dot.configured_entities VALUES('57a9fd48-51d8-4dc0-bbd1-a6e0405696cd', 'mnview_registration', 'mn', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select * from {{ schema }}.mnview_registration');
 INSERT INTO dot.configured_entities VALUES('fade2413-8504-443f-b161-1c5470fc1df3', 'patient', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
     select
         uuid,
@@ -110,18 +92,13 @@ with source_data as (
       from {{ schema }}.contactview_metadata
      where type = ''person''
 )
-
 select *
 from source_data');
 INSERT INTO dot.configured_entities VALUES('eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'pncview_visits', 'pnc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
-
     select * from {{ schema }}.pncview_visits
-
 )
-
 select *
 from source_data');
 
@@ -151,7 +128,7 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2
 -- GE-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 6, 'Test for miscalibrated thermometer (GE-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 'child_temperature_pre_chw', '', '{"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Medic unknown');
 -- ??
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'No assessment for patient who has been reported over 3 years ago', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', 'with patient_no_assessment as (
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', 'with patient_no_assessment as (
     select
         patient.uuid as uuid,
         patient.reported as patient_reported
