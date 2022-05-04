@@ -133,6 +133,8 @@ DROP TRIGGER check_test_parameters_validation_trigger ON dot.configured_tests;
 
 
 -- Note these UUIDs get reset by the trigger
+-- Note these UUIDs get reset by the trigger
+-- ?
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, 'Patient ID is not null', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
 -- ?
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 5, 'Patient age is not negative', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 'name: patient_age_in_years', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
@@ -152,24 +154,23 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', 'with patient_no_assessment as (
     select
         patient.uuid as uuid,
-        patient.reported as patient_reported,
+        patient.reported as patient_reported
     from {{ ref(''dot_model__patient'') }} patient
     left join {{ ref(''dot_model__iccmview_assessment'') }} assessment
     on patient.uuid = assessment.patient_id
     where assessment.patient_id is null
 )
-
-select distinct
-  uuid,
-  ''patient'' as primary_table,
-  ''uuid'' as primary_table_id_field
+select
+    distinct uuid,
+    ''patient'' as primary_table,
+    ''uuid'' as primary_table_id_field
 from patient_no_assessment pna
-where (CURRENT_DATE::date - pna.patient_reported::date) >= 300', '2022-02-01 19:00:00.000 -0500', '2022-02-01 19:00:00.000 -0500', 'Example');
+where (CURRENT_DATE::date - pna.patient_reported::date) >= 1095', '2022-02-01 19:00:00.000 -0500', '2022-02-01 19:00:00.000 -0500', 'Example');
 -- WT-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 8, 'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expression_is_true', '', '', 'name: "t_under_24_months_wrong_dosage"| expression: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"', '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'MoH');
 -- NFP-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca70', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '', 'select
-    a.patient_id,
+    a.patient_id as uuid,
     a.reported,
     a.fp_method_being_used,
     ''dot_model__fpview_registration'' as primary_table,
@@ -206,7 +207,7 @@ join
 on cnt.days_since_lmp = ap.days_since_lmp
 order by round(ap.days_since_lmp::float)','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
 -- LMP-2
--- Deactivating, as logic needs further refinement with Medic 
+-- Deactivating, as logic needs further refinement with Medic
 -- INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',8,'LMP Date at Beginning of Month (LMP-2)','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
 --         ap.uuid,
 --         ap.days_since_lmp,
