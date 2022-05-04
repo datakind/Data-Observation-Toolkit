@@ -135,6 +135,35 @@ ORDER BY
    ct.test_type
 ```
 
+Same, but adding in test description and entity names in grouping ...
+
+```
+SELECT
+   tr.run_id,
+   ct.test_type,
+   ct.description,
+   ce.entity_name,
+   COUNT(*)
+FROM
+   dot.test_results tr,
+   dot.configured_tests ct,
+   dot.configured_entities ce 
+WHERE
+   tr.test_id = ct.test_id AND
+   ce.entity_id = ct.entity_id
+GROUP BY
+   tr.run_id,
+   ct.test_type,
+   ct.description,
+   ce.entity_name
+ORDER BY
+   tr.run_id,
+   ct.test_type,
+   ct.description,
+   ce.entity_name
+limit 10
+```
+
 ### Linking DOT Data scenarios with configured tests
 
 ```
@@ -154,14 +183,17 @@ WHERE
 SELECT 
    s.*,
    ct.*,
+   ce.entity_name,
    tr.*
 FROM
    dot.scenarios s,
    dot.configured_tests ct,
-   dot.test_results_summary tr
+   dot.test_results_summary tr,
+   dot.configured_entities ce
 WHERE 
    s.scenario_id=ct.scenario_id AND
-   tr.test_id=ct.test_id
+   tr.test_id=ct.test_id AND
+   ce.entity_id = ct.entity_id
 LIMIT 10
 ```
 
