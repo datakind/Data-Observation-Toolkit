@@ -140,6 +140,7 @@ Same, but adding in test description and entity names in grouping ...
 ```
 SELECT
    tr.run_id,
+   tr.view_name, 
    ct.test_type,
    ct.description,
    ce.entity_name,
@@ -153,15 +154,17 @@ WHERE
    ce.entity_id = ct.entity_id
 GROUP BY
    tr.run_id,
+   tr.view_name, 
    ct.test_type,
    ct.description,
    ce.entity_name
 ORDER BY
    tr.run_id,
+   tr.view_name, 
    ct.test_type,
    ct.description,
    ce.entity_name
-LIMIT 10
+
 ```
 
 ### Linking DOT Data scenarios with configured tests
