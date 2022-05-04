@@ -170,11 +170,12 @@ where (CURRENT_DATE::date - pna.patient_reported::date) >= 1095', '2022-02-01 19
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 8, 'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expression_is_true', '', '', 'name: "t_under_24_months_wrong_dosage"| expression: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"', '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'MoH');
 -- NFP-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca70', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '', 'select
-    a.patient_id as uuid,
+    a.uuid,
+    a.patient_id,
     a.reported,
     a.fp_method_being_used,
     ''dot_model__fpview_registration'' as primary_table,
-    ''patient_id'' as primary_table_id_field
+    ''uuid'' as primary_table_id_field
     from {{ ref(''dot_model__fpview_registration'') }} a
     inner join
     (
