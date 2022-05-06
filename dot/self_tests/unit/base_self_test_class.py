@@ -129,7 +129,7 @@ class BaseSelfTestClass(unittest.TestCase):
     def create_self_tests_db_schema(
         self,
         additional_query: str = None,
-        schema_filepath: str = "self_tests/data/queries/1-schema.sql",
+        schema_filepath: str = "../db/dot/1-schema.sql",
     ):
         """
         Creates the self tests' schema and runs the queries in `additional_query`

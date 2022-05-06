@@ -28,7 +28,10 @@ class UtilsTest(BaseSelfTestClass):
             "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
         ) as f:
             self.create_self_tests_db_schema(
-                f.read(), "self_tests/data/queries/1-schema-improved.sql"
+                "\n".join([
+                    "ALTER TABLE self_tests_dot.configured_tests ADD COLUMN id_column_name VARCHAR(300) NULL;",
+                    f.read(),
+                ])
             )
 
     def tearDown(self) -> None:
