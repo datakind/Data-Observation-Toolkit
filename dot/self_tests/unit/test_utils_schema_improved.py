@@ -7,10 +7,7 @@ from .base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order
-    get_test_id,
     get_configured_tests_row,
-    get_entity_id_from_name,
-    get_entity_name_from_id,
     get_test_rows,
     setup_custom_logger,
 )
@@ -28,10 +25,13 @@ class UtilsTest(BaseSelfTestClass):
             "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
         ) as f:
             self.create_self_tests_db_schema(
-                "\n".join([
-                    "ALTER TABLE self_tests_dot.configured_tests ADD COLUMN id_column_name VARCHAR(300) NULL;",
-                    f.read(),
-                ])
+                "\n".join(
+                    [
+                        "ALTER TABLE self_tests_dot.configured_tests "
+                        "ADD COLUMN id_column_name VARCHAR(300) NULL;",
+                        f.read(),
+                    ]
+                )
             )
 
     def tearDown(self) -> None:
@@ -49,7 +49,9 @@ class UtilsTest(BaseSelfTestClass):
             entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
             column="",
             project_id="Muso",
-            test_parameters="table_specific_reported_date: delivery_date| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid",
+            test_parameters="table_specific_reported_date: delivery_date| "
+            "table_specific_patient_uuid: patient_id| "
+            "table_specific_uuid: uuid",
         )
         expected_test_id = "329bdb85-5f36-372d-bab0-8efd3c2d33b4"
         self.assertEqual(
@@ -72,7 +74,9 @@ class UtilsTest(BaseSelfTestClass):
             "column_name": "",
             "column_description": "",
             "id_column_name": "id_column",
-            "test_parameters": "table_specific_reported_date: delivery_date| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid",
+            "test_parameters": "table_specific_reported_date: delivery_date| "
+            "table_specific_patient_uuid: patient_id| "
+            "table_specific_uuid: uuid",
             "last_updated_by": "Lorenzo",
         }
         for k, v in expected_row.items():
@@ -97,14 +101,14 @@ class UtilsTest(BaseSelfTestClass):
         cursor.execute(
             f"""
             DROP SCHEMA IF EXISTS {schema_core} CASCADE;
-            CREATE SCHEMA IF NOT EXISTS {schema_core}; 
+            CREATE SCHEMA IF NOT EXISTS {schema_core};
             CREATE TABLE IF NOT EXISTS {schema_core}.dot_model__fpview_registration(
                 patient_id VARCHAR(300),
                 value VARCHAR(1000) NOT NULL
             );
             INSERT INTO {schema_core}.dot_model__fpview_registration
             select * from
-                (values ('patient_id1', '1'), ('patient_id2', '2'), ('patient_id3', '3')) 
+                (values ('patient_id1', '1'), ('patient_id2', '2'), ('patient_id3', '3'))
                 x(patient_id, value)
             """
         )
@@ -120,14 +124,14 @@ class UtilsTest(BaseSelfTestClass):
             cursor.execute(
                 f"""
                 DROP SCHEMA IF EXISTS {schema_test} CASCADE;
-                CREATE SCHEMA IF NOT EXISTS {schema_test}; 
+                CREATE SCHEMA IF NOT EXISTS {schema_test};
             """
             )
             conn_test.commit()
 
         cursor.execute(
             f"""
-            CREATE SCHEMA IF NOT EXISTS {schema_test}; 
+            CREATE SCHEMA IF NOT EXISTS {schema_test};
             CREATE TABLE IF NOT EXISTS {schema_test}.tr_dot_model__fpview_registration_id10(
                 patient_id VARCHAR(300) PRIMARY KEY,
                 value VARCHAR(1000) NOT NULL,
@@ -151,11 +155,11 @@ class UtilsTest(BaseSelfTestClass):
             "test_type": "custom_sql",
             "column_name": "",
             "id_column_name": "patient_id",
-            "test_parameters": "this is the SQL for the test definition; irrelevant for this test",  # "select\n    a.patient_id,\n    a.reported,\n    a.fp_method_being_used,\n    'dot_model__fpview_registration' as primary_table,\n    'patient_id' as primary_table_id_field\n    from {{ ref('dot_model__fpview_registration') }} a\n    inner join\n    (\n        select distinct\n        patient_id,\n        max(reported) reported\n        from {{ ref('dot_model__fpview_registration') }}\n        where fp_method_being_used in ('vasectomie','female sterilization')\n        group by patient_id\n    ) b on a.patient_id = b.patient_id and a.reported > b.reported\n    and fp_method_being_used not in ('vasectomie','female sterilization')\n    and fp_method_being_used not like '%condom%'",
+            "test_parameters": "SQL for the test definition; irrelevant for this test",
             "test_status": "fail",
             "test_status_message": "got 49 results, configured to fail if != 0",
             "failed_tests_view": "tr_dot_model__fpview_registration_id10",
-            "failed_tests_view_sql": "this is the SQL for the view of the failing rows; irrelevant for this test",  # "SELECT a.patient_id,\n    a.reported,\n    a.fp_method_being_used,\n    'dot_model__fpview_registration' AS primary_table,\n    'patient_id' AS primary_table_id_field\n   FROM public_tests.dot_model__fpview_registration a\n     JOIN ( SELECT DISTINCT dot_model__fpview_registration.patient_id,\n            max(dot_model__fpview_registration.reported) AS reported\n           FROM public_tests.dot_model__fpview_registration\n          WHERE dot_model__fpview_registration.fp_method_being_used = ANY (ARRAY['vasectomie'::text, 'female sterilization'::text])\n          GROUP BY dot_model__fpview_registration.patient_id) b ON a.patient_id = b.patient_id AND a.reported > b.reported AND (a.fp_method_being_used <> ALL (ARRAY['vasectomie'::text, 'female sterilization'::text])) AND a.fp_method_being_used !~~ '%condom%'::text;"
+            "failed_tests_view_sql": "SQL for the view of the failing rows; irrelevant",
         }
         test_summary = pd.DataFrame(test_summary_row, index=[0])
         test_rows = get_test_rows(
