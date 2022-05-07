@@ -12,29 +12,24 @@ INSERT INTO dot.entity_categories VALUES('pnc', 'Postnatal care');
 -- configured entities - sql definitions of DBT base objects
 INSERT INTO dot.configured_entities VALUES('b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'ancview_danger_sign', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.ancview_danger_sign');
 INSERT INTO dot.configured_entities VALUES('66f5d13a-8f74-4f97-836b-334d97932781', 'ancview_delivery', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.ancview_delivery');
 INSERT INTO dot.configured_entities VALUES('638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'ancview_pregnancy', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select ap.*,
         ap.lmp as lmp_date,
         DATE_PART(''day'', reported - lmp) as days_since_lmp
 from {{ schema }}.ancview_pregnancy ap');
 INSERT INTO dot.configured_entities VALUES('8ccab0bf-383e-4e41-9437-2b1c5007ba80', 'ancview_pregnancy_visit', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.ancview_pregnancy_visit');
 INSERT INTO dot.configured_entities VALUES('f41fe8ee-ee1c-49dd-ae3d-c473daf441d5', 'chv', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
     select distinct
         reported_by,
@@ -42,30 +37,24 @@ with source_data as (
     from
         {{ schema }}.iccmview_assessment
 )
-
 select *
 from source_data');
 INSERT INTO dot.configured_entities VALUES('6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'fpview_follow_up', 'fp', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.fpview_follow_up');
 INSERT INTO dot.configured_entities VALUES('95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'fpview_registration', 'fp', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.fpview_registration');
 INSERT INTO dot.configured_entities VALUES('173793ff-491d-4c73-8d0b-3903a82d3796', 'hhview_visits', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select *
 from {{ schema }}.hhview_visits');
 INSERT INTO dot.configured_entities VALUES('baf349c9-c919-40ff-a611-61ddc59c2d52', 'iccmview_assessment', 'iccm', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 -- select *
 -- from iccmview_assessment
-
 select
   ia.*,
   ua.child_temperature::real ,
@@ -83,26 +72,19 @@ where
   and fa.uuid = ua.uuid');
 INSERT INTO dot.configured_entities VALUES('50f31569-f2fc-4dc6-af49-4268381e7c13', 'iccmview_assessment_follow_up', 'iccm', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
-
     select * from {{ schema }}.iccmview_assessment_follow_up
-
 )
-
 select *
 from source_data');
 INSERT INTO dot.configured_entities VALUES('d0645118-bd68-4eba-8ead-fad114be86b7', 'mnview_follow_up', 'mn', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select * from {{ schema }}.mnview_follow_up');
 INSERT INTO dot.configured_entities VALUES('57a9fd48-51d8-4dc0-bbd1-a6e0405696cd', 'mnview_registration', 'mn', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 select * from {{ schema }}.mnview_registration');
 INSERT INTO dot.configured_entities VALUES('fade2413-8504-443f-b161-1c5470fc1df3', 'patient', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
     select
         uuid,
@@ -110,21 +92,24 @@ with source_data as (
       from {{ schema }}.contactview_metadata
      where type = ''person''
 )
-
 select *
 from source_data');
 INSERT INTO dot.configured_entities VALUES('eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'pncview_visits', 'pnc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-
 with source_data as (
-
     select * from {{ schema }}.pncview_visits
-
 )
-
 select *
 from source_data');
 
+-- The test validation code checks tests which refer to columns on entity views, if they don't exist, the test cannot
+-- be inserted. This is the correct behavior. However, it causes issues when loading the sample tests below. The
+-- entities these tests refer to are in the data DB dump, not yet loaded. As a workaround we disable validation then
+-- re-enable afterwards. All this goes away with Synthetic data.
+DROP TRIGGER check_test_parameters_validation_trigger ON dot.configured_tests;
+
+
+-- Note these UUIDs get reset by the trigger
 -- Note these UUIDs get reset by the trigger
 -- ?
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, 'Patient ID is not null', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
@@ -152,19 +137,22 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-7
     on patient.uuid = assessment.patient_id
     where assessment.patient_id is null
 )
-
-select distinct uuid
+select
+    distinct uuid,
+    ''patient'' as primary_table,
+    ''uuid'' as primary_table_id_field
 from patient_no_assessment pna
 where (CURRENT_DATE::date - pna.patient_reported::date) >= 1095', '2022-02-01 19:00:00.000 -0500', '2022-02-01 19:00:00.000 -0500', 'Example');
 -- WT-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 8, 'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expression_is_true', '', '', 'name: "t_under_24_months_wrong_dosage"| expression: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"', '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'MoH');
 -- NFP-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca70', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '', 'select
-    a.patient_id as uuid,
+    a.uuid,
+    a.patient_id,
     a.reported,
     a.fp_method_being_used,
     ''dot_model__fpview_registration'' as primary_table,
-    ''patient_id'' as primary_table_id_field
+    ''uuid'' as primary_table_id_field
     from {{ ref(''dot_model__fpview_registration'') }} a
     inner join
     (
@@ -230,6 +218,11 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'eeafde14-6515-30dc-a51c-c
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '2660b519-9946-3e12-9b92-46d4321b1d56', 'DUPLICATE-1', 5, 'Multiple forms of the same activity submitted in a day (PDF-6)', '', '', '50f31569-f2fc-4dc6-af49-4268381e7c13', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Medic unknown');
 -- PDF-7
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '99ac4950-13df-3777-bd27-923e74be9dcb', 'DUPLICATE-1', 7, 'Multiple reporting of specific PNC visits (PDF-7)', '', '', 'eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'possible_duplicate_forms', '', '', 'table_specific_patient_uuid: patient_id| table_specific_uuid: uuid| table_specific_period: day', '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Leah');
+
+-- Reinstate validation
+CREATE TRIGGER check_test_parameters_validation_trigger
+AFTER INSERT OR UPDATE ON dot.configured_tests
+FOR EACH ROW EXECUTE PROCEDURE dot.test_validation_trigger_function();
 
 -- Required for Airflow deployment and easier access to uynderlying data
 -- CREATE SCHEMA data_musoapp;

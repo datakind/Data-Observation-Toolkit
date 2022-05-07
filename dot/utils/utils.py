@@ -559,11 +559,17 @@ def get_test_rows(
                     failing_ids = test_results_df[unique_column_name].tolist()
                     break
 
+        # Special handling for SQL, we'll use mandatory field 'primary_table_id_field' from query
+        if test_type == "custom_sql":
+            unique_column_name = str(
+                test_results_df["primary_table_id_field"].iloc[0]
+            )
+            failing_ids = test_results_df[unique_column_name].tolist()
+
+        # last chance For any test type: if id_column name is set, then use it
         if unique_column_name is None:
-            # Special handling for custom_sql test type
             if (
-                test_type == "custom_sql"
-                and id_column_name is not None
+                id_column_name is not None
                 and id_column_name != ""
             ):
                 unique_column_name = id_column_name

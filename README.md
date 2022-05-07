@@ -31,7 +31,7 @@ a container for running DOT as well as another container for running Superset da
 First make sure you have checked the
 [Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend 
  using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data 
- being tested. 
+ being tested. If running on a Mac M1 chip, you might need to set export DOCKER_DEFAULT_PLATFORM=linux/amd64 and have [Rosetta](https://support.apple.com/en-us/HT211861) installed
  
 ### Building the DOT Docker environment
   
@@ -95,9 +95,15 @@ For example, if you used the provided Medic Muso database dump, you would run wi
 Now time for some real fun!
 
 # Viewing test results
-Your test results will be in the `dot-db`. You can access this from the command line by:
+
+Your test results will be in the `dot-db` container. You can view the results by opening a shell in the dot-db container:
+
+`docker exec -it dot-db /bin/bash`
+
+Then running the psql client locally in that container:
 
 `psql -U postgres -d dot_db`
+
 
 Or if you prefer a database client (like [DBeaver](https://dbeaver.io)), you can use there settings:
 ```
@@ -135,6 +141,38 @@ ORDER BY
    ct.test_type
 ```
 
+Same, but adding in test description and entity names in grouping ...
+
+```
+SELECT
+   tr.run_id,
+   tr.view_name, 
+   ct.test_type,
+   ct.description,
+   ce.entity_name,
+   COUNT(*)
+FROM
+   dot.test_results tr,
+   dot.configured_tests ct,
+   dot.configured_entities ce 
+WHERE
+   tr.test_id = ct.test_id AND
+   ce.entity_id = ct.entity_id
+GROUP BY
+   tr.run_id,
+   tr.view_name, 
+   ct.test_type,
+   ct.description,
+   ce.entity_name
+ORDER BY
+   tr.run_id,
+   tr.view_name, 
+   ct.test_type,
+   ct.description,
+   ce.entity_name
+
+```
+
 ### Linking DOT Data scenarios with configured tests
 
 ```
@@ -154,14 +192,17 @@ WHERE
 SELECT 
    s.*,
    ct.*,
+   ce.entity_name,
    tr.*
 FROM
    dot.scenarios s,
    dot.configured_tests ct,
-   dot.test_results_summary tr
+   dot.test_results_summary tr,
+   dot.configured_entities ce
 WHERE 
    s.scenario_id=ct.scenario_id AND
-   tr.test_id=ct.test_id
+   tr.test_id=ct.test_id AND
+   ce.entity_id = ct.entity_id
 LIMIT 10
 ```
 
@@ -286,6 +327,13 @@ last_updated_by | Person who last updated the test
 
 The UUID in the above example will get overwritten with an automatically generated value. Also, your test must be unique 
 for the project. If you get a key violation it's probably because that test already exists.
+
+#### Test validation
+
+Any insert of update of configured tests will call database function `dot.test_validation`, as defined in 
+[./db/dot/1-schema.sql](./db/dot/1-schema.sql). This function performs some basic validation to ensure test parameters
+are in an expected format. It is not infallable, if there are any issues with test parameters and tests do not execute,
+you can confirm this by looking at columns `test_status` and `test_status_message` in `dot.test_results_summary`.
 
 #### Example `INSERT` statements for adding a new test for each test type:
 
