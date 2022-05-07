@@ -1,3 +1,6 @@
+"""
+Replicates tests in test_utils.py adding the column id_column_name to the schema
+"""
 import uuid
 import logging
 import pandas as pd
@@ -11,7 +14,7 @@ from utils.utils import (  # pylint: disable=wrong-import-order
     get_test_rows,
     setup_custom_logger,
 )
-from utils.connection_utils import (  # pylint: disable=wrong-import-position
+from utils.connection_utils import (  # pylint: disable=wrong-import-position, wrong-import-order
     DbParamsConnection,
 )
 
@@ -23,7 +26,7 @@ class UtilsTest(BaseSelfTestClass):
         # "../db/dot/2-upload_static_data.sql"
         with open(
             "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
-        ) as f:
+        ) as f:  # pylint: disable=invalid-name
             self.create_self_tests_db_schema(
                 "\n".join(
                     [
@@ -51,9 +54,10 @@ class UtilsTest(BaseSelfTestClass):
             project_id="Muso",
             test_parameters="table_specific_reported_date: delivery_date| "
             "table_specific_patient_uuid: patient_id| "
-            "table_specific_uuid: uuid",
+            "table_specific_uuid: uuid| "
+            "table_specific_period: day",
         )
-        expected_test_id = "329bdb85-5f36-372d-bab0-8efd3c2d33b4"
+        expected_test_id = "31cd2301-3632-3f4f-a4bc-e24ac149c31b"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -63,7 +67,7 @@ class UtilsTest(BaseSelfTestClass):
         expected_row = {
             "test_activated": True,
             "project_id": "Muso",
-            "test_id": "329bdb85-5f36-372d-bab0-8efd3c2d33b4",
+            "test_id": expected_test_id,
             "scenario_id": "DUPLICATE-1",
             "priority": 3,
             "description": "",
@@ -76,10 +80,11 @@ class UtilsTest(BaseSelfTestClass):
             "id_column_name": "id_column",
             "test_parameters": "table_specific_reported_date: delivery_date| "
             "table_specific_patient_uuid: patient_id| "
-            "table_specific_uuid: uuid",
+            "table_specific_uuid: uuid| "
+            "table_specific_period: day",
             "last_updated_by": "Lorenzo",
         }
-        for k, v in expected_row.items():
+        for k, v in expected_row.items():  # pylint: disable=invalid-name
             self.assertEqual(
                 v,
                 configured_tests_row.get(k),
@@ -90,10 +95,11 @@ class UtilsTest(BaseSelfTestClass):
     def test_get_test_rows(
         self, mock_get_config_filename
     ):  # pylint: disable=no-value-for-parameter
+        """test get failing rows for custom test"""
         mock_get_config_filename.side_effect = self.mock_get_config_filename
 
         # create data for the core entity
-        # TODO add an utility function to do this
+        # TODO add an utility function to do this  # pylint: disable=fixme
         schema_core, _, conn_core = self.get_self_tests_db_conn(
             connection=DbParamsConnection["project_core"]
         )
@@ -115,7 +121,7 @@ class UtilsTest(BaseSelfTestClass):
         conn_core.commit()
 
         # create data for the failing test rows entity
-        # TODO add an utility function to do this from the test definition
+        # TODO add an utility function to do this from the test definition  # pylint: disable=fixme
         schema_test, _, conn_test = self.get_self_tests_db_conn(
             connection=DbParamsConnection["project_test"]
         )

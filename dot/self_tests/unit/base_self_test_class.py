@@ -130,6 +130,7 @@ class BaseSelfTestClass(unittest.TestCase):
         self,
         additional_query: str = None,
         schema_filepath: str = "../db/dot/1-schema.sql",
+        do_recreate_schema: bool = True,
     ):
         """
         Creates the self tests' schema and runs the queries in `additional_query`
@@ -141,6 +142,8 @@ class BaseSelfTestClass(unittest.TestCase):
             string with valid queries to run
         schema_filepath
             path of the file that creates the schema
+        do_recreate_schema
+            drops and recreates the schema, True by default
 
         Returns
         -------
@@ -154,39 +157,46 @@ class BaseSelfTestClass(unittest.TestCase):
 
         cursor = conn.cursor()
 
-        self.drop_self_tests_db_schema(schema, conn, cursor)
+        try:
+            if do_recreate_schema:
+                self.drop_self_tests_db_schema(schema, conn, cursor)
 
-        query_create = sql.SQL("create schema {name}").format(
-            name=sql.Identifier(schema)
-        )
-        cursor.execute(query_create)
-        conn.commit()
+                query_create = sql.SQL("create schema {name}").format(
+                    name=sql.Identifier(schema)
+                )
+                cursor.execute(query_create)
+                conn.commit()
 
-        with open(schema_filepath, "r") as f:
-            queries = []
-            query_lines = []
-            all_query_lines = []
-            lines = f.readlines()
-            for line in lines:
-                if "create schema" in line.lower():
-                    continue
-                line = line.replace("dot.", f"{schema}.")
-                query_lines.append(line)
-                all_query_lines.append(line)
-                if ";" in line:
-                    queries.append("".join(query_lines))
+            if schema_filepath is not None:
+                with open(schema_filepath, "r") as f:
+                    queries = []
                     query_lines = []
+                    all_query_lines = []
+                    lines = f.readlines()
+                    for line in lines:
+                        if "create schema" in line.lower():
+                            continue
+                        line = line.replace("dot.", f"{schema}.")
+                        query_lines.append(line)
+                        all_query_lines.append(line)
+                        if ";" in line:
+                            queries.append("".join(query_lines))
+                            query_lines = []
 
-            for query in queries:
-                if "create table if not exists" in query.lower():
-                    # execute only table creation queries TODO reconsider
-                    cursor.execute(query)
+                    for query in queries:
+                        if "create table if not exists" in query.lower():
+                            # execute only table creation queries TODO reconsider
+                            cursor.execute(query)
+                            conn.commit()
+
+                    # execute all queries
+                    cursor.execute("".join(all_query_lines))
                     conn.commit()
 
-            # execute all queries
-            cursor.execute("".join(all_query_lines))
-            conn.commit()
+            if additional_query:
+                cursor.execute(additional_query)
+                conn.commit()
 
-        if additional_query:
-            cursor.execute(additional_query)
-            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e

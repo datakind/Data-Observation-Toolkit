@@ -74,15 +74,87 @@ class UtilsTest(BaseSelfTestClass):
             project_id="Muso",
             test_parameters="table_specific_reported_date: delivery_date"
             "| table_specific_patient_uuid: patient_id"
-            "| table_specific_uuid: uuid",
+            "| table_specific_uuid: uuid"
+            "| table_specific_period: day",
         )
-        expected_test_id = "329bdb85-5f36-372d-bab0-8efd3c2d33b4"
+        expected_test_id = "31cd2301-3632-3f4f-a4bc-e24ac149c31b"
         self.assertEqual(
             expected_test_id,
             generated_test_id,
             f"difference in generated_test_id {generated_test_id} "
             f"vs {expected_test_id} for possible_duplicate_forms test",
         )
+
+    @patch("utils.configuration_utils._get_config_filename")
+    def test_possible_duplicate_forms_test_malformed(
+        self, mock_get_config_filename
+    ):  # pylint: disable=no-value-for-parameter
+        """test a possible_duplicate_forms w missing parameters"""
+        mock_get_config_filename.side_effect = self.mock_get_config_filename
+
+        with self.assertRaises(Exception):
+            self.create_self_tests_db_schema(
+                additional_query="INSERT INTO self_tests_dot.configured_tests "
+                "VALUES(TRUE,"
+                "'Muso',"
+                "'7f78de0e-8268-3da6-8845-9a445457cc9a',"
+                "'DUPLICATE-1',"
+                "3, '', '', '', "
+                "'66f5d13a-8f74-4f97-836b-334d97932781',"
+                "'possible_duplicate_forms', '', '',"
+                "'table_specific_reported_date: delivery_date| "
+                "table_specific_patient_uuid: patient_id| "
+                "table_specific_uuid: uuid',"
+                "'2021-12-23 19:00:00.000 -0500',"
+                "'2021-12-23 19:00:00.000 -0500',"
+                "'Lorenzo');",
+                schema_filepath=None,
+                do_recreate_schema=False,
+            )
+
+    @patch("utils.configuration_utils._get_config_filename")
+    def test_custom_sql_test_malformed(
+        self, mock_get_config_filename
+    ):  # pylint: disable=no-value-for-parameter
+        """test a possible_duplicate_forms w missing parameters"""
+        mock_get_config_filename.side_effect = self.mock_get_config_filename
+
+        with self.assertRaises(Exception):
+            self.create_self_tests_db_schema(
+                additional_query="""
+                    INSERT INTO self_tests_dot.configured_tests 
+                    VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca70',
+                    'TREAT-1', 5, 'Test for new family planning method (NFP-1)', 
+                    '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', 
+                    '', '', 'SELECT
+                              patient_id as primary_table_id_field,
+                              value
+                            FROM {{ ref(''dot_model__fpview_registration'') }} a
+                            LIMIT 2', 
+                    '2021-12-23 19:00:00.000 -0500', 
+                    '2021-12-23 19:00:00.000 -0500', 
+                    'Leah');""",
+                schema_filepath=None,
+                do_recreate_schema=False,
+            )
+
+    @patch("utils.configuration_utils._get_config_filename")
+    def test_get_configured_tests_row_reference_error(
+        self, mock_get_config_filename
+    ):  # pylint: disable=no-value-for-parameter
+        """test not found exception if the test has wrong parameters"""
+        mock_get_config_filename.side_effect = self.mock_get_config_filename
+
+        with self.assertRaises(ReferenceError):
+            _ = get_configured_tests_row(
+                test_type="possible_duplicate_forms",
+                entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
+                column="",
+                project_id="Muso",
+                test_parameters="table_specific_reported_date: delivery_date"
+                "| table_specific_patient_uuid: patient_id"
+                "| table_specific_uuid: uuid",
+            )
 
     @patch("utils.configuration_utils._get_config_filename")
     def test_get_configured_tests_row(
@@ -98,9 +170,10 @@ class UtilsTest(BaseSelfTestClass):
             project_id="Muso",
             test_parameters="table_specific_reported_date: delivery_date"
             "| table_specific_patient_uuid: patient_id"
-            "| table_specific_uuid: uuid",
+            "| table_specific_uuid: uuid"
+            "| table_specific_period: day",
         )
-        expected_test_id = "329bdb85-5f36-372d-bab0-8efd3c2d33b4"
+        expected_test_id = "31cd2301-3632-3f4f-a4bc-e24ac149c31b"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -110,7 +183,7 @@ class UtilsTest(BaseSelfTestClass):
         expected_row = {
             "test_activated": True,
             "project_id": "Muso",
-            "test_id": "329bdb85-5f36-372d-bab0-8efd3c2d33b4",
+            "test_id": expected_test_id,
             "scenario_id": "DUPLICATE-1",
             "priority": 3,
             "description": "",
@@ -120,10 +193,10 @@ class UtilsTest(BaseSelfTestClass):
             "test_type": "possible_duplicate_forms",
             "column_name": "",
             "column_description": "",
-            # "id_column_name": "",
             "test_parameters": "table_specific_reported_date: delivery_date"
             "| table_specific_patient_uuid: patient_id"
-            "| table_specific_uuid: uuid",
+            "| table_specific_uuid: uuid"
+            "| table_specific_period: day",
             "last_updated_by": "Lorenzo",
         }
         for k, v in expected_row.items():
@@ -175,7 +248,7 @@ class UtilsTest(BaseSelfTestClass):
             DROP SCHEMA IF EXISTS {schema_core} CASCADE;
             CREATE SCHEMA IF NOT EXISTS {schema_core};
             CREATE TABLE IF NOT EXISTS {schema_core}.dot_model__fpview_registration(
-                uuid VARCHAR(300),
+                patient_id VARCHAR(300),
                 value VARCHAR(1000) NOT NULL
             );
             INSERT INTO {schema_core}.dot_model__fpview_registration
@@ -205,7 +278,7 @@ class UtilsTest(BaseSelfTestClass):
             f"""
             CREATE SCHEMA IF NOT EXISTS {schema_test};
             CREATE TABLE IF NOT EXISTS {schema_test}.tr_dot_model__fpview_registration_id10(
-                uuid VARCHAR(300) PRIMARY KEY,
+                patient_id VARCHAR(300) PRIMARY KEY,
                 value VARCHAR(1000) NOT NULL,
                 primary_table_id_field VARCHAR(300)
             );
