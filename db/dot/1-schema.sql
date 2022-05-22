@@ -219,12 +219,12 @@ BEGIN
 		    END CASE;
 	   WHEN test_type = 'possible_duplicate_forms' then
 		    CASE
-               WHEN test_parameters ~ 'table_specific_reported_date:.*?\|\s?table_specific_.*?:.*?\|\s?table_specific_.*?:.*?\|\s?table_specific_period:' THEN
+               WHEN test_parameters ~ 'table_specific_.*?:.*?\|\s?table_specific_.*?:.*?\|\s?table_specific_period:' THEN
 		          SELECT TRUE INTO validation_status;
 		       ELSE
 		          SELECT FALSE INTO validation_status;
 		          RAISE NOTICE '%', test_parameters;
-		          RAISE EXCEPTION 'possible_duplicate_forms test parameters must be: table_specific_reported_date: <DATE COLUMN FOR FORM REPORTED DATE> | table_specific_patient_uuid: <UNIQUE PATIENT ID COLUMN NAME>| table_specific_uuid: <TABLE UUID COLUMN NAME>| table_specific_period: <PERIOD, eg day>';
+		          RAISE EXCEPTION 'possible_duplicate_forms test parameters must be: table_specific_patient_uuid: <UNIQUE PATIENT ID COLUMN NAME>| table_specific_uuid: <TABLE UUID COLUMN NAME>| table_specific_period: <PERIOD, eg day>';
 		    END CASE;
 	   WHEN test_type = 'not_null' or test_type = 'unique' then
 		    case
