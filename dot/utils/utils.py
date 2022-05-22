@@ -12,7 +12,6 @@ import psycopg2 as pg
 
 import pandas as pd
 from pandas import json_normalize
-from sqlalchemy import Table
 from utils.connection_utils import get_db_params_from_config, get_metadata
 from utils.configuration_utils import DbParamsConfigFile, DbParamsConnection
 
