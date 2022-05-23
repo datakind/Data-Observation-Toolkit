@@ -8,7 +8,7 @@ from psycopg2 import sql
 
 from utils.utils import (
     get_short_test_name,
-    get_test_id,
+    get_configured_tests_row,
     run_sub_process,
     get_entity_id_from_name,
     dot_model_PREFIX,
@@ -259,9 +259,11 @@ def extract_df_from_dbt_test_results_json(
         entity_name = entity_name.split("_id")[0]
 
         entity_id = get_entity_id_from_name(project_id, entity_name)
-        test_id = get_test_id(
+        configured_test_row = get_configured_tests_row(
             test_type, entity_id, column_name, project_id, test_parameters
         )
+        test_id = configured_test_row["test_id"]
+        id_column_name = configured_test_row.get("id_column_name")
 
         # Get result view SQL definition
         if test_status == "fail":
@@ -284,6 +286,7 @@ def extract_df_from_dbt_test_results_json(
             "entity_id": entity_id,
             "test_type": test_type,
             "column_name": column_name,
+            "id_column_name": id_column_name,
             "test_parameters": test_parameters,
             "test_status": test_status,
             "test_status_message": test_message,

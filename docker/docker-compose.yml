@@ -25,6 +25,7 @@ services:
     volumes:
       - ../dot:/app
       - ./dot/dot_config.yml:/app/config/dot_config.yml
+      - ../dot/config/example/self_tests/dot_config_docker.yml:/app/self_tests/data/base_self_test/dot_config.yml
 
   superset:
     image: apache/superset

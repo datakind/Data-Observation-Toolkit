@@ -24,7 +24,7 @@ parser.add_argument(
 project_id = parser.parse_args().project_id
 
 # Generate the run_id
-run_id = run_id = uuid.uuid4()
+run_id = uuid.uuid4()
 
 # noinspection PyBroadException
 try:

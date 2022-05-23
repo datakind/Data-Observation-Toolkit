@@ -3,17 +3,53 @@ from typing import Tuple, Iterable, Optional
 
 import psycopg2 as pg
 import sqlalchemy as sa
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from utils.configuration_utils import (
     DbParamsConfigFile,
     DbParamsConnection,
     load_credentials,
 )
 
+metadata: sa.sql.schema.MetaData = None
 
-def create_sqlalchemy_engine(db_credentials):
+
+def get_metadata() -> sa.sql.schema.MetaData:
+    """
+    Gets the metadata local object to this module
+
+    Returns
+    -------
+        MetaData
+    """
+    return metadata
+
+
+def refresh_db_metadata(
+    engine: sa.engine.base.Engine, schema: str
+) -> sa.sql.schema.MetaData:
+    """
+    Refresh ddbb metadata. Slow operation!
+    Can be called from anywhere and refreshes the object local object to this module
+
+    @param engine: engine for connection to database
+    @return: updated database metadata
+    """
+    global metadata
+    metadata = MetaData(engine, reflect=True, schema=schema)
+
+
+def create_sqlalchemy_engine(db_credentials: dict) -> sa.engine.base.Engine:
     """
     Default configs for creating engine
+
+    Parameters
+    ----------
+    db_credentials : dict
+        db credentials dictiontay
+    Returns
+    -------
+    engine :
+        SQL alchemy engine
     """
     engine = create_engine(
         "postgresql://"
@@ -31,6 +67,7 @@ def create_sqlalchemy_engine(db_credentials):
         executemany_values_page_size=1000,
         executemany_batch_page_size=200,
     )
+    refresh_db_metadata(engine, db_credentials["schema"])
     return engine
 
 

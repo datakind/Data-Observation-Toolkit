@@ -12,7 +12,7 @@ import psycopg2 as pg
 
 import pandas as pd
 from pandas import json_normalize
-from utils.connection_utils import get_db_params_from_config
+from utils.connection_utils import get_db_params_from_config, get_metadata
 from utils.configuration_utils import DbParamsConfigFile, DbParamsConnection
 
 dot_model_PREFIX = "dot_model__"
@@ -180,6 +180,44 @@ def get_test_id(
     UUID: str
         UUID3 id read from dot.configured_tests
     """
+    test_id = get_configured_tests_row(
+        test_type, entity_id, column, project_id, test_parameters
+    ).get("test_id")
+
+    if test_id is None:
+        raise ReferenceError(
+            f"test_id not found in db with test_type {test_type}, entity_id {entity_id} "
+            f"and test_parameters {test_parameters}"
+        )
+
+    return test_id
+
+
+def get_configured_tests_row(
+    test_type: str, entity_id: str, column: str, project_id: str, test_parameters: str
+) -> dict:
+    """Gets the full row of configured_tests fields by finding the corresponding
+    record in dot.configured_tests
+
+    Parameters
+    ----------
+    test_type : str
+        Test type, aligns with column test_type on dot.configured_tests
+        (eg not_null)
+    entity_id : str
+        Entity if available, primary table for custom SQL tests
+    column : str
+        Column if test has column
+    project_id : str
+        Project id for run, eg 'Muso'
+    test_parameters : str
+        Test parameters string, SQL for custom SQL tests
+
+    Returns
+    -------
+    row: dict
+        dictionary with all the row attributes
+    """
     # TODO this should be cached with one query on dot.configured_tests
     # TODO REALLY we should have id's in the generated test files, where they propagate
     #  through dbt and ge. Everything
@@ -198,7 +236,7 @@ def get_test_id(
     # Generate a query that will match our test details and return test_id
     query = f"""
                     SELECT
-                        test_id
+                        *
                     FROM
                         {schema_dot}.configured_tests
                     WHERE
@@ -210,12 +248,10 @@ def get_test_id(
                 """
     # print(query)
 
-    test_id = pd.read_sql(query, conn_dot)
-    if test_id.empty:
+    test_row = pd.read_sql(query, conn_dot)
+    if test_row.empty:
         raise ReferenceError(f"test_id not found in db with query {query}")
-    test_id = str(test_id.iloc[0, 0])
-
-    return test_id
+    return test_row.iloc[0].to_dict()
 
 
 def save_tests_to_db(
@@ -242,10 +278,17 @@ def save_tests_to_db(
     schema_dot, engine_dot, _ = get_db_params_from_config(
         DbParamsConfigFile["dot_config.yml"], DbParamsConnection["dot"], project_id
     )
+
     test_rows.to_sql(
         "test_results", engine_dot, index=False, if_exists="append", schema=schema_dot
     )
-    test_summary.to_sql(
+
+    # get current columns from metadata - schema could have less columns than results
+    test_results_summary_columns = [
+        c.name
+        for c in get_metadata().tables.get(f"{schema_dot}.test_results_summary").columns
+    ]
+    test_summary.loc[:, test_results_summary_columns].to_sql(
         "test_results_summary",
         engine_dot,
         index=False,
@@ -379,7 +422,9 @@ def generate_failing_passing_dfs(
     return test_failing_rows, test_passing_rows
 
 
-def get_test_rows(tests_summary, run_id, project_id, logger: logging.Logger):
+def get_test_rows(
+    tests_summary: pd.DataFrame, run_id: str, project_id: str, logger: logging.Logger
+) -> pd.DataFrame:
     """Generates a test_results dataframe using the test_summary dataframe and
     associated test results DB views
 
@@ -432,6 +477,7 @@ def get_test_rows(tests_summary, run_id, project_id, logger: logging.Logger):
         test_type = row["test_type"]
         column_name = row["column_name"]
         test_status = row["test_status"]
+        id_column_name = row.get("id_column_name")
         test_parameters = row["test_parameters"]
 
         # Get entity data from the DB
@@ -472,6 +518,7 @@ def get_test_rows(tests_summary, run_id, project_id, logger: logging.Logger):
         # Interrogate results dataframes to identify unique id field and failing rows
         # TODO: How can we simplify this logic, and better still include in the
         # DB somehow. What's here if not generic for all deployments
+        unique_column_name = None
         for c in id_col_names:
             if c in test_results_df_cols:
                 # If a list of ids, use those
@@ -513,13 +560,17 @@ def get_test_rows(tests_summary, run_id, project_id, logger: logging.Logger):
 
         # Special handling for SQL, we'll use mandatory field 'primary_table_id_field' from query
         if test_type == "custom_sql":
-            unique_column_name = str(
-                test_results_df["primary_table_id_field"].iloc[0]
-            )
+            unique_column_name = str(test_results_df["primary_table_id_field"].iloc[0])
             failing_ids = test_results_df[unique_column_name].tolist()
 
+        # last chance For any test type: if id_column name is set, then use it
+        if unique_column_name is None:
+            if id_column_name is not None and id_column_name != "":
+                unique_column_name = id_column_name
+                failing_ids = test_results_df[unique_column_name].tolist()
+
         # Catch gaps in logic
-        if unique_column_name == None:
+        if unique_column_name is None:
             logger.error(
                 "Unknown ID column for test_type "
                 + test_type
