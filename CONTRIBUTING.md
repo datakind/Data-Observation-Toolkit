@@ -139,4 +139,4 @@ We use [GitHub Actions](https://github.com/datakind/Data-Observation-Toolkit/act
 for continuous integration. 
 See [here](https://docs.github.com/en/actions) for GitHub's documentation.
 
-The [`.github/workflows/lint.yml`](.github/workflows/lint.yml) file configures the CI.
+The [`.github/workflows/lint.yml`](.github/workflows/ci.yml) file configures the CI.
