@@ -908,7 +908,7 @@ And finally you can run the tests from a terminal as follows:
 pytest dot/self_tests/unit
 ```
 
-Alternativelly, if you want to instead run the tests from the docker container itself, you will need to:
+Alternatively, if you want to instead run the tests from the docker container itself, you will need to:
 - start a terminal on the container
 ```
 docker exec -it dot /bin/bash
