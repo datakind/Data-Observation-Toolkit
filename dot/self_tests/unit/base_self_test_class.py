@@ -40,7 +40,7 @@ class BaseSelfTestClass(unittest.TestCase):
         os.makedirs(test_output_path)
 
     @staticmethod
-    def mock_get_config_filename(path: str) -> str:
+    def mock_get_filename_safely(path: str) -> str:
         """
         Mock paths of config files
 
@@ -58,10 +58,10 @@ class BaseSelfTestClass(unittest.TestCase):
             return path
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def get_self_tests_db_conn(
         self,
-        mock_get_config_filename,
+        mock_get_filename_safely,
         connection: DbParamsConnection = DbParamsConnection["dot"],
     ) -> Tuple[
         str, sa.engine.base.Engine, pg.extensions.connection
@@ -71,7 +71,7 @@ class BaseSelfTestClass(unittest.TestCase):
 
         Parameters
         ----------
-        mock_get_config_filename
+        mock_get_filename_safely
 
         Returns
         -------
@@ -79,7 +79,7 @@ class BaseSelfTestClass(unittest.TestCase):
             engine: sa.engine.base.Engine
             conn: pg.extensions.connection
         """
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
         schema, engine, conn = get_db_params_from_config(
             DbParamsConfigFile["dot_config.yml"],
             connection,

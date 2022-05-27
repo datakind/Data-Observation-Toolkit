@@ -40,12 +40,12 @@ class UtilsTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_configured_tests_row(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test yaml file creation for 1 core entity -see file in filename below"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         configured_tests_row = get_configured_tests_row(
             test_type="possible_duplicate_forms",
@@ -91,12 +91,12 @@ class UtilsTest(BaseSelfTestClass):
                 f"difference in {k}; {v} vs {configured_tests_row[k]}",
             )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_test_rows(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test get failing rows for custom test"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         # create data for the core entity
         # TODO add an utility function to do this  # pylint: disable=fixme
