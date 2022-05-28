@@ -1,0 +1,44 @@
+version: '3.1'
+
+services:
+  dot_db:
+      image: postgres:9.6.23-buster
+      container_name: dot-db
+      ports:
+          - "5433:5432"
+      environment:
+          POSTGRES_DB: dot_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      volumes:
+          - .:/db_dumps
+          - ../db/dot:/docker-entrypoint-initdb.d
+
+  dot:
+    build:
+        context: ..
+        dockerfile: ./docker/dot/Dockerfile
+    image: dot
+    container_name: dot
+    environment:
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ../dot:/app
+      - ./dot/dot_config.yml:/app/config/dot_config.yml
+      - ../dot/config/example/self_tests/dot_config_docker.yml:/app/self_tests/data/base_self_test/dot_config.yml
+
+  superset:
+    image: apache/superset
+    ports:
+        - "8080:8088"
+    container_name: superset
+
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "445:443"
+    volumes:
+      - ./appsmith/stacks:/appsmith-stacks
+    #restart: unless-stopped
