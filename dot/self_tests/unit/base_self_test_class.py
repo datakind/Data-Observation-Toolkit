@@ -72,6 +72,8 @@ class BaseSelfTestClass(unittest.TestCase):
         Parameters
         ----------
         mock_get_filename_safely
+        connection: DbParamsConnection
+            enum for the connection to dot
 
         Returns
         -------
@@ -85,6 +87,7 @@ class BaseSelfTestClass(unittest.TestCase):
             connection,
             "Muso",
         )
+
         return schema, engine, conn
 
     def drop_self_tests_db_schema(
@@ -149,6 +152,15 @@ class BaseSelfTestClass(unittest.TestCase):
         -------
         None
         """
+        schema_list = []
+        for member in list(DbParamsConnection.__members__):
+            (
+                schema, _, _
+            ) = self.get_self_tests_db_conn(
+                connection=DbParamsConnection[member]
+            )
+            schema_list.append(schema)
+
         (
             schema,
             _,
@@ -159,13 +171,16 @@ class BaseSelfTestClass(unittest.TestCase):
 
         try:
             if do_recreate_schema:
-                self.drop_self_tests_db_schema(schema, conn, cursor)
+                for sch in schema_list:
+                    self.drop_self_tests_db_schema(sch, conn, cursor)
 
-                query_create = sql.SQL("create schema {name}").format(
-                    name=sql.Identifier(schema)
-                )
-                cursor.execute(query_create)
-                conn.commit()
+                    query_create = sql.SQL("""
+                        CREATE SCHEMA {name};
+                    """).format(
+                        name=sql.Identifier(sch)
+                    )
+                    cursor.execute(query_create)
+                    conn.commit()
 
             if schema_filepath is not None:
                 with open(schema_filepath, "r") as f:
@@ -177,6 +192,10 @@ class BaseSelfTestClass(unittest.TestCase):
                         if "create schema" in line.lower():
                             continue
                         line = line.replace("dot.", f"{schema}.")
+                        if "CREATE EXTENSION" in line:
+                            # i.e. this assumes that the extension is already installed,
+                            # coulc be improved
+                            continue
                         query_lines.append(line)
                         all_query_lines.append(line)
                         if ";" in line:

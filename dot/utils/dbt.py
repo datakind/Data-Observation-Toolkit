@@ -20,6 +20,7 @@ from utils.configuration_utils import (
     get_dbt_config_model_paths,
     get_dbt_config_test_paths,
     adapt_core_entities,
+    _get_filename_safely,
 )
 
 
@@ -183,7 +184,10 @@ def run_dbt_chv_tests(logger):
 
 
 def extract_df_from_dbt_test_results_json(
-    run_id: str, project_id: str, logger: logging.Logger
+    run_id: str,
+    project_id: str,
+    logger: logging.Logger,
+    target_path: str="dbt/target",
 ) -> pd.DataFrame:
     """Function to parse GE csv results file (that was created by parse_results) to
     form a test_summaries standard
@@ -197,6 +201,9 @@ def extract_df_from_dbt_test_results_json(
              Current run project ID
           logger: Logging object
              Custom logging object
+          target_path: str
+             Target path for test results, defaults to "dbt/target"
+             Modified within tests only
 
        Returns
        -------
@@ -215,11 +222,11 @@ def extract_df_from_dbt_test_results_json(
     # results are in _archive files
     for t in ["all", "test"]:
         suffix = t if t == "test" else "archive"
-        filename = "dbt/target/run_results_" + suffix + ".json"
+        filename = _get_filename_safely(f"{target_path}/run_results_{suffix}.json")
         with open(filename) as f:
             dbt_results[t] = json.load(f)
         # Manifest, see https://docs.getdbt.com/reference/artifacts/manifest-json
-        filename = "dbt/target/manifest_" + suffix + ".json"
+        filename = f"{target_path}/manifest_{suffix}.json"
         with open(filename) as f:
             manifest[t] = json.load(f)
 
