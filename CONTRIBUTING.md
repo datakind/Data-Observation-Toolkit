@@ -45,7 +45,11 @@ If you use the docker compose:
 into `dot/self_tests/data/base_self_test`, renaming it to `dot_config.yml`.
 
 If you are using a local db, use this [config.yaml](dot/config/example/self_tests/dot_config_github.yml) 
-as a refence; probably you will only have to change the password (and maybe the port?)
+as a reference; probably you will only have to change the password (and maybe the port?).
+Also you will need to install the following UUID related extensions:
+```
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
 
 #### Check that everything is fine
 
