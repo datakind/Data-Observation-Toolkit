@@ -17,5 +17,5 @@ Muso_db:
   pass: postgres
   port: 5432
   dbname: dot_db
-  schema: public
+  schema: self_tests_public
   threads: 4
