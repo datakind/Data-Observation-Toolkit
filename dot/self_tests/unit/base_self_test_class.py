@@ -154,9 +154,7 @@ class BaseSelfTestClass(unittest.TestCase):
         """
         schema_list = []
         for member in list(DbParamsConnection.__members__):
-            (
-                schema, _, _
-            ) = self.get_self_tests_db_conn(
+            (schema, _, _) = self.get_self_tests_db_conn(
                 connection=DbParamsConnection[member]
             )
             schema_list.append(schema)
@@ -174,11 +172,11 @@ class BaseSelfTestClass(unittest.TestCase):
                 for sch in schema_list:
                     self.drop_self_tests_db_schema(sch, conn, cursor)
 
-                    query_create = sql.SQL("""
+                    query_create = sql.SQL(
+                        """
                         CREATE SCHEMA {name};
-                    """).format(
-                        name=sql.Identifier(sch)
-                    )
+                    """
+                    ).format(name=sql.Identifier(sch))
                     cursor.execute(query_create)
                     conn.commit()
 

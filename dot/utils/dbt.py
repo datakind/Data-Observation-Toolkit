@@ -1,3 +1,5 @@
+""" dbt utility functions """
+
 import logging
 import os
 import json
@@ -187,7 +189,7 @@ def extract_df_from_dbt_test_results_json(
     run_id: str,
     project_id: str,
     logger: logging.Logger,
-    target_path: str="dbt/target",
+    target_path: str = "dbt/target",
 ) -> pd.DataFrame:
     """Function to parse GE csv results file (that was created by parse_results) to
     form a test_summaries standard
@@ -255,7 +257,8 @@ def extract_df_from_dbt_test_results_json(
 
         test_parameters = str(test_parameters)
 
-        # Custom sql (dbt/tests/*.sql) tests do not have the same structure and we have to get SQL from file
+        # Custom sql (dbt/tests/*.sql) tests do not have the same structure
+        # and we have to get SQL from file
         if test_type is None:
             if f"{get_dbt_config_test_paths()}/" in node["original_file_path"]:
                 test_type = "custom_sql"

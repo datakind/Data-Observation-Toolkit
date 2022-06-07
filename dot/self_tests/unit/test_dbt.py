@@ -1,3 +1,5 @@
+""" tests for utils/dbt.py """
+
 import uuid
 import logging
 
@@ -23,13 +25,10 @@ class DbtUtilsTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
-    # @patch("utils.configuration_utils._get_filename_safely")
     def test_extract_df_from_dbt_test_results_json(
-        self, # mock_get_filename_safely_dbt_test_results
+        self,
     ):  # pylint: disable=no-value-for-parameter
         """test yaml file creation for 1 core entity -see file in filename below"""
-        # mock_get_filename_safely_dbt_test_results.side_effect = self.mock_get_filename_safely_dbt_test_results
-
         run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
         output = extract_df_from_dbt_test_results_json(
             run_id=run_id,
@@ -38,10 +37,12 @@ class DbtUtilsTest(BaseSelfTestClass):
             target_path="self_tests/data/dot_output_files/dbt/target",
         )
         expected = pd.read_csv(
-            "self_tests/data/expected/extract_df_from_dbt_test_results_json.csv", index_col=0
+            "self_tests/data/expected/extract_df_from_dbt_test_results_json.csv",
+            index_col=0,
         ).fillna("")
         skip_columns = [
-            "run_id", "id_column_name",
+            "run_id",
+            "id_column_name",
         ]
         pd.testing.assert_frame_equal(
             output.drop(columns=skip_columns), expected.drop(columns=skip_columns)
