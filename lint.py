@@ -1,6 +1,11 @@
+""" runs lint on the project sources"""
+
 import argparse
 import logging
+import sys
 from pylint.lint import Run
+
+sys.path.append("./dot")
 
 
 logging.getLogger().setLevel(logging.INFO)
@@ -28,35 +33,30 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-path = str(args.path)
+PATH = str(args.path)
 threshold = float(args.threshold)
 
-logging.info(
-    "PyLint Starting | " "Path: {} | " "Threshold: {} ".format(path, threshold)
-)
+logging.info(f"PyLint Starting | " "Path: {PATH} | " "Threshold: {threshold}")
 
-results = Run([path], do_exit=False)
+results = Run([PATH], do_exit=False)
 
 final_score = results.linter.stats.global_note
 
 if final_score < threshold:
 
-    message = (
+    MESSAGE = (
         "PyLint Failed | "
         "Score: {} | "
         "Threshold: {} ".format(final_score, threshold)
     )
 
-    logging.error(message)
-    raise Exception(message)
+    logging.error(MESSAGE)
+    raise Exception(MESSAGE)
 
-else:
-    message = (
-        "PyLint Passed | "
-        "Score: {} | "
-        "Threshold: {} ".format(final_score, threshold)
-    )
+MESSAGE = (
+    "PyLint Passed | " "Score: {} | " "Threshold: {} ".format(final_score, threshold)
+)
 
-    logging.info(message)
+logging.info(MESSAGE)
 
-    exit(0)
+sys.exit(0)
