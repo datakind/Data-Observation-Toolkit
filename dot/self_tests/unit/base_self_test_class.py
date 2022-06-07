@@ -190,10 +190,6 @@ class BaseSelfTestClass(unittest.TestCase):
                         if "create schema" in line.lower():
                             continue
                         line = line.replace("dot.", f"{schema}.")
-                        if "CREATE EXTENSION" in line:
-                            # i.e. this assumes that the extension is already installed,
-                            # coulc be improved
-                            continue
                         query_lines.append(line)
                         all_query_lines.append(line)
                         if ";" in line:
