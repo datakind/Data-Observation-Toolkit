@@ -60,12 +60,12 @@ class UtilsTest(BaseSelfTestClass):
         test_summary = pd.DataFrame(test_summary_row, index=[0])
         return test_summary, run_id
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_test_id(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test yaml file creation for 1 core entity -see file in filename below"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         generated_test_id = get_test_id(
             test_type="possible_duplicate_forms",
@@ -85,12 +85,12 @@ class UtilsTest(BaseSelfTestClass):
             f"vs {expected_test_id} for possible_duplicate_forms test",
         )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_possible_duplicate_forms_test_malformed(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test a possible_duplicate_forms w missing parameters"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         with self.assertRaises(Exception):
             self.create_self_tests_db_schema(
@@ -112,12 +112,12 @@ class UtilsTest(BaseSelfTestClass):
                 do_recreate_schema=False,
             )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_custom_sql_test_malformed(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test a possible_duplicate_forms w missing parameters"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         with self.assertRaises(Exception):
             self.create_self_tests_db_schema(
@@ -138,12 +138,12 @@ class UtilsTest(BaseSelfTestClass):
                 do_recreate_schema=False,
             )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_configured_tests_row_reference_error(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test not found exception if the test has wrong parameters"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         with self.assertRaises(ReferenceError):
             _ = get_configured_tests_row(
@@ -156,12 +156,12 @@ class UtilsTest(BaseSelfTestClass):
                 "| table_specific_uuid: uuid",
             )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_configured_tests_row(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test yaml file creation for 1 core entity -see file in filename below"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         configured_tests_row = get_configured_tests_row(
             test_type="possible_duplicate_forms",
@@ -206,36 +206,36 @@ class UtilsTest(BaseSelfTestClass):
                 f"difference in {k}; {v} vs {configured_tests_row[k]}",
             )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_entity_id_from_name(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test for get_entity_id_from_name"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         self.assertEqual(
             "66f5d13a-8f74-4f97-836b-334d97932781",
             get_entity_id_from_name("Muso", "dot_model__ancview_delivery"),
         )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_entity_name_from_id(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test for get_entity_name_from_id"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         self.assertEqual(
             "dot_model__ancview_delivery",
             get_entity_name_from_id("Muso", "66f5d13a-8f74-4f97-836b-334d97932781"),
         )
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_get_test_rows(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test for get_test_rows"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         # create data for the core entity
         # TODO add an utility function to do this
@@ -304,8 +304,8 @@ class UtilsTest(BaseSelfTestClass):
         )
 
     @pytest.mark.skip("temporarily disabled")
-    @patch("utils.configuration_utils._get_config_filename")
-    def test_save_tests_to_db(self, mock_get_config_filename):
+    @patch("utils.configuration_utils._get_filename_safely")
+    def test_save_tests_to_db(self, mock_get_filename_safely):
         """
         TODO to make it work
               1. take care of FK when inserting test_rows: configured_tests, runs, etc
@@ -313,13 +313,13 @@ class UtilsTest(BaseSelfTestClass):
                     ==> improve helper functions
         Parameters
         ----------
-        mock_get_config_filename
+        mock_get_filename_safely
 
         Returns
         -------
 
         """
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         test_summary, run_id = self.get_test_summary()
         test_row_dict = {

@@ -40,7 +40,7 @@ class BaseSelfTestClass(unittest.TestCase):
         os.makedirs(test_output_path)
 
     @staticmethod
-    def mock_get_config_filename(path: str) -> str:
+    def mock_get_filename_safely(path: str) -> str:
         """
         Mock paths of config files
 
@@ -58,10 +58,10 @@ class BaseSelfTestClass(unittest.TestCase):
             return path
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def get_self_tests_db_conn(
         self,
-        mock_get_config_filename,
+        mock_get_filename_safely,
         connection: DbParamsConnection = DbParamsConnection["dot"],
     ) -> Tuple[
         str, sa.engine.base.Engine, pg.extensions.connection
@@ -71,7 +71,9 @@ class BaseSelfTestClass(unittest.TestCase):
 
         Parameters
         ----------
-        mock_get_config_filename
+        mock_get_filename_safely
+        connection: DbParamsConnection
+            enum for the connection to dot
 
         Returns
         -------
@@ -79,12 +81,13 @@ class BaseSelfTestClass(unittest.TestCase):
             engine: sa.engine.base.Engine
             conn: pg.extensions.connection
         """
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
         schema, engine, conn = get_db_params_from_config(
             DbParamsConfigFile["dot_config.yml"],
             connection,
             "Muso",
         )
+
         return schema, engine, conn
 
     def drop_self_tests_db_schema(
@@ -149,6 +152,13 @@ class BaseSelfTestClass(unittest.TestCase):
         -------
         None
         """
+        schema_list = []
+        for member in list(DbParamsConnection.__members__):
+            (schema, _, _) = self.get_self_tests_db_conn(
+                connection=DbParamsConnection[member]
+            )
+            schema_list.append(schema)
+
         (
             schema,
             _,
@@ -159,13 +169,16 @@ class BaseSelfTestClass(unittest.TestCase):
 
         try:
             if do_recreate_schema:
-                self.drop_self_tests_db_schema(schema, conn, cursor)
+                for sch in schema_list:
+                    self.drop_self_tests_db_schema(sch, conn, cursor)
 
-                query_create = sql.SQL("create schema {name}").format(
-                    name=sql.Identifier(schema)
-                )
-                cursor.execute(query_create)
-                conn.commit()
+                    query_create = sql.SQL(
+                        """
+                        CREATE SCHEMA {name};
+                    """
+                    ).format(name=sql.Identifier(sch))
+                    cursor.execute(query_create)
+                    conn.commit()
 
             if schema_filepath is not None:
                 with open(schema_filepath, "r") as f:
