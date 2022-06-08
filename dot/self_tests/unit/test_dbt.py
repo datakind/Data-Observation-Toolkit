@@ -2,7 +2,7 @@
 
 import uuid
 import logging
-
+from mock import patch
 from .base_self_test_class import BaseSelfTestClass
 
 import pandas as pd
@@ -25,10 +25,16 @@ class DbtUtilsTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_extract_df_from_dbt_test_results_json(
-        self,
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
-        """test yaml file creation for 1 core entity -see file in filename below"""
+        """
+        test output df generated from dbt results in json format
+        (dbt target directory)
+        """
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
+
         run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
         output = extract_df_from_dbt_test_results_json(
             run_id=run_id,
