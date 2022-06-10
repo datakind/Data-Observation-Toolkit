@@ -119,8 +119,11 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2
 -- GE-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f18', 'BIAS-1', 6, 'Test for miscalibrated thermometer (GE-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 'child_temperature_pre_chw', '', $${"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}$$, '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Medic unknown');
 -- ??
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '', $$
-{"query": "with patient_no_assessment as (select
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        with patient_no_assessment as (select
         patient.uuid as uuid,
         patient.reported as patient_reported
     from {{ ref(''dot_model__patient'') }} patient
@@ -133,50 +136,86 @@ select
     ''patient'' as primary_table,
     ''uuid'' as primary_table_id_field
 from patient_no_assessment pna
-where (CURRENT_DATE::date - pna.patient_reported::date) >= 1095"
-}
-$$, '2022-02-01 19:00:00.000 -0500', '2022-02-01 19:00:00.000 -0500', 'Example');
+where (CURRENT_DATE::date - pna.patient_reported::date) >= 1095
+    $query$::text)
+)::json, '2022-02-01 19:00:00.000 -0500', '2022-02-01 19:00:00.000 -0500', 'Example');
 -- WT-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 8, 'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expression_is_true', '', '', $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$, '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'MoH');
 -- NFP-1
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '', $${"query":"select
-    a.uuid,
-    a.patient_id,
-    a.reported,
-    a.fp_method_being_used,
-    ''dot_model__fpview_registration'' as primary_table,
-    ''uuid'' as primary_table_id_field
-    from {{ ref(''dot_model__fpview_registration'') }} a
-    inner join
-    (
-        select distinct
-        patient_id,
-        max(reported) reported
-        from {{ ref(''dot_model__fpview_registration'') }}
-        where fp_method_being_used in (''vasectomie'',''female sterilization'')
-        group by patient_id
-    ) b on a.patient_id = b.patient_id and a.reported > b.reported
-    and fp_method_being_used not in (''vasectomie'',''female sterilization'')
-    and fp_method_being_used not like ''%condom%''"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        select
+            a.patient_id,
+            a.reported,
+            a.fp_method_being_used,
+            ''dot_model__fpview_registration'' as primary_table,
+            ''patient_id'' as primary_table_id_field
+        from {{ ref(''dot_model__fpview_registration'') }} a
+            inner join
+            (
+                select distinct
+                patient_id,
+                max(reported) reported
+                from {{ ref(''dot_model__fpview_registration'') }}
+                where fp_method_being_used in (''vasectomie'',''female sterilization'')
+                group by patient_id
+            ) b on a.patient_id = b.patient_id and a.reported > b.reported
+            and fp_method_being_used not in (''vasectomie'',''female sterilization'')
+            and fp_method_being_used not like ''%condom%''
+    $query$::text)
+)::json,'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        select
+            a.uuid,
+            a.patient_id,
+            a.reported,
+            a.fp_method_being_used,
+            ''dot_model__fpview_registration'' as primary_table,
+            ''uuid'' as primary_table_id_field
+        from {{ ref(''dot_model__fpview_registration'') }} a
+        inner join
+        (
+            select distinct
+            patient_id,
+            max(reported) reported
+            from {{ ref(''dot_model__fpview_registration'') }}
+            where fp_method_being_used in (''vasectomie'',''female sterilization'')
+            group by patient_id
+        ) b on a.patient_id = b.patient_id and a.reported > b.reported
+        and fp_method_being_used not in (''vasectomie'',''female sterilization'')
+        and fp_method_being_used not like ''%condom%''
+    $query$::text)
+)::json, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 -- LMP-1
-INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05ec','INCONSISTENT-1',9,'Erroneous LMP Date (LMP-1)','10','Put a validation on the application that no LMP should be less than 4 weeks at the time of registration','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','',$${"query":"select
-        ap.uuid,
-        ap.days_since_lmp,
-        cnt.appearances as tot_appearances,
-        ''dot_model__ancview_pregnancy'' as primary_table,
-        ''uuid'' as primary_table_id_field
-from (
-select
-        round(ap.days_since_lmp::float) days_since_lmp,
-          count(*) appearances
-        from {{ ref(''dot_model__ancview_pregnancy'') }} ap
-    where ap.lmp_date is not null and round(ap.days_since_lmp::float)<=28
-    group by round(ap.days_since_lmp::float)
-) cnt
-join
-{{ ref(''dot_model__ancview_pregnancy'') }} ap
-on cnt.days_since_lmp = ap.days_since_lmp
-order by round(ap.days_since_lmp::float)"}$$,'2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
+INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05ec','INCONSISTENT-1',9,'Erroneous LMP Date (LMP-1)','10','Put a validation on the application that no LMP should be less than 4 weeks at the time of registration','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        select
+                ap.uuid,
+                ap.days_since_lmp,
+                cnt.appearances as tot_appearances,
+                ''dot_model__ancview_pregnancy'' as primary_table,
+                ''uuid'' as primary_table_id_field
+        from (
+        select
+                round(ap.days_since_lmp::float) days_since_lmp,
+                  count(*) appearances
+                from {{ ref(''dot_model__ancview_pregnancy'') }} ap
+            where ap.lmp_date is not null and round(ap.days_since_lmp::float)<=28
+            group by round(ap.days_since_lmp::float)
+        ) cnt
+        join
+        {{ ref(''dot_model__ancview_pregnancy'') }} ap
+        on cnt.days_since_lmp = ap.days_since_lmp
+        order by round(ap.days_since_lmp::float)
+    $query$::text)
+)::json,'2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','Leah');
 -- LMP-2
 -- Deactivating, as logic needs further refinement with Medic
 -- INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',8,'LMP Date at Beginning of Month (LMP-2)','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
