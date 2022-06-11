@@ -166,31 +166,6 @@ format('{%s: %s}',
             and fp_method_being_used not like '%condom%'
     $query$::text)
 )::json,'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '',
-format('{%s: %s}',
-    to_json('query'::text),
-    to_json($query$
-        select
-            a.uuid,
-            a.patient_id,
-            a.reported,
-            a.fp_method_being_used,
-            'dot_model__fpview_registration' as primary_table,
-            'uuid' as primary_table_id_field
-        from {{ ref('dot_model__fpview_registration') }} a
-        inner join
-        (
-            select distinct
-            patient_id,
-            max(reported) reported
-            from {{ ref('dot_model__fpview_registration') }}
-            where fp_method_being_used in ('vasectomie','female sterilization')
-            group by patient_id
-        ) b on a.patient_id = b.patient_id and a.reported > b.reported
-        and fp_method_being_used not in ('vasectomie','female sterilization')
-        and fp_method_being_used not like '%condom%'
-    $query$::text)
-)::json, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 -- LMP-1
 INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05ec','INCONSISTENT-1',9,'Erroneous LMP Date (LMP-1)','10','Put a validation on the application that no LMP should be less than 4 weeks at the time of registration','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','',
 format('{%s: %s}',
