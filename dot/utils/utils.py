@@ -222,6 +222,8 @@ def get_configured_tests_row(
     # TODO REALLY we should have id's in the generated test files, where they propagate
     #  through dbt and ge. Everything
 
+    test_parameters = json.dumps(test_parameters)
+
     # else is a bit of a hack. Unfortunately this might not be supported by dbt and ge
     schema_dot, _, conn_dot = get_db_params_from_config(
         DbParamsConfigFile["dot_config.yml"], DbParamsConnection["dot"], project_id
@@ -233,6 +235,15 @@ def get_configured_tests_row(
     if column is None:
         column = ""
 
+    prefix = 'query' if test_type == 'custom_sql' else ''
+
+    # This whole function must go away, we need to pass test_ids through dbt and ge. Below is
+    # temporary.
+    test_params_clause = ''
+    if test_parameters != '':
+        test_params_clause = f""" AND regexp_replace(CAST(test_parameters AS VARCHAR), '\W+', '', 'g') =
+                             '{prefix}{test_parameters}'"""
+
     # Generate a query that will match our test details and return test_id
     query = f"""
                     SELECT
@@ -242,9 +253,8 @@ def get_configured_tests_row(
                     WHERE
                         test_type = '{test_type}' AND
                         entity_id = '{entity_id}' AND
-                        column_name = '{column}' AND
-                        regexp_replace(test_parameters, '\W+', '', 'g') =
-                        '{test_parameters}'
+                        column_name = '{column}'
+                        {test_params_clause}
                 """
     # print(query)
 
