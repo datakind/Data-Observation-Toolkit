@@ -111,11 +111,11 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '52d7352e-56ee-3084-9c67-e
 -- ?
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, 'Disallowed FP methods entered in form', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', $${"values": ["oral mini-pill (progestogen)", "male condom", "female sterilization", "iud", "oral combination pill", "implants", "injectible"]}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
 -- ??
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, 'Pregnancy danger signs with no pregnancy record', '', '', 'b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'relationships', 'pregnancy_uuid', '', $${"name": "danger_signs_with_no_pregnancy", "to": "ref(''dot_model__ancview_pregnancy'')", "field": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, 'Pregnancy danger signs with no pregnancy record', '', '', 'b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'relationships', 'pregnancy_uuid', '', $${"name": "danger_signs_with_no_pregnancy", "to": "ref('dot_model__ancview_pregnancy')", "field": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
 -- MDSF-2
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8b3f974c-16f2-4048-920c-f28086b9b411', 'MISSED-3', 9, 'Missing danger sign  follow up (MDSF-2)', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', $${"name": "missed_danger_sign_followup", "to": "ref(''dot_model__ancview_danger_sign'')", "field": "pregnancy_uuid", "where": "danger_sign_at_reg=True" }$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8b3f974c-16f2-4048-920c-f28086b9b411', 'MISSED-3', 9, 'Missing danger sign  follow up (MDSF-2)', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', $${"name": "missed_danger_sign_followup", "to": "ref('dot_model__ancview_danger_sign')", "field": "pregnancy_uuid", "where": "danger_sign_at_reg=True" }$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 -- MAVF-1
-INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2bb57f104357', 'MISSED-3', 8, 'Expectant women should be followed up by a health worker (MAVF-1)', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', $${"name": "missed_anc_visit_followup", "to": "ref(''dot_model__ancview_pregnancy_visit'')", "field": "pregnancy_uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
+INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '1305077b-718d-4a0c-b08c-2bb57f104357', 'MISSED-3', 8, 'Expectant women should be followed up by a health worker (MAVF-1)', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'relationships', 'uuid', '', $${"name": "missed_anc_visit_followup", "to": "ref('dot_model__ancview_pregnancy_visit')", "field": "pregnancy_uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 -- GE-1
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f18', 'BIAS-1', 6, 'Test for miscalibrated thermometer (GE-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 'child_temperature_pre_chw', '', $${"key": "reported_by","quantity": "child_temperature_pre_chw","form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}$$, '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Medic unknown');
 -- ??
@@ -126,15 +126,15 @@ format('{%s: %s}',
         with patient_no_assessment as (select
         patient.uuid as uuid,
         patient.reported as patient_reported
-    from {{ ref(''dot_model__patient'') }} patient
-    left join {{ ref(''dot_model__iccmview_assessment'') }} assessment
+    from {{ ref('dot_model__patient') }} patient
+    left join {{ ref('dot_model__iccmview_assessment') }} assessment
     on patient.uuid = assessment.patient_id
     where assessment.patient_id is null
 )
 select
     distinct uuid,
-    ''patient'' as primary_table,
-    ''uuid'' as primary_table_id_field
+    'patient' as primary_table,
+    'uuid' as primary_table_id_field
 from patient_no_assessment pna
 where (CURRENT_DATE::date - pna.patient_reported::date) >= 1095
     $query$::text)
@@ -150,20 +150,20 @@ format('{%s: %s}',
             a.patient_id,
             a.reported,
             a.fp_method_being_used,
-            ''dot_model__fpview_registration'' as primary_table,
-            ''patient_id'' as primary_table_id_field
-        from {{ ref(''dot_model__fpview_registration'') }} a
+            'dot_model__fpview_registration' as primary_table,
+            'patient_id' as primary_table_id_field
+        from {{ ref('dot_model__fpview_registration') }} a
             inner join
             (
                 select distinct
                 patient_id,
                 max(reported) reported
-                from {{ ref(''dot_model__fpview_registration'') }}
-                where fp_method_being_used in (''vasectomie'',''female sterilization'')
+                from {{ ref('dot_model__fpview_registration') }}
+                where fp_method_being_used in ('vasectomie','female sterilization')
                 group by patient_id
             ) b on a.patient_id = b.patient_id and a.reported > b.reported
-            and fp_method_being_used not in (''vasectomie'',''female sterilization'')
-            and fp_method_being_used not like ''%condom%''
+            and fp_method_being_used not in ('vasectomie','female sterilization')
+            and fp_method_being_used not like '%condom%'
     $query$::text)
 )::json,'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '62665f35-bff9-4304-a496-76619c895a19', 'MISSED-1', 3, 'Patient with no assessment', '', '', 'fade2413-8504-443f-b161-1c5470fc1df3', 'custom_sql', '', '',
@@ -175,20 +175,20 @@ format('{%s: %s}',
             a.patient_id,
             a.reported,
             a.fp_method_being_used,
-            ''dot_model__fpview_registration'' as primary_table,
-            ''uuid'' as primary_table_id_field
-        from {{ ref(''dot_model__fpview_registration'') }} a
+            'dot_model__fpview_registration' as primary_table,
+            'uuid' as primary_table_id_field
+        from {{ ref('dot_model__fpview_registration') }} a
         inner join
         (
             select distinct
             patient_id,
             max(reported) reported
-            from {{ ref(''dot_model__fpview_registration'') }}
-            where fp_method_being_used in (''vasectomie'',''female sterilization'')
+            from {{ ref('dot_model__fpview_registration') }}
+            where fp_method_being_used in ('vasectomie','female sterilization')
             group by patient_id
         ) b on a.patient_id = b.patient_id and a.reported > b.reported
-        and fp_method_being_used not in (''vasectomie'',''female sterilization'')
-        and fp_method_being_used not like ''%condom%''
+        and fp_method_being_used not in ('vasectomie','female sterilization')
+        and fp_method_being_used not like '%condom%'
     $query$::text)
 )::json, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 -- LMP-1
@@ -200,18 +200,18 @@ format('{%s: %s}',
                 ap.uuid,
                 ap.days_since_lmp,
                 cnt.appearances as tot_appearances,
-                ''dot_model__ancview_pregnancy'' as primary_table,
-                ''uuid'' as primary_table_id_field
+                'dot_model__ancview_pregnancy' as primary_table,
+                'uuid' as primary_table_id_field
         from (
         select
                 round(ap.days_since_lmp::float) days_since_lmp,
                   count(*) appearances
-                from {{ ref(''dot_model__ancview_pregnancy'') }} ap
+                from {{ ref('dot_model__ancview_pregnancy') }} ap
             where ap.lmp_date is not null and round(ap.days_since_lmp::float)<=28
             group by round(ap.days_since_lmp::float)
         ) cnt
         join
-        {{ ref(''dot_model__ancview_pregnancy'') }} ap
+        {{ ref('dot_model__ancview_pregnancy') }} ap
         on cnt.days_since_lmp = ap.days_since_lmp
         order by round(ap.days_since_lmp::float)
     $query$::text)
