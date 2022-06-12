@@ -3,13 +3,14 @@
 import uuid
 import logging
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
-
 import pandas as pd
+
+from .base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.dbt import (  # pylint: disable=wrong-import-order
     extract_df_from_dbt_test_results_json,
+    get_view_definition,
 )
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
 
@@ -52,4 +53,22 @@ class DbtUtilsTest(BaseSelfTestClass):
         ]
         pd.testing.assert_frame_equal(
             output.drop(columns=skip_columns), expected.drop(columns=skip_columns)
+        )
+
+    @patch("utils.configuration_utils._get_filename_safely")
+    def test_get_view_definition(
+        self, mock_get_filename_safely
+    ):  # pylint: disable=no-value-for-parameter
+        """
+        test for function get_view_definition; needs db connection & the test view
+        """
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
+
+        self.assertEqual(
+            get_view_definition("Muso", "tr_dot_model__fpview_registration_value"),
+            " SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list\n"
+            "   FROM self_tests_public_tests.dot_model__fpview_registration\n"
+            "  WHERE dot_model__fpview_registration.value::character varying::text "
+            "~~ '-%'::text\n"
+            " HAVING count(*) > 0;",
         )
