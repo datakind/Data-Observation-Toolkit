@@ -943,7 +943,7 @@ dot_db:
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5433
   dbname: dot_db
-  schema: public
+  schema: self_tests_public
   threads: 4
 ```
 
