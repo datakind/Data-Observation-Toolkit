@@ -23,8 +23,8 @@ from utils.configuration_utils import (
     adapt_core_entities,
 )
 from utils.dbt_logs import (
-    read_dbt_output_files,
-    process_dbt_result_row,
+    read_dbt_logs,
+    process_dbt_logs_row,
 )
 
 
@@ -244,12 +244,12 @@ def extract_df_from_dbt_test_results_json(
 
     logger.info("Extracting DBT test summary dataframe ...")
 
-    dbt_results = read_dbt_output_files(target_path)
+    dbt_results = read_dbt_logs(target_path)
 
     # Extract test results and save to dataframe
     dbt_tests_summary = {}
     for row in dbt_results:
-        processed_row = process_dbt_result_row(row)
+        processed_row = process_dbt_logs_row(row)
 
         entity_id = get_entity_id_from_name(project_id, processed_row.entity_name)
         configured_test_row = get_configured_tests_row(

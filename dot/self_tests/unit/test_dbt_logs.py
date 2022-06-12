@@ -1,16 +1,24 @@
 """ tests for utils/dbt.py """
 
 import ast
-import json
-
+import logging
 from .base_self_test_class import BaseSelfTestClass
 
-from utils.dbt_logs import (
+from utils.dbt import (  # pylint: disable=wrong-import-order
+    run_dbt_core,
+    archive_previous_dbt_results,
+    create_failed_dbt_test_models,
+    run_dbt_test,
+)
+from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
+
+# functions under test
+from utils.dbt_logs import (  # pylint: disable=wrong-import-order
     DbtOutputProcessedRow,
-    read_dbt_output_files,
-    get_test_parameters,
-    get_test_type,
-    process_dbt_result_row,
+    read_dbt_logs,
+    _get_test_parameters,
+    _get_test_type,
+    process_dbt_logs_row,
 )
 
 
@@ -25,12 +33,12 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
-    def test_read_dbt_output_files(self):
+    def test_read_dbt_logs(self):
         """
         This test is not really so useful; a better test would run dbt on the inputs
         and check that the logs have not changed
         """
-        output = read_dbt_output_files(
+        output = read_dbt_logs(
             target_path="self_tests/data/dot_output_files/dbt/target",
         )
         with open("self_tests/data/expected/read_dbt_output_files.json", "r") as f:
@@ -48,7 +56,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             "r",
         ) as f:
             node = ast.literal_eval(f.read())
-            output = get_test_parameters(node, "not_negative_string_column")
+            output = _get_test_parameters(node, "not_negative_string_column")
             self.assertEqual(output, "{'name': 'value'}")
 
     def test_get_test_type(self):
@@ -56,18 +64,21 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         Gets test type from dbt manifest metadata
         """
         node = {"test_metadata": {"name": "test_type_x"}}
-        self.assertEqual(get_test_type(node), "test_type_x")
+        self.assertEqual(_get_test_type(node), "test_type_x")
         node = {"test_metadata": {}, "original_file_path": "tests/Muso/test_x.sql"}
-        self.assertEqual(get_test_type(node), "custom_sql")
+        self.assertEqual(_get_test_type(node), "custom_sql")
         node = {"test_metadata": {}}
-        self.assertEqual(get_test_type(node), None)
+        self.assertEqual(_get_test_type(node), None)
 
-    def test_process_dbt_result_row(self):
-        """ """
+    def test_process_dbt_logs_row(self):
+        """
+        Same as test_read_dbt_output_files, will not detect a problem due to dbt
+        version changing logs
+        """
         with open("self_tests/data/expected/read_dbt_output_files.json", "r") as f:
             # below contains lines read from logs passed through read_dbt_output_files
             expected_lines = ast.literal_eval(f.read())
-            res = process_dbt_result_row(expected_lines[0])
+            res = process_dbt_logs_row(expected_lines[0])
             expected = DbtOutputProcessedRow(
                 unique_id="test.dbt_model_1.not_negative_string_column_dot_model__fpview_registration_value__value.e15d766b3b",
                 test_type="not_negative_string_column",

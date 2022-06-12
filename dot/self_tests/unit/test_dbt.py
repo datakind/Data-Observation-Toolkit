@@ -20,8 +20,13 @@ class DbtUtilsTest(BaseSelfTestClass):
 
     def setUp(self) -> None:
         # "../db/dot/2-upload_static_data.sql"
-        with open("self_tests/data/queries/configured_tests_dbt_core.sql", "r") as f:
-            self.create_self_tests_db_schema(f.read())
+        with open("self_tests/data/queries/configured_tests_dbt_core.sql", "r") as f1:
+            queries = f1.read()
+            with open(
+                "self_tests/data/queries/dbt_core_generated_objects.sql", "r"
+            ) as f2:
+                queries = "\n".join([queries, f2.read()])
+                self.create_self_tests_db_schema(queries)
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()

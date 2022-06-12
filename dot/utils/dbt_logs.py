@@ -1,6 +1,9 @@
 """
 Utility functions for dbt that read results from logs (i.e. dbt `target`
  directory) thus may have to be changed when upgrading dbt versions
+
+Could be better solved as a class with methods to read logs and get row but
+we have not used classes extensively in DOT for now
 """
 import json
 from dataclasses import dataclass
@@ -27,7 +30,7 @@ class DbtOutputProcessedRow:
     short_test_name: str
 
 
-def read_dbt_output_files(target_path: str, suffix: str = "archive") -> dict:
+def read_dbt_logs(target_path: str, suffix: str = "archive") -> dict:
     """
     Read generated json files. Assumes the cleanup has run and most recent
     results are in _archive files
@@ -58,9 +61,10 @@ def read_dbt_output_files(target_path: str, suffix: str = "archive") -> dict:
     ]
 
 
-def get_test_parameters(node: dict, test_type: str) -> str:
+def _get_test_parameters(node: dict, test_type: str) -> str:
     """
     Figures out test parameters from the dbt logs
+    INTERNAL function, do not use
 
     Parameters
     ----------
@@ -96,9 +100,10 @@ def get_test_parameters(node: dict, test_type: str) -> str:
     return str(test_parameters)
 
 
-def get_test_type(node):
+def _get_test_type(node):
     """
     Figures out test type from the dbt logs
+    INTERNAL function, do not use
 
     Parameters
     ----------
@@ -118,7 +123,7 @@ def get_test_type(node):
     return test_type
 
 
-def process_dbt_result_row(row: dict) -> dict:
+def process_dbt_logs_row(row: dict) -> dict:
     """
     Figures out parameters from each of the tests of the dbt output rows
 
@@ -134,14 +139,14 @@ def process_dbt_result_row(row: dict) -> dict:
     """
     unique_id = row["unique_id"]
     node = row["node"]
-    test_type = get_test_type(node)
+    test_type = _get_test_type(node)
     test_status = row["status"].lower()
     test_message = row["message"].lower() if row["message"] else ""
 
     column_name = node.get("column_name")
     entity_name = node["original_file_path"].split("/")[-1].split(".")[0]
 
-    test_parameters = get_test_parameters(node, test_type)
+    test_parameters = _get_test_parameters(node, test_type)
 
     # For custom sql tests the view name has "id_XX" at the end, needs to be stripped
     entity_name = entity_name.split("_id")[0]
