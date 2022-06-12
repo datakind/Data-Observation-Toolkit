@@ -218,9 +218,9 @@ def get_configured_tests_row(
     row: dict
         dictionary with all the row attributes
     """
-    # TODO this should be cached with one query on dot.configured_tests
+
     # TODO REALLY we should have id's in the generated test files, where they propagate
-    #  through dbt and ge. Everything
+    #  through dbt and ge.
 
     test_parameters = json.dumps(test_parameters)
 
@@ -242,7 +242,7 @@ def get_configured_tests_row(
     test_params_clause = ''
     if test_parameters != '':
         test_params_clause = f""" AND regexp_replace(CAST(test_parameters AS VARCHAR), '\W+', '', 'g') =
-                             '{prefix}{test_parameters}'"""
+                             '{prefix}{test_parameters}';"""
 
     # Generate a query that will match our test details and return test_id
     query = f"""
@@ -262,7 +262,6 @@ def get_configured_tests_row(
     if test_row.empty:
         raise ReferenceError(f"test_id not found in db with query {query}")
     return test_row.iloc[0].to_dict()
-
 
 def save_tests_to_db(
     test_rows: pd.DataFrame,

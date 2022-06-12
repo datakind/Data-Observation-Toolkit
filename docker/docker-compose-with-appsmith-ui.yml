@@ -23,22 +23,24 @@ services:
     environment:
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ../dot:/app
-      - ./dot/dot_config.yml:/app/config/dot_config.yml
-      - ../dot/config/example/self_tests/dot_config_docker.yml:/app/self_tests/data/base_self_test/dot_config.yml
+      - ../:/app
+      - ./dot/dot_config.yml:/app/dot/config/dot_config.yml
+      - ../dot/config/example/self_tests/dot_config_docker.yml:/app/dot/self_tests/data/base_self_test/dot_config.yml
 
-  superset:
-    image: apache/superset
-    ports:
-        - "8080:8088"
-    container_name: superset
+  #superset:
+  #  image: apache/superset
+  #  ports:
+  #      - "8080:8088"
+  #  container_name: superset
 
   appsmith:
     image: index.docker.io/appsmith/appsmith-ce
     container_name: appsmith
     ports:
       - "82:80"
-      - "445:443"
+      - "446:443"
     volumes:
       - ./appsmith/stacks:/appsmith-stacks
     #restart: unless-stopped
+
+

@@ -86,6 +86,7 @@ below.
 
 Then to run DOT:
 
+`cd dot`
 `python3 ./run_everything.py --project_id '<project name>'`
 
 For example, if you used the provided Medic Muso database dump, you would run with ...
@@ -872,8 +873,7 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 Assuming you would like to run the tests locally, as preparation steps, you will need to:
 - create a local env for python via either venv or conda
-- run `pip install -r dot/requirements_data_confidence.txt`
-- run `pip install -r dot/requirements_test.txt`
+- run `pip install -r dot/requirements_dot.txt`
 - prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
 only, or you could use a local instance of a Postgres DB)
 - prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
