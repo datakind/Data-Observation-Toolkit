@@ -1,0 +1,37 @@
+name: Lint
+
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: dot_db
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: black, lint & self_tests (pre-commit actions)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r dot/requirements_dot.txt
+          cp dot/config/example/self_tests/dot_config_github.yml dot/self_tests/data/base_self_test/dot_config.yml
+          ./setup_hooks.sh
+          .git/hooks/pre-commit
