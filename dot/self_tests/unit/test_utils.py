@@ -33,8 +33,7 @@ class UtilsTest(BaseSelfTestClass):
             self.create_self_tests_db_schema(f.read())
 
     def tearDown(self) -> None:
-        print("Hi")
-        #self.drop_self_tests_db_schema()
+        self.drop_self_tests_db_schema()
 
     @staticmethod
     def get_test_summary() -> Tuple[pd.DataFrame, uuid.UUID]:
