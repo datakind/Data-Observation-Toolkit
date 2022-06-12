@@ -17,12 +17,12 @@ class CoreEntitiesCreationTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_yaml_creation(
-        self, mock_get_config_filename
+        self, mock_get_filename_safely
     ):  # pylint: disable=no-value-for-parameter
         """test yaml file creation for 1 core entity -see file in filename below"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         schema, _, conn = self.get_self_tests_db_conn()
         output_dir = "self_tests/output/test_yaml_creation"
