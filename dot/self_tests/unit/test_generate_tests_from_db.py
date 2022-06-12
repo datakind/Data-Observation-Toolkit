@@ -19,7 +19,7 @@ class GenerateTestsFromDbTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
-    @pytest.mark.skip("temp")
+    @pytest.mark.skip("intermediate commit - WIP for this test")
     @patch("utils.configuration_utils._get_filename_safely")
     def test_generate_tests_from_db(
         self, mock_get_filename_safely
