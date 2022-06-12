@@ -913,10 +913,6 @@ Alternatively, if you want to instead run the tests from the docker container it
 ```
 docker exec -it dot /bin/bash
 ```
-- install test requirements as follows (the tool itself is already installed)
-```
-pip install -r dot/requirements_test.txt
-```
 - and run the tests
 ```
 pytest self_tests/unit
