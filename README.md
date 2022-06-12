@@ -458,7 +458,7 @@ Tables are defined as follows:
 | scenarios | The DOT Taxonomy scenario for each test |
 | test_types | The available test types for each test, eg null, unique, custom_sql |
 | scenario_test_types | The test types that apply for any given scenario |
-| test_parameters_interface | Interface parameters required for each test type. Note: Not currently used but will be in future |
+| test_parameters_interface | JSON object defining Interface parameters required for each test type. Note: Not currently used but will be in future |
 | run_log | Log of DOT runs, with stop/start times and failure message |
 | test_results | Main test results table, indicating test fails |
 | test_results_summary | Aggregated test results for each run |
@@ -871,12 +871,56 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 #### Running self-tests
 
+##### Using Docker
+
+The recommended way is to run self-tests in Docker, as this is how dot is typically deployed and 
+ensures you're testing the exact same environment. 
+
+- Set [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
+`dot/self_tests/data/base_self_test` as follows ...
+
+```
+dot:
+  save_passed_tests: False
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_dot
+  threads: 4
+Muso_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+```
+
+- Start a terminal on the container
+```
+docker exec -it dot /bin/bash
+```
+- Run the tests
+```
+pytest self_tests/unit
+```
+
+##### On your local machine
+
 Assuming you would like to run the tests locally, as preparation steps, you will need to:
-- create a local env for python via either venv or conda
-- run `pip install -r dot/requirements_dot.txt`
-- prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
+- Create a local env for python via either venv or conda
+- Make sure your Python version aligns with that in `.github/workflows/lint.yml`
+- Run `pip install -r dot/requirements_dot.txt`
+- Prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
 only, or you could use a local instance of a Postgres DB)
-- prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
+- Prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
 `dot/self_tests/data/base_self_test` with the same structure as the [dot_config.yml](dot/config/example/dot_config.yml) 
 for the DOT; should look like something as follows (note that the config below points to DB in the docker container):
 ```
@@ -908,15 +952,6 @@ And finally you can run the tests from a terminal as follows:
 pytest dot/self_tests/unit
 ```
 
-Alternatively, if you want to instead run the tests from the docker container itself, you will need to:
-- start a terminal on the container
-```
-docker exec -it dot /bin/bash
-```
-- and run the tests
-```
-pytest self_tests/unit
-```
 
 #### Guidelines for adding new tests
 - Existing tests are at [the self-tests folder](dot/self_tests/unit)
