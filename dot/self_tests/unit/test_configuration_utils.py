@@ -687,16 +687,16 @@ class ConfigUtilsTest(BaseSelfTestClass):
                 self.assertListEqual(output_lines, ref_lines)
 
     @staticmethod
-    @patch("utils.configuration_utils._get_config_filename")
+    @patch("utils.configuration_utils._get_filename_safely")
     def test_create_config_file_exception(
-        mock_get_config_filename,
+        mock_get_filename_safely,
     ):  # pylint: disable=no-value-for-parameter
         """Test exceptions for create_config_file function"""
 
         def fake(path):
             raise Exception
 
-        mock_get_config_filename.side_effect = fake
+        mock_get_filename_safely.side_effect = fake
         with pytest.raises(Exception) as exec_info:
             _create_config_file(
                 "non_existing_path",
@@ -707,10 +707,10 @@ class ConfigUtilsTest(BaseSelfTestClass):
             )
         assert isinstance(exec_info.value, Exception)
 
-    @patch("utils.configuration_utils._get_config_filename")
-    def test_dbt_config_custom_schema_output_objects(self, mock_get_config_filename):
+    @patch("utils.configuration_utils._get_filename_safely")
+    def test_dbt_config_custom_schema_output_objects(self, mock_get_filename_safely):
         """test get_dbt_config_custom_schema_output_objects"""
-        mock_get_config_filename.side_effect = self.mock_get_config_filename
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         assert get_dbt_config_custom_schema_output_objects() == "tests"
         assert get_dbt_config_custom_schema_output_objects() == "tests"
