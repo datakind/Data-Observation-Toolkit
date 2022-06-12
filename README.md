@@ -899,7 +899,7 @@ Muso_db:
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
   dbname: dot_db
-  schema: public
+  schema: self_tests_public
   threads: 4
 ```
 
@@ -909,6 +909,7 @@ docker exec -it dot /bin/bash
 ```
 - Run the tests
 ```
+cd dot
 pytest self_tests/unit
 ```
 
