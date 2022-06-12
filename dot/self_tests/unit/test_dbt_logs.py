@@ -2,6 +2,8 @@
 
 import ast
 import logging
+import pytest
+from mock import patch
 from .base_self_test_class import BaseSelfTestClass
 
 from utils.dbt import (  # pylint: disable=wrong-import-order
@@ -59,10 +61,15 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             output = _get_test_parameters(node, "not_negative_string_column")
             self.assertEqual(output, "{'name': 'value'}")
 
-    def test_get_test_type(self):
+    @patch("utils.configuration_utils._get_filename_safely")
+    def test_get_test_type(
+        self, mock_get_filename_safely
+    ):  # pylint: disable=no-value-for-parameter
         """
         Gets test type from dbt manifest metadata
         """
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
+
         node = {"test_metadata": {"name": "test_type_x"}}
         self.assertEqual(_get_test_type(node), "test_type_x")
         node = {"test_metadata": {}, "original_file_path": "tests/Muso/test_x.sql"}
@@ -90,3 +97,35 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                 short_test_name="tr_dot_model__fpview_registration_value",
             )
             self.assertEqual(res, expected)
+
+    @pytest.mark.skip("WIP")
+    def test_read_dbt_logs_safe(self):
+        """
+        Will detect a change in logs due to dbt versions
+        """
+        # 1. Run all the dbt actions -better wrapped in a function? -
+        #    - may be fine since there are some that do not really belong to dbt
+        project_id = "Muso"
+        logger = setup_custom_logger("self_tests/output/test.log", logging.INFO)
+        run_dbt_core(project_id, logger)
+        archive_previous_dbt_results(logger)
+        create_failed_dbt_test_models(project_id, logger, "view")
+        run_dbt_test(project_id, logger)
+
+        # 2. test that the outputs are still ok
+        output = read_dbt_logs(
+            target_path="dbt/target",  # i.e. the usual execution path
+        )
+        with open("self_tests/data/expected/read_dbt_output_files.json", "r") as f:
+            expected = ast.literal_eval(f.read())
+        self.assertEqual(len(output), len(expected))
+        for (out_line, exp_line) in zip(output, expected):
+            print(exp_line)
+            for exp_k, exp_v in exp_line.items():
+                if exp_k in ["timing", "execution_time"]:
+                    continue
+                self.assertEqual(
+                    out_line.get(exp_k),
+                    exp_v,
+                    f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
+                )

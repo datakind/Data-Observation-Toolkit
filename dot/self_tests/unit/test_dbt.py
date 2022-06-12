@@ -2,8 +2,8 @@
 
 import uuid
 import logging
-from mock import patch
 import pandas as pd
+from mock import patch
 
 from .base_self_test_class import BaseSelfTestClass
 
