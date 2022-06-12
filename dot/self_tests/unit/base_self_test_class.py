@@ -22,6 +22,7 @@ from utils.connection_utils import (  # pylint: disable=wrong-import-position
 )
 from utils.configuration_utils import (  # pylint: disable=wrong-import-position
     dot_config_FILENAME,
+    DBT_PROJECT_FINAL_FILENAME,
 )
 
 
@@ -56,6 +57,8 @@ class BaseSelfTestClass(unittest.TestCase):
             return "self_tests/data/base_self_test/dot_config.yml"
         if path == "./config/example/project_name/dbt/dbt_project.yml":
             return path
+        if path == DBT_PROJECT_FINAL_FILENAME:
+            return "./config/example/project_name/dbt/dbt_project.yml"
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     @patch("utils.configuration_utils._get_filename_safely")

@@ -412,7 +412,8 @@ def _get_dbt_config_key(key: str, dbt_config: Optional[dict] = None) -> str:
                   e.g. models_Muso
     """
     if dbt_config is None:
-        with open(DBT_PROJECT_FINAL_FILENAME) as f:
+        filename = _get_filename_safely(DBT_PROJECT_FINAL_FILENAME)
+        with open(filename) as f:
             dbt_config = yaml.load(f, Loader=yaml.FullLoader)
 
     if len(dbt_config[key]) != 1:

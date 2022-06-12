@@ -2,7 +2,6 @@
 
 import ast
 import logging
-import pytest
 from mock import patch
 from .base_self_test_class import BaseSelfTestClass
 
@@ -98,7 +97,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             )
             self.assertEqual(res, expected)
 
-    @pytest.mark.skip("WIP")
+    # @pytest.mark.skip("WIP")
     def test_read_dbt_logs_safe(self):
         """
         Will detect a change in logs due to dbt versions
@@ -119,10 +118,17 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         with open("self_tests/data/expected/read_dbt_output_files.json", "r") as f:
             expected = ast.literal_eval(f.read())
         self.assertEqual(len(output), len(expected))
-        for (out_line, exp_line) in zip(output, expected):
-            print(exp_line)
+        for exp_line in expected:
+            unique_id = exp_line["unique_id"]
+            out_lines = [l for l in output if l.get("unique_id") == unique_id]
+            self.assertEqual(
+                len(out_lines),
+                1,
+                f"there should be 1 and only 1 output w unique_id {unique_id}",
+            )
+            out_line = out_lines[0]
             for exp_k, exp_v in exp_line.items():
-                if exp_k in ["timing", "execution_time"]:
+                if exp_k in ["timing", "execution_time", "thread_id"]:
                     continue
                 self.assertEqual(
                     out_line.get(exp_k),
