@@ -27,36 +27,6 @@ from utils.utils import get_entity_name_from_id
 
 # %%
 
-
-def parse_test_params(test_parameters, test_type):
-    """Little helper function to parse tests string and return array with correct types
-
-    Parameters
-    ----------
-    test_parameters : str
-        Test parameters, as found in dot.configured_tests
-    test_type : str
-        test_type as found in dot.configured_tests and dot.test_types
-
-    Returns
-    -------
-    Array of test parameters that can be written to yml configuration files
-    """
-    test = {}
-    test[test_type] = {}
-    params = test_parameters.split("|")
-    for p in params:
-        p = p.strip()
-        key_val = p.split(":")
-        key_val[1] = key_val[1].strip().replace('"', "")
-        # Convert from string to correct types for boolean and arrays
-        matches = ["true", "false", "[", "]"]
-        if any(x in key_val[1].lower() for x in matches):
-            key_val[1] = eval(key_val[1])
-        test[test_type][key_val[0]] = key_val[1]
-    return test
-
-
 def generate_tests_from_db(project_id, logger=logging.Logger):
     """Function to generate dbt test yml files and Great Expectation .json files based
     on the contents of database table dot.configured_tests.
@@ -181,12 +151,17 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             test_type = row["test_type"]
             test_parameters = row["test_parameters"]
 
+            #if test_parameters != None:
+            #    test_parameters = "| ".join([f"{k}={test_parameters[k]}" for k in test_parameters])
+            #else:
+            #    test_parameters = ""
+
             # Update 'tests' node for this entity with non column-specific tests
             if column_name in (None, ""):
                 if "tests" not in config_options[entity_id]:
                     config_options[entity_id]["tests"] = []
                 if test_parameters not in ("", None):
-                    test = parse_test_params(test_parameters, test_type)
+                    test = {test_type:test_parameters}
                     config_options[entity_id]["tests"].append(test)
 
             # Update 'columns' node for this entity with column-specific tests
@@ -202,7 +177,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
                 if "tests" not in config_options[entity_id]["columns"][column_name]:
                     config_options[entity_id]["columns"][column_name]["tests"] = []
                 if test_parameters not in ("", None):
-                    test = parse_test_params(test_parameters, test_type)
+                    test = {test_type:test_parameters}
                     config_options[entity_id]["columns"][column_name]["tests"].append(
                         test
                     )
@@ -249,7 +224,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
         df = dbt_non_schema_tests.loc[dot_tests["entity_id"] == entity_id]
         for index, row in df.iterrows():
             test_type = row["test_type"]
-            custom_sql = row["test_parameters"]
+            custom_sql = row["test_parameters"]["query"]
             entity_name = get_entity_name_from_id(project_id, entity_id)
             output_file = tests_dir + "/" + entity_name + "_id" + str(index) + ".sql"
             logger.info("Writing custom sql test file: " + output_file)
@@ -277,8 +252,11 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             expectation = {
                 "expectation_type": row["test_type"],
                 # additional parameters to expectations, not controlled by test config
+                #"kwargs": add_ge_schema_parameters(
+                #    json.loads(row["test_parameters"]), project_id
+                #),
                 "kwargs": add_ge_schema_parameters(
-                    json.loads(row["test_parameters"]), project_id
+                    row["test_parameters"], project_id
                 ),
                 "meta": {},
             }

@@ -86,6 +86,7 @@ below.
 
 Then to run DOT:
 
+`cd dot`
 `python3 ./run_everything.py --project_id '<project name>'`
 
 For example, if you used the provided Medic Muso database dump, you would run with ...
@@ -345,7 +346,7 @@ generated one.
     ```
     'INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', 
     '', 'dot_model__ancview_pregnancy', 'relationships', 'uuid', '', 
-    'name: danger_signs_with_no_pregnancy| to: ref(''dot_model__ancview_danger_sign'')| field: pregnancy_uuid', 
+    $${"name": "danger_signs_with_no_pregnancy", "to": "ref('dot_model__ancview_danger_sign')", "field": "pregnancy_uuid"}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 2. `unique`
@@ -359,7 +360,8 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 3, 
-    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 'name: patient_age_in_years', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 
+    $${"name": "patient_age_in_years"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 4. `not_null`
     <br><br>
@@ -371,20 +373,23 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, 
-    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 'values: [''oral mini-pill (progestogen)'', ''male condom'', ''female sterilization'', ''iud'', ''oral combination pill'', ''implants'', ''injectible'']', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 
+    $${"values": ['oral mini-pill (progestogen)', 'male condom', 'female sterilization', 'iud', 'oral combination pill', 'implants', 'injectible']}$$, 
+    '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 6. `possible_duplicate_forms`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
-    '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: delivery_date| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 
+    $${"table_specific_reported_date": "delivery_date", "table_specific_patient_uuid": "patient_id", "table_specific_uuid": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 7. `associated_columns_not_null`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, '', 
     '', '', 'dot_model__iccmview_assessment', 'associated_columns_not_null', 'diarrhea_dx', 'diarrhea diagnosis', 
-    'name: diarrhea_dx_has_duration | col_value: True | associated_columns: [''max_symptom_duration'']', 
+    $${"name": "diarrhea_dx_has_duration", "col_value": True, "associated_columns": ['max_symptom_duration']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 8. `expect_similar_means_across_reporters`
@@ -402,32 +407,37 @@ generated one.
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 3, 
     'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 
     'expression_is_true', '', '', 
-    'name: "t_under_24_months_wrong_dosage"| expression: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"', 
+    $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$, 
     '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'your-name');
     ```
 10. `custom_sql`
 <br><br>
 Custom SQL queries require special case because they must have `primary_table` and `primary_table_id_field` specified within the SQL query as shown below:
     ```
-    INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',5,
-    'LMP Date at Beginning of Month','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
-        ap.uuid,
-        ap.days_since_lmp,
-        cnt.proportion as tot_proportion,
-        ''dot_model__ancview_pregnancy'' as `primary_table`,
-        ''uuid'' as `primary_table_id_field`
-      from
-      (
-              select round(days_since_lmp::float) days_since_lmp,
-                      count(*)*100.0/sum(count(*)) over() proportion
-              from {{ ref(''dot_model__ancview_pregnancy'') }} ap
-              where lmp_date is not null
-              group by round(days_since_lmp::float)
-      ) cnt
-      join
-      {{ ref(''dot_model__ancview_pregnancy'') }} ap
-      on cnt.days_since_lmp = ap.days_since_lmp
-      where cnt.proportion>1','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','your_name');
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        select
+            a.patient_id,
+            a.reported,
+            a.fp_method_being_used,
+            'dot_model__fpview_registration' as primary_table,
+            'patient_id' as primary_table_id_field
+        from {{ ref('dot_model__fpview_registration') }} a
+            inner join
+            (
+                select distinct
+                patient_id,
+                max(reported) reported
+                from {{ ref('dot_model__fpview_registration') }}
+                where fp_method_being_used in ('vasectomie','female sterilization')
+                group by patient_id
+            ) b on a.patient_id = b.patient_id and a.reported > b.reported
+            and fp_method_being_used not in ('vasectomie','female sterilization')
+            and fp_method_being_used not like '%condom%'
+    $query$::text)
+    )::json,'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');    
     ```
 
 
@@ -457,7 +467,7 @@ Tables are defined as follows:
 | scenarios | The DOT Taxonomy scenario for each test |
 | test_types | The available test types for each test, eg null, unique, custom_sql |
 | scenario_test_types | The test types that apply for any given scenario |
-| test_parameters_interface | Interface parameters required for each test type. Note: Not currently used but will be in future |
+| test_parameters_interface | JSON object defining Interface parameters required for each test type. Note: Not currently used but will be in future |
 | run_log | Log of DOT runs, with stop/start times and failure message |
 | test_results | Main test results table, indicating test fails |
 | test_results_summary | Aggregated test results for each run |
@@ -870,13 +880,57 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 #### Running self-tests
 
+##### Using Docker
+
+The recommended way is to run self-tests in Docker, as this is how dot is typically deployed and 
+ensures you're testing the exact same environment. 
+
+- Set [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
+`dot/self_tests/data/base_self_test` as follows ...
+
+```
+dot:
+  save_passed_tests: False
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_dot
+  threads: 4
+Muso_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_public
+  threads: 4
+```
+
+- Start a terminal on the container
+```
+docker exec -it dot /bin/bash
+```
+- Run the tests
+```
+cd dot
+pytest self_tests/unit
+```
+
+##### On your local machine
+
 Assuming you would like to run the tests locally, as preparation steps, you will need to:
-- create a local env for python via either venv or conda
-- run `pip install -r dot/requirements_data_confidence.txt`
-- run `pip install -r dot/requirements_test.txt`
-- prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
+- Create a local env for python via either venv or conda
+- Make sure your Python version aligns with that in `.github/workflows/lint.yml`
+- Run `pip install -r dot/requirements_dot.txt`
+- Prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
 only, or you could use a local instance of a Postgres DB)
-- prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
+- Prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
 `dot/self_tests/data/base_self_test` with the same structure as the [dot_config.yml](dot/config/example/dot_config.yml) 
 for the DOT; should look like something as follows (note that the config below points to DB in the docker container):
 ```
@@ -908,19 +962,6 @@ And finally you can run the tests from a terminal as follows:
 pytest dot/self_tests/unit
 ```
 
-Alternatively, if you want to instead run the tests from the docker container itself, you will need to:
-- start a terminal on the container
-```
-docker exec -it dot /bin/bash
-```
-- install test requirements as follows (the tool itself is already installed)
-```
-pip install -r dot/requirements_test.txt
-```
-- and run the tests
-```
-pytest self_tests/unit
-```
 
 #### Guidelines for adding new tests
 - Existing tests are at [the self-tests folder](dot/self_tests/unit)
