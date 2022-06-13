@@ -35,3 +35,4 @@ jobs:
           cp dot/config/example/self_tests/dot_config_github.yml dot/self_tests/data/base_self_test/dot_config.yml
           ./setup_hooks.sh
           .git/hooks/pre-commit
+

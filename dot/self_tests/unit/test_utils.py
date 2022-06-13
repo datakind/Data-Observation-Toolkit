@@ -68,6 +68,8 @@ class UtilsTest(BaseSelfTestClass):
     ):  # pylint: disable=no-value-for-parameter
         """test yaml file creation for 1 core entity -see file in filename below"""
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
+
+
         generated_test_id = get_test_id(
             test_type="possible_duplicate_forms",
             entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
