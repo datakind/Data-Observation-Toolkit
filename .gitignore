@@ -8,6 +8,7 @@ dot/great_expectations/great_expectations.yml
 
 dot/self_tests/data/base_self_test/dot_config.yml
 dot/self_tests/output/
+dot/dbt/models_self_tests
 
 .idea*
 __pycache__

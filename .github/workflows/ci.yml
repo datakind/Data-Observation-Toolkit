@@ -34,5 +34,6 @@ jobs:
           pip install -r dot/requirements_data_confidence.txt
           pip install -r dot/requirements_test.txt
           cp dot/config/example/self_tests/dot_config_github.yml dot/self_tests/data/base_self_test/dot_config.yml
+          cp dot/config/example/self_tests/dbt/profiles.yml ~/.dbt/profiles.yml
           ./setup_hooks.sh
           .git/hooks/pre-commit
