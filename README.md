@@ -248,6 +248,10 @@ This returns a json record for the data that was tested. **Note:** If using the 
 to the schema where the data is, for example `data_musoapp`.
 
 # Configuring DOT
+
+The following sections provide instructions for adding entities and tests to DOT directly in the DOT database. You can 
+also use the DOT user interface for tests, for more details please see section see section [The DOT User Interface](#the-dot-user-interface). 
+
 ## How to add new entities
 The DOT will run tests against user-defined views onto the underlying data. These views are called "entities" and defined in table `dot.configured_entities`:
 
@@ -448,6 +452,57 @@ set `test_activated=False` in table `dot.configured_tests`. For example:
  
  
 ` update dot.configured_tests set test_activated=false where test_id not in ('7db8742b-c20b-3060-93e2-614e35da2d4b','0f26d515-a70f-3758-8266-8da326d90eb6'); `
+
+# The DOT User Interface
+
+The DOT user interface will allow you to manage DOT in a web application. To get started ...
+
+[ The following assumes you have already built the DOT docker environment, as described above ]
+
+1. `docker compose -f docker-compose-with-appsmith-ui.yml build`
+2. `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
+3. Go to [http://localhost:82/](http://localhost:82)
+4. Click the button and register to create a login (keep note of the password)
+5. Once created, click 'Build my own' on the next popup
+6. Click app smith icon top-left to go back tom homepage
+7. Top-right next to the new button, click on the '...' and select *import*
+8. Select *Import from file* and navigate to file `./docker/appsmith/DOT App V2.json`
+9. You will be prompted to enter details for the database connection. You can set these as required, but if using the 
+   DOT dockerized Postgres database, the parameters are:
+    - Host address: dot-db
+    - Port: 5432
+    - Database name: dot_db
+    - Authentication > User name: postgres
+    - Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>
+
+You should now have the DOT webapp running in development mode. To run in end-user mode:
+
+1. Click button top-right click the 'Deploy' button. This should open a new tab
+ 
+Note: If you want to remove appsmith information on the deployed app, add `?embed=True` at the end
+of the deployed app URL.
+
+## Test configuration
+
+- To edit any test, click on the edit button on the left
+- To add a test, click the 'Add test' button above the table
+- To Activate/Deactive tests, select them using far-left radio buttons then click button 'Activate/Deactivate' tests 
+  button above table 
+- To delete tests, select them using far-left radio buttons then click button 'Delete' tests 
+  button above table 
+
+## Updating to latest version of appsmith
+
+Appsmith release bug fixes and enhancements. To get these:
+
+1. In `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml stop`
+2. `docker rm appsmith`
+3. In a clean directory: `curl -L https://bit.ly/32jBNin -o $PWD/docker-compose.yml`
+4. `docker-compose pull && docker-compose rm -fsv appsmith && docker-compose up -d`
+5. Back in `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
+
+Note, these will remove your saved configuration and app, so be sure to make note of these before doing the above
+steps.
 
 # Advanced topics
 
