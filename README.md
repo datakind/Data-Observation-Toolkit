@@ -937,45 +937,11 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 ##### Using Docker
 
-The recommended way is to run self-tests in Docker, as this is how dot is typically deployed and 
-ensures you're testing the exact same environment. 
+The Docker build provided above to run DOT, also includes self-test. So once you have the container running, all you
+need to do is ..
 
-- Set [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
-`dot/self_tests/data/base_self_test` as follows ...
-
-```
-dot:
-  save_passed_tests: False
-  output_schema_suffix: tests
-dot_db:
-  type: postgres
-  host: dot_db
-  user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5432
-  dbname: dot_db
-  schema: self_tests_dot
-  threads: 4
-Muso_db:
-  type: postgres
-  host: dot_db
-  user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5432
-  dbname: dot_db
-  schema: self_tests_public
-  threads: 4
-```
-
-- Start a terminal on the container
-```
-docker exec -it dot /bin/bash
-```
-- Run the tests
-```
-cd dot
-pytest self_tests/unit
-```
+1. `exec -it dot /bin/bash`
+2. `pytest dot/self_tests/unit`
 
 ##### On your local machine
 
@@ -1016,7 +982,6 @@ And finally you can run the tests from a terminal as follows:
 ```
 pytest dot/self_tests/unit
 ```
-
 
 #### Guidelines for adding new tests
 - Existing tests are at [the self-tests folder](dot/self_tests/unit)

@@ -5,9 +5,10 @@ INSERT INTO self_tests_dot.scenarios VALUES('TREAT-1', 'Incorrect treatment', 'P
 INSERT INTO self_tests_dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid');
 INSERT INTO self_tests_dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', '""select 1""');
 
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_reported_date', 'function_argument', 'Column which indicates when form created');
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_patient_uuid', 'function_argument', 'Column which holds to patient uuid');
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_uuid', 'function_argument', 'UUID for records in the table (form) being checked');
+INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_reported_date', 'entity date field', 'reported', 'Column which indicates when form created');
+INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_patient_uuid', 'entity id field', 'patient_id',  'Column which holds to patient uuid');
+INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_uuid', 'entity id field', 'uuid', 'UUID for records in the table (form) being checked');
+INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_period', 'one of (hour, day, week)', 'day','Specified period to check for duplicates (hour, day, week)');
 
 INSERT INTO self_tests_dot.scenario_test_types VALUES('DUPLICATE-1', 'possible_duplicate_forms');
 INSERT INTO self_tests_dot.scenario_test_types VALUES('TREAT-1', 'custom_sql');
