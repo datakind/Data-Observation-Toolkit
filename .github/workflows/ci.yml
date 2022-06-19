@@ -22,7 +22,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -31,9 +31,9 @@ jobs:
       - name: black, lint & self_tests (pre-commit actions)
         run: |
           python -m pip install --upgrade pip
-          pip install -r dot/requirements_data_confidence.txt
-          pip install -r dot/requirements_test.txt
+          pip install -r dot/requirements_dot.txt
           cp dot/config/example/self_tests/dot_config_github.yml dot/self_tests/data/base_self_test/dot_config.yml
           cp dot/config/example/self_tests/dbt/profiles.yml ~/.dbt/profiles.yml
           ./setup_hooks.sh
           .git/hooks/pre-commit
+

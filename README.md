@@ -86,6 +86,7 @@ below.
 
 Then to run DOT:
 
+`cd dot`
 `python3 ./run_everything.py --project_id '<project name>'`
 
 For example, if you used the provided Medic Muso database dump, you would run with ...
@@ -247,6 +248,10 @@ This returns a json record for the data that was tested. **Note:** If using the 
 to the schema where the data is, for example `data_musoapp`.
 
 # Configuring DOT
+
+The following sections provide instructions for adding entities and tests to DOT directly in the DOT database. You can 
+also use the DOT user interface for tests, for more details please see section see section [The DOT User Interface](#the-dot-user-interface). 
+
 ## How to add new entities
 The DOT will run tests against user-defined views onto the underlying data. These views are called "entities" and defined in table `dot.configured_entities`:
 
@@ -345,7 +350,7 @@ generated one.
     ```
     'INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', 
     '', 'dot_model__ancview_pregnancy', 'relationships', 'uuid', '', 
-    'name: danger_signs_with_no_pregnancy| to: ref(''dot_model__ancview_danger_sign'')| field: pregnancy_uuid', 
+    $${"name": "danger_signs_with_no_pregnancy", "to": "ref('dot_model__ancview_danger_sign')", "field": "pregnancy_uuid"}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 2. `unique`
@@ -359,7 +364,8 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 3, 
-    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 'name: patient_age_in_years', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 
+    $${"name": "patient_age_in_years"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 4. `not_null`
     <br><br>
@@ -371,20 +377,23 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, 
-    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 'values: [''oral mini-pill (progestogen)'', ''male condom'', ''female sterilization'', ''iud'', ''oral combination pill'', ''implants'', ''injectible'']', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 
+    $${"values": ['oral mini-pill (progestogen)', 'male condom', 'female sterilization', 'iud', 'oral combination pill', 'implants', 'injectible']}$$, 
+    '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 6. `possible_duplicate_forms`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
-    '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 'table_specific_reported_date: delivery_date| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 
+    $${"table_specific_reported_date": "delivery_date", "table_specific_patient_uuid": "patient_id", "table_specific_uuid": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 7. `associated_columns_not_null`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, '', 
     '', '', 'dot_model__iccmview_assessment', 'associated_columns_not_null', 'diarrhea_dx', 'diarrhea diagnosis', 
-    'name: diarrhea_dx_has_duration | col_value: True | associated_columns: [''max_symptom_duration'']', 
+    $${"name": "diarrhea_dx_has_duration", "col_value": True, "associated_columns": ['max_symptom_duration']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 8. `expect_similar_means_across_reporters`
@@ -402,32 +411,37 @@ generated one.
     INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 3, 
     'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 
     'expression_is_true', '', '', 
-    'name: "t_under_24_months_wrong_dosage"| expression: "malaria_act_dosage is not null"| condition: "(patient_age_in_months<24) and (malaria_give_act is not null)"', 
+    $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$, 
     '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'your-name');
     ```
 10. `custom_sql`
 <br><br>
 Custom SQL queries require special case because they must have `primary_table` and `primary_table_id_field` specified within the SQL query as shown below:
     ```
-    INSERT INTO dot.configured_tests VALUES (TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc','INCONSISTENT-1',5,
-    'LMP Date at Beginning of Month','10','Use days/weeks since LMP instead of months as this may be much closer to the actual LMP instead of months since LMP','638ed10b-3a2f-4f18-9ca1-ebf23563fdc0','custom_sql','','','select
-        ap.uuid,
-        ap.days_since_lmp,
-        cnt.proportion as tot_proportion,
-        ''dot_model__ancview_pregnancy'' as `primary_table`,
-        ''uuid'' as `primary_table_id_field`
-      from
-      (
-              select round(days_since_lmp::float) days_since_lmp,
-                      count(*)*100.0/sum(count(*)) over() proportion
-              from {{ ref(''dot_model__ancview_pregnancy'') }} ap
-              where lmp_date is not null
-              group by round(days_since_lmp::float)
-      ) cnt
-      join
-      {{ ref(''dot_model__ancview_pregnancy'') }} ap
-      on cnt.days_since_lmp = ap.days_since_lmp
-      where cnt.proportion>1','2022-02-15 20:00:00.000 -0500','2022-02-15 20:00:00.000 -0500','your_name');
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        select
+            a.patient_id,
+            a.reported,
+            a.fp_method_being_used,
+            'dot_model__fpview_registration' as primary_table,
+            'patient_id' as primary_table_id_field
+        from {{ ref('dot_model__fpview_registration') }} a
+            inner join
+            (
+                select distinct
+                patient_id,
+                max(reported) reported
+                from {{ ref('dot_model__fpview_registration') }}
+                where fp_method_being_used in ('vasectomie','female sterilization')
+                group by patient_id
+            ) b on a.patient_id = b.patient_id and a.reported > b.reported
+            and fp_method_being_used not in ('vasectomie','female sterilization')
+            and fp_method_being_used not like '%condom%'
+    $query$::text)
+    )::json,'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');    
     ```
 
 
@@ -438,6 +452,57 @@ set `test_activated=False` in table `dot.configured_tests`. For example:
  
  
 ` update dot.configured_tests set test_activated=false where test_id not in ('7db8742b-c20b-3060-93e2-614e35da2d4b','0f26d515-a70f-3758-8266-8da326d90eb6'); `
+
+# The DOT User Interface
+
+The DOT user interface will allow you to manage DOT in a web application. To get started ...
+
+[ The following assumes you have already built the DOT docker environment, as described above ]
+
+1. `docker compose -f docker-compose-with-appsmith-ui.yml build`
+2. `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
+3. Go to [http://localhost:82/](http://localhost:82)
+4. Click the button and register to create a login (keep note of the password)
+5. Once created, click 'Build my own' on the next popup
+6. Click app smith icon top-left to go back tom homepage
+7. Top-right next to the new button, click on the '...' and select *import*
+8. Select *Import from file* and navigate to file `./docker/appsmith/DOT App V2.json`
+9. You will be prompted to enter details for the database connection. You can set these as required, but if using the 
+   DOT dockerized Postgres database, the parameters are:
+    - Host address: dot-db
+    - Port: 5432
+    - Database name: dot_db
+    - Authentication > User name: postgres
+    - Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>
+
+You should now have the DOT webapp running in development mode. To run in end-user mode:
+
+1. Click button top-right click the 'Deploy' button. This should open a new tab
+ 
+Note: If you want to remove appsmith information on the deployed app, add `?embed=True` at the end
+of the deployed app URL.
+
+## Test configuration
+
+- To edit any test, click on the edit button on the left
+- To add a test, click the 'Add test' button above the table
+- To Activate/Deactive tests, select them using far-left radio buttons then click button 'Activate/Deactivate' tests 
+  button above table 
+- To delete tests, select them using far-left radio buttons then click button 'Delete' tests 
+  button above table 
+
+## Updating to latest version of appsmith
+
+Appsmith release bug fixes and enhancements. To get these:
+
+1. In `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml stop`
+2. `docker rm appsmith`
+3. In a clean directory: `curl -L https://bit.ly/32jBNin -o $PWD/docker-compose.yml`
+4. `docker-compose pull && docker-compose rm -fsv appsmith && docker-compose up -d`
+5. Back in `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
+
+Note, these will remove your saved configuration and app, so be sure to make note of these before doing the above
+steps.
 
 # Advanced topics
 
@@ -457,7 +522,7 @@ Tables are defined as follows:
 | scenarios | The DOT Taxonomy scenario for each test |
 | test_types | The available test types for each test, eg null, unique, custom_sql |
 | scenario_test_types | The test types that apply for any given scenario |
-| test_parameters_interface | Interface parameters required for each test type. Note: Not currently used but will be in future |
+| test_parameters_interface | JSON object defining Interface parameters required for each test type. Note: Not currently used but will be in future |
 | run_log | Log of DOT runs, with stop/start times and failure message |
 | test_results | Main test results table, indicating test fails |
 | test_results_summary | Aggregated test results for each run |
@@ -870,13 +935,57 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 #### Running self-tests
 
+##### Using Docker
+
+The recommended way is to run self-tests in Docker, as this is how dot is typically deployed and 
+ensures you're testing the exact same environment. 
+
+- Set [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
+`dot/self_tests/data/base_self_test` as follows ...
+
+```
+dot:
+  save_passed_tests: False
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_dot
+  threads: 4
+Muso_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_public
+  threads: 4
+```
+
+- Start a terminal on the container
+```
+docker exec -it dot /bin/bash
+```
+- Run the tests
+```
+cd dot
+pytest self_tests/unit
+```
+
+##### On your local machine
+
 Assuming you would like to run the tests locally, as preparation steps, you will need to:
-- create a local env for python via either venv or conda
-- run `pip install -r dot/requirements_data_confidence.txt`
-- run `pip install -r dot/requirements_test.txt`
-- prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
+- Create a local env for python via either venv or conda
+- Make sure your Python version aligns with that in `.github/workflows/lint.yml`
+- Run `pip install -r dot/requirements_dot.txt`
+- Prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
 only, or you could use a local instance of a Postgres DB)
-- prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
+- Prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
 `dot/self_tests/data/base_self_test` with the same structure as the [dot_config.yml](dot/config/example/dot_config.yml) 
 for the DOT; should look like something as follows (note that the config below points to DB in the docker container):
 ```
@@ -908,19 +1017,6 @@ And finally you can run the tests from a terminal as follows:
 pytest dot/self_tests/unit
 ```
 
-Alternatively, if you want to instead run the tests from the docker container itself, you will need to:
-- start a terminal on the container
-```
-docker exec -it dot /bin/bash
-```
-- install test requirements as follows (the tool itself is already installed)
-```
-pip install -r dot/requirements_test.txt
-```
-- and run the tests
-```
-pytest self_tests/unit
-```
 
 #### Guidelines for adding new tests
 - Existing tests are at [the self-tests folder](dot/self_tests/unit)

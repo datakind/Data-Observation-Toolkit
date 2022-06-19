@@ -52,12 +52,9 @@ class UtilsTest(BaseSelfTestClass):
             entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
             column="",
             project_id="Muso",
-            test_parameters="table_specific_reported_date: delivery_date| "
-            "table_specific_patient_uuid: patient_id| "
-            "table_specific_uuid: uuid| "
-            "table_specific_period: day",
+            test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}"
         )
-        expected_test_id = "31cd2301-3632-3f4f-a4bc-e24ac149c31b"
+        expected_test_id = "0a055ffd-c753-3c27-9de9-a4665352513f"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -78,16 +75,13 @@ class UtilsTest(BaseSelfTestClass):
             "column_name": "",
             "column_description": "",
             "id_column_name": "id_column",
-            "test_parameters": "table_specific_reported_date: delivery_date| "
-            "table_specific_patient_uuid: patient_id| "
-            "table_specific_uuid: uuid| "
-            "table_specific_period: day",
+            "test_parameters": "{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
             "last_updated_by": "Lorenzo",
         }
         for k, v in expected_row.items():  # pylint: disable=invalid-name
             self.assertEqual(
-                v,
-                configured_tests_row.get(k),
+                str(v),
+                str(configured_tests_row.get(k)),
                 f"difference in {k}; {v} vs {configured_tests_row[k]}",
             )
 
@@ -161,7 +155,7 @@ class UtilsTest(BaseSelfTestClass):
             "test_type": "custom_sql",
             "column_name": "",
             "id_column_name": "patient_id",
-            "test_parameters": "SQL for the test definition; irrelevant for this test",
+            "test_parameters": '$${"query"="SQL for the test definition; irrelevant for self_tests"}$$',
             "test_status": "fail",
             "test_status_message": "got 49 results, configured to fail if != 0",
             "failed_tests_view": "tr_dot_model__fpview_registration_id10",

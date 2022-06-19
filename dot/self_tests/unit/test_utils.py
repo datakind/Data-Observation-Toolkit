@@ -7,6 +7,8 @@ from mock import patch
 from typing import Tuple
 from .base_self_test_class import BaseSelfTestClass
 
+import sys
+
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order
     get_test_id,
@@ -51,7 +53,7 @@ class UtilsTest(BaseSelfTestClass):
             "test_type": "custom_sql",
             "column_name": "",
             # "id_column_name": "patient_id",
-            "test_parameters": "SQL for the test definition; irrelevant for self_tests",
+            "test_parameters": '$${"query"="SQL for the test definition; irrelevant for self_tests"}$$',
             "test_status": "fail",
             "test_status_message": "got 49 results, configured to fail if != 0",
             "failed_tests_view": "tr_dot_model__fpview_registration_id10",
@@ -67,17 +69,22 @@ class UtilsTest(BaseSelfTestClass):
         """test yaml file creation for 1 core entity -see file in filename below"""
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
+
         generated_test_id = get_test_id(
             test_type="possible_duplicate_forms",
             entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
             column="",
             project_id="Muso",
-            test_parameters="table_specific_reported_date: delivery_date"
-            "| table_specific_patient_uuid: patient_id"
-            "| table_specific_uuid: uuid"
-            "| table_specific_period: day",
+            test_parameters='''$$
+                {
+                   'table_specific_uuid': 'uuid',
+                   'table_specific_period': 'day',
+                   'table_specific_patient_uuid': 'patient_id',
+                   'table_specific_reported_date': 'delivery_date',
+                }$$
+            '''.replace('\n','')
         )
-        expected_test_id = "31cd2301-3632-3f4f-a4bc-e24ac149c31b"
+        expected_test_id = "0a055ffd-c753-3c27-9de9-a4665352513f"
         self.assertEqual(
             expected_test_id,
             generated_test_id,
@@ -102,9 +109,12 @@ class UtilsTest(BaseSelfTestClass):
                 "3, '', '', '', "
                 "'66f5d13a-8f74-4f97-836b-334d97932781',"
                 "'possible_duplicate_forms', '', '',"
-                "'table_specific_reported_date: delivery_date| "
-                "table_specific_patient_uuid: patient_id| "
-                "table_specific_uuid: uuid',"
+                '''$${
+                   'table_specific_uuid': 'uuid',
+                   'table_specific_patient_uuid': 'patient_id',
+                   'table_specific_reported_date': 'delivery_date',
+                }$$
+                ,'''
                 "'2021-12-23 19:00:00.000 -0500',"
                 "'2021-12-23 19:00:00.000 -0500',"
                 "'Lorenzo');",
@@ -126,11 +136,11 @@ class UtilsTest(BaseSelfTestClass):
                     VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca70',
                     'TREAT-1', 5, 'Test for new family planning method (NFP-1)', 
                     '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', 
-                    '', '', 'SELECT
+                    '', '', $${"query":"SELECT
                               patient_id as primary_table_id_field,
                               value
-                            FROM {{ ref(''dot_model__fpview_registration'') }} a
-                            LIMIT 2', 
+                            FROM {{ ref('dot_model__fpview_registration') }} a
+                            LIMIT 2"}$$,
                     '2021-12-23 19:00:00.000 -0500', 
                     '2021-12-23 19:00:00.000 -0500', 
                     'Leah');""",
@@ -151,9 +161,14 @@ class UtilsTest(BaseSelfTestClass):
                 entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
                 column="",
                 project_id="Muso",
-                test_parameters="table_specific_reported_date: delivery_date"
-                "| table_specific_patient_uuid: patient_id"
-                "| table_specific_uuid: uuid",
+                test_parameters='''
+                {
+                   'table_specific_uuid': 'uuid',
+                   'table_specific_period': 'day',
+                   'table_specific_patient_uuid': 'patient_id',
+                   'table_specific_reported_date': 'delivery_date',
+                }
+                ''',
             )
 
     @patch("utils.configuration_utils._get_filename_safely")
@@ -168,12 +183,10 @@ class UtilsTest(BaseSelfTestClass):
             entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
             column="",
             project_id="Muso",
-            test_parameters="table_specific_reported_date: delivery_date"
-            "| table_specific_patient_uuid: patient_id"
-            "| table_specific_uuid: uuid"
-            "| table_specific_period: day",
+            test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
+
         )
-        expected_test_id = "31cd2301-3632-3f4f-a4bc-e24ac149c31b"
+        expected_test_id = "0a055ffd-c753-3c27-9de9-a4665352513f"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -193,16 +206,13 @@ class UtilsTest(BaseSelfTestClass):
             "test_type": "possible_duplicate_forms",
             "column_name": "",
             "column_description": "",
-            "test_parameters": "table_specific_reported_date: delivery_date"
-            "| table_specific_patient_uuid: patient_id"
-            "| table_specific_uuid: uuid"
-            "| table_specific_period: day",
+            "test_parameters": "{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
             "last_updated_by": "Lorenzo",
         }
         for k, v in expected_row.items():
             self.assertEqual(
-                v,
-                configured_tests_row.get(k),
+                str(v),
+                str(configured_tests_row.get(k)),
                 f"difference in {k}; {v} vs {configured_tests_row[k]}",
             )
 

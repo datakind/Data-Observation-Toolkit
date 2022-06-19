@@ -1,5 +1,5 @@
 ,run_id,test_id,entity_id,test_type,column_name,id_column_name,test_parameters,test_status,test_status_message,failed_tests_view,failed_tests_view_sql
-test.dbt_model_1.not_negative_string_column_dot_model__fpview_registration_value__value.e15d766b3b,4541476c-814e-43fe-ab38-786f36beecbc,ca450aac-80ea-3682-b656-42215370bda4,95bd0f60-ab59-48fc-a62e-f256f5f3e6de,not_negative_string_column,value,,{'name': 'value'},fail,"got 1 result, configured to fail if != 0",tr_dot_model__fpview_registration_value," SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list
+test.dbt_model_1.not_negative_string_column_dot_model__fpview_registration_value__value.e15d766b3b,4541476c-814e-43fe-ab38-786f36beecbc,54196c00-98cf-3b57-a5e0-155c726552da,95bd0f60-ab59-48fc-a62e-f256f5f3e6de,not_negative_string_column,value,,{'name': 'value'},fail,"got 1 result, configured to fail if != 0",tr_dot_model__fpview_registration_value," SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list
    FROM self_tests_public_tests.dot_model__fpview_registration
   WHERE dot_model__fpview_registration.value::character varying::text ~~ '-%'::text
  HAVING count(*) > 0;"
