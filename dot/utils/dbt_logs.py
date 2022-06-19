@@ -7,15 +7,9 @@ we have not used classes extensively in DOT for now
 """
 import json
 from dataclasses import dataclass
-from utils.configuration_utils import (
-    _get_filename_safely,
-)
-from utils.configuration_utils import (
-    get_dbt_config_test_paths,
-)
-from utils.utils import (
-    get_short_test_name,
-)
+from utils.configuration_utils import _get_filename_safely
+from utils.configuration_utils import get_dbt_config_test_paths
+from utils.utils import get_short_test_name
 
 
 @dataclass

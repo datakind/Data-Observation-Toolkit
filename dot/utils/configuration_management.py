@@ -27,6 +27,7 @@ from utils.utils import get_entity_name_from_id
 
 # %%
 
+
 def generate_tests_from_db(project_id, logger=logging.Logger):
     """Function to generate dbt test yml files and Great Expectation .json files based
     on the contents of database table dot.configured_tests.
@@ -151,9 +152,9 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             test_type = row["test_type"]
             test_parameters = row["test_parameters"]
 
-            #if test_parameters != None:
+            # if test_parameters != None:
             #    test_parameters = "| ".join([f"{k}={test_parameters[k]}" for k in test_parameters])
-            #else:
+            # else:
             #    test_parameters = ""
 
             # Update 'tests' node for this entity with non column-specific tests
@@ -161,7 +162,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
                 if "tests" not in config_options[entity_id]:
                     config_options[entity_id]["tests"] = []
                 if test_parameters not in ("", None):
-                    test = {test_type:test_parameters}
+                    test = {test_type: test_parameters}
                     config_options[entity_id]["tests"].append(test)
 
             # Update 'columns' node for this entity with column-specific tests
@@ -177,7 +178,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
                 if "tests" not in config_options[entity_id]["columns"][column_name]:
                     config_options[entity_id]["columns"][column_name]["tests"] = []
                 if test_parameters not in ("", None):
-                    test = {test_type:test_parameters}
+                    test = {test_type: test_parameters}
                     config_options[entity_id]["columns"][column_name]["tests"].append(
                         test
                     )
@@ -252,12 +253,10 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             expectation = {
                 "expectation_type": row["test_type"],
                 # additional parameters to expectations, not controlled by test config
-                #"kwargs": add_ge_schema_parameters(
+                # "kwargs": add_ge_schema_parameters(
                 #    json.loads(row["test_parameters"]), project_id
-                #),
-                "kwargs": add_ge_schema_parameters(
-                    row["test_parameters"], project_id
-                ),
+                # ),
+                "kwargs": add_ge_schema_parameters(row["test_parameters"], project_id),
                 "meta": {},
             }
 

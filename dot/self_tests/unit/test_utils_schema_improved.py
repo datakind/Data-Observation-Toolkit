@@ -52,7 +52,7 @@ class UtilsTest(BaseSelfTestClass):
             entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
             column="",
             project_id="Muso",
-            test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}"
+            test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
         )
         expected_test_id = "0a055ffd-c753-3c27-9de9-a4665352513f"
         self.assertEqual(

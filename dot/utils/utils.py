@@ -235,12 +235,12 @@ def get_configured_tests_row(
     if column is None:
         column = ""
 
-    prefix = 'query' if test_type == 'custom_sql' else ''
+    prefix = "query" if test_type == "custom_sql" else ""
 
     # This whole function must go away, we need to pass test_ids through dbt and ge. Below is
     # temporary.
-    test_params_clause = ''
-    if test_parameters != '':
+    test_params_clause = ""
+    if test_parameters != "":
         test_params_clause = f""" AND regexp_replace(CAST(test_parameters AS VARCHAR), '\W+', '', 'g') =
                              '{prefix}{test_parameters}';"""
 
@@ -262,6 +262,7 @@ def get_configured_tests_row(
     if test_row.empty:
         raise ReferenceError(f"test_id not found in db with query {query}")
     return test_row.iloc[0].to_dict()
+
 
 def save_tests_to_db(
     test_rows: pd.DataFrame,
