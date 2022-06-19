@@ -5,7 +5,6 @@ import ast
 import logging
 import shutil
 
-import pytest
 from mock import patch
 from utils.configuration_utils import DBT_PROJECT_FINAL_FILENAME
 from .base_self_test_class import BaseSelfTestClass
@@ -173,3 +172,49 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                     exp_v,
                     f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
                 )
+
+    @patch("utils.configuration_utils._get_filename_safely")
+    def test_process_dbt_logs_row_safe(
+        self, mock_get_filename_safely
+    ):  # pylint: disable=no-value-for-parameter
+        """
+        Will detect a change in logs due to dbt versions, processing the raw and
+        looking only for the required parameters
+        """
+        # 0. Test setup
+        shutil.copy(
+            "./config/example/self_tests/dbt/dbt_project.yml", "./dbt/dbt_project.yml"
+        )
+
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely_dbt
+
+        shutil.rmtree("dbt/models_self_tests")
+        shutil.copytree("self_tests/data/dot_input_files/dbt", "dbt/models_self_tests")
+
+        # 1. Run all the dbt actions
+        self.run_dbt_steps()
+
+        # 2. check results
+        output = read_dbt_logs(
+            target_path="dbt/target",  # i.e. the usual execution path
+        )
+        checked = False
+        for line in output:
+            res = process_dbt_logs_row(line)
+            if res.test_type == "not_negative_string_column":
+                expected = DbtOutputProcessedRow(
+                    unique_id="test.dbt_model_1."
+                    "not_negative_string_column_dot_model__fpview_registration_value__value."
+                    "e15d766b3b",
+                    test_type="not_negative_string_column",
+                    test_status="fail",
+                    test_message="got 1 result, configured to fail if != 0",
+                    column_name="value",
+                    entity_name="dot_model__fpview_registration",
+                    test_parameters="{'name': 'value'}",
+                    short_test_name="tr_dot_model__fpview_registration_value",
+                )
+                self.assertEqual(res, expected)
+                checked = True
+
+        self.assertEqual(checked, True)
