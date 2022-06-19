@@ -39,6 +39,31 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
 
+    @staticmethod
+    def mock_get_filename_safely_dbt(path):
+        """
+        mock for dbt tests only, so that the yml and sql files are at models_self_tests
+        (instead of e.g. models/Muso)
+        """
+        if path == DBT_PROJECT_FINAL_FILENAME:
+            # dbt models at models_self_tests
+            return "./config/example/self_tests/dbt/dbt_project.yml"
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"Cannot find file {path}")
+        return path
+
+    @staticmethod
+    def run_dbt_steps():
+        """
+        Runs all the actions for dbt
+        """
+        project_id = "Muso"
+        logger = setup_custom_logger("self_tests/output/test.log", logging.INFO)
+        run_dbt_core(project_id, logger)
+        archive_previous_dbt_results(logger)
+        create_failed_dbt_test_models(project_id, logger, "view")
+        run_dbt_test(project_id, logger)
+
     def test_read_dbt_logs(self):
         """
         This test is not really so useful; a better test would run dbt on the inputs
@@ -104,7 +129,6 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             )
             self.assertEqual(res, expected)
 
-    @pytest.mark.skip("temp disable")
     @patch("utils.configuration_utils._get_filename_safely")
     def test_read_dbt_logs_safe(
         self, mock_get_filename_safely
@@ -113,28 +137,17 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         Will detect a change in logs due to dbt versions
         """
         # 0. Test setup
-        # TODO move to function, maybe even in base_self_test_class
-        def mock_get_filename_safely_dbt(path):
-            if path == DBT_PROJECT_FINAL_FILENAME:
-                # dbt models at models_self_tests
-                return "./config/example/self_tests/dbt/dbt_project.yml"
-            if not os.path.isfile(path):
-                raise FileNotFoundError(f"Cannot find file {path}")
-            return path
+        shutil.copy(
+            "./config/example/self_tests/dbt/dbt_project.yml", "./dbt/dbt_project.yml"
+        )
 
-        mock_get_filename_safely.side_effect = mock_get_filename_safely_dbt
+        mock_get_filename_safely.side_effect = self.mock_get_filename_safely_dbt
 
         shutil.rmtree("dbt/models_self_tests")
         shutil.copytree("self_tests/data/dot_input_files/dbt", "dbt/models_self_tests")
 
-        # 1. Run all the dbt actions -better wrapped in a function? -
-        #    - may be fine since there are some that do not really belong to dbt
-        project_id = "Muso"
-        logger = setup_custom_logger("self_tests/output/test.log", logging.INFO)
-        run_dbt_core(project_id, logger)
-        archive_previous_dbt_results(logger)
-        create_failed_dbt_test_models(project_id, logger, "view")
-        run_dbt_test(project_id, logger)
+        # 1. Run all the dbt actions
+        self.run_dbt_steps()
 
         # 2. test that the outputs are still ok
         output = read_dbt_logs(
