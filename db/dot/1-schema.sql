@@ -226,4 +226,36 @@ BEGIN
 	RETURN QUERY EXECUTE 'SELECT row_to_json(dot_model__'|| entity || ') from ' || results_schema || '.dot_model__' || entity || ' WHERE ' || id_col || '=''' || id_col_val || '''';
 END; $$ LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION dot.configured_entities_insert()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+declare
+   KEY_STRING text;
+BEGIN
+   -- If you change how this UUID is generated, be sure to also change how it is created in get_test_id in /utils/utils.py
+   KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
+   NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
+   new.date_added := NOW();
+   new.date_modified := NOW();
+   RETURN NEW;
+END;
+$$;
 
+CREATE OR REPLACE FUNCTION dot.configured_entities_update()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+   new.date_modified := NOW();
+   RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER configured_entities_insert_trigger
+BEFORE INSERT ON dot.configured_entities
+FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_insert() ;
+
+CREATE TRIGGER configured_entities_update_trigger
+BEFORE UPDATE ON dot.configured_entities
+FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_update() ;
