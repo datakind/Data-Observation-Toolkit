@@ -1,5 +1,5 @@
-INSERT INTO dot.projects SELECT 'Muso', 'Muso project', '2021-12-07 00:00:00+00', 'true', 'public';
-INSERT INTO dot.projects SELECT 'Brac', 'Brac project', '2021-12-07 00:00:00+00', 'true', 'public';
+INSERT INTO dot.projects SELECT 'Muso', 'Muso project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
+INSERT INTO dot.projects SELECT 'Brac', 'Brac project',  true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
 
 -- entity categories
 INSERT INTO dot.entity_categories VALUES('anc', 'Antenatal care');
@@ -13,21 +13,21 @@ INSERT INTO dot.entity_categories VALUES('pnc', 'Postnatal care');
 INSERT INTO dot.configured_entities VALUES('b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 'ancview_danger_sign', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select *
-from {{ schema }}.ancview_danger_sign');
+from {{ schema }}.ancview_danger_sign','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('66f5d13a-8f74-4f97-836b-334d97932781', 'ancview_delivery', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select *
-from {{ schema }}.ancview_delivery');
+from {{ schema }}.ancview_delivery','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'ancview_pregnancy', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select ap.*,
         ap.lmp as lmp_date,
         DATE_PART(''day'', reported - lmp) as days_since_lmp
-from {{ schema }}.ancview_pregnancy ap');
+from {{ schema }}.ancview_pregnancy ap','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('8ccab0bf-383e-4e41-9437-2b1c5007ba80', 'ancview_pregnancy_visit', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select *
-from {{ schema }}.ancview_pregnancy_visit');
+from {{ schema }}.ancview_pregnancy_visit','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('f41fe8ee-ee1c-49dd-ae3d-c473daf441d5', 'chv', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 with source_data as (
@@ -38,19 +38,19 @@ with source_data as (
         {{ schema }}.iccmview_assessment
 )
 select *
-from source_data');
+from source_data','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'fpview_follow_up', 'fp', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select *
-from {{ schema }}.fpview_follow_up');
+from {{ schema }}.fpview_follow_up','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'fpview_registration', 'fp', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select *
-from {{ schema }}.fpview_registration');
+from {{ schema }}.fpview_registration','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('173793ff-491d-4c73-8d0b-3903a82d3796', 'hhview_visits', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select *
-from {{ schema }}.hhview_visits');
+from {{ schema }}.hhview_visits','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('baf349c9-c919-40ff-a611-61ddc59c2d52', 'iccmview_assessment', 'iccm', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 -- select *
@@ -69,20 +69,20 @@ from
   {{ schema }}.formview_assessment fa  -- should be maybe a left join with iccmview_assessment
 where
   ia.uuid = ua.uuid
-  and fa.uuid = ua.uuid');
+  and fa.uuid = ua.uuid','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('50f31569-f2fc-4dc6-af49-4268381e7c13', 'iccmview_assessment_follow_up', 'iccm', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 with source_data as (
     select * from {{ schema }}.iccmview_assessment_follow_up
 )
 select *
-from source_data');
+from source_data','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('d0645118-bd68-4eba-8ead-fad114be86b7', 'mnview_follow_up', 'mn', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-select * from {{ schema }}.mnview_follow_up');
+select * from {{ schema }}.mnview_follow_up','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('57a9fd48-51d8-4dc0-bbd1-a6e0405696cd', 'mnview_registration', 'mn', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
-select * from {{ schema }}.mnview_registration');
+select * from {{ schema }}.mnview_registration','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('fade2413-8504-443f-b161-1c5470fc1df3', 'patient', 'core', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 with source_data as (
@@ -93,14 +93,14 @@ with source_data as (
      where type = ''person''
 )
 select *
-from source_data');
+from source_data','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 INSERT INTO dot.configured_entities VALUES('eaea6e4c-a455-4f04-bb36-4bab0f6ba1a3', 'pncview_visits', 'pnc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 with source_data as (
     select * from {{ schema }}.pncview_visits
 )
 select *
-from source_data');
+from source_data','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 -- Note these UUIDs get reset by the trigger
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, 'Patient ID is not null', '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', NULL, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');

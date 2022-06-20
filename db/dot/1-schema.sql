@@ -50,10 +50,12 @@ CREATE TABLE IF NOT EXISTS dot.scenario_test_types(
 CREATE TABLE IF NOT EXISTS dot.projects(
     project_id VARCHAR(300) PRIMARY KEY,
     description VARCHAR(1000) NOT NULL,
-    created_on TIMESTAMP WITH TIME ZONE NOT NULL,
     active BOOLEAN,
     project_schema VARCHAR(300) NULL,
-    contacts VARCHAR(1000) NULL
+    contacts VARCHAR(1000) NULL,
+    date_added TIMESTAMP WITH TIME ZONE NOT NULL,
+    date_modified TIMESTAMP WITH TIME ZONE NOT NULL,
+    last_updated_by VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dot.run_log (
@@ -80,6 +82,9 @@ CREATE TABLE IF NOT EXISTS dot.configured_entities (
   entity_name VARCHAR(300),
   entity_category VARCHAR(300),
   entity_definition VARCHAR(4096),
+  date_added TIMESTAMP WITH TIME ZONE NOT NULL,
+  date_modified TIMESTAMP WITH TIME ZONE NOT NULL,
+  last_updated_by VARCHAR(200) NOT NULL,
   Primary Key (entity_id),
   CONSTRAINT fk_entity_category
       FOREIGN KEY(entity_category)
