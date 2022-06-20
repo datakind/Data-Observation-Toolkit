@@ -25,23 +25,16 @@ INSERT INTO dot.scenarios VALUES('ASSESS-1', 'Inconsistent data', 'Process error
 INSERT INTO dot.scenarios VALUES('TREAT-1', 'Incorrect treatment', 'Process errors', 'Incorrect treatment', 'Outliers', 'Drug protocol not followed for Malaria treatment; FP for people on tubal ligation, pregnant or had vasectomy');
 
 -- dot.test_types
-INSERT INTO dot.test_types VALUES('relationships', 'dbt', 'Test missing relationships between records', 'multi_table', 'name: danger_signs_with_no_pregnancy| to: ref(''pregnancy'')| field: uuid');
-INSERT INTO dot.test_types VALUES('unique', 'dbt', 'Test to confirm uniqueness ', 'column', '');
-INSERT INTO dot.test_types VALUES('not_negative_string_column', 'dbt', 'Test to confirm all positive', 'column', 'name: patient_age_in_years');
-INSERT INTO dot.test_types VALUES('not_null', 'dbt', 'Test to confirm if null', 'column', '');
-INSERT INTO dot.test_types VALUES('accepted_values', 'dbt', 'Test to confirm values adhere to specified list', 'column', 'values: [True, False]');
-INSERT INTO dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', '""select
-    reported,
-    reported_by_parent as chw_uuid,
-    count(*)
-from {{ ref(''household_visit'') }}
-group by 1, 2
-having count(*) > 100""');
-INSERT INTO dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid');
-INSERT INTO dot.test_types VALUES('associated_columns_not_null', 'dbt', 'Test to confirm related columns not null', 'column', '');
-INSERT INTO dot.test_types VALUES('expect_similar_means_across_reporters', 'great_expectations', 'Test to compare means across reporters (eg of temperature)', 'column', '');
-INSERT INTO dot.test_types VALUES('fake_expectation_for_test_purposes', 'great_expectations', 'Great expectation test test, ignore', 'column', '');
-INSERT INTO dot.test_types VALUES('expression_is_true', 'dbt', 'Test to confirm a value of an expression given a condition', 'any', 'name: "t_referral_follow_up_negative"| expression: "not(treat_malnutrition and danger_sign)"| condition: "not(fu_ref_rec or fu_rec)"');
+INSERT INTO dot.test_types VALUES('relationships', 'dbt', 'Test missing relationships between records', 'multi_table',  true, true);
+INSERT INTO dot.test_types VALUES('unique', 'dbt', 'Test to confirm uniqueness ', 'column', false,true);
+INSERT INTO dot.test_types VALUES('not_negative_string_column', 'dbt', 'Test to confirm all positive', 'column', false, true);
+INSERT INTO dot.test_types VALUES('not_null', 'dbt', 'Test to confirm if null', 'column', false, true);
+INSERT INTO dot.test_types VALUES('accepted_values', 'dbt', 'Test to confirm values adhere to specified list', 'column',  true, true);
+INSERT INTO dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', true, false);
+INSERT INTO dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', true, false);
+INSERT INTO dot.test_types VALUES('associated_columns_not_null', 'dbt', 'Test to confirm related columns not null', 'column', true, false);
+INSERT INTO dot.test_types VALUES('expect_similar_means_across_reporters', 'great_expectations', 'Test to compare means across reporters (eg of temperature)', 'column', true, false);
+INSERT INTO dot.test_types VALUES('expression_is_true', 'dbt', 'Test to confirm a value of an expression given a condition', 'any', true, false);
 
 
 -- dot.test_parameters_interface

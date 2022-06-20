@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS dot.test_types(
     library VARCHAR(300) NOT NULL,
     description VARCHAR(1000) NOT NULL,
     scope VARCHAR(300) CHECK(scope in ('column','single_table', 'multi_table','any')),
-    example_test_parameters VARCHAR(1000) NULL
+    uses_parameters BOOLEAN NOT NULL,
+    uses_column BOOLEAN NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dot.test_parameters_interface(
