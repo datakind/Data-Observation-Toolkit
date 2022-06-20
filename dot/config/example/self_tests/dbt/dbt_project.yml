@@ -9,7 +9,7 @@ profile: 'default'
 # found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models_self_tests"]  # here the tool sets the output to a project-dependent folder
 analysis-paths: ["analysis"]
-test-paths: ["tests"]  # here the tool sets the output  to a project-dependent folder
+test-paths: ["tests_self_tests"]  # here the tool sets the output  to a project-dependent folder
 seed-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]

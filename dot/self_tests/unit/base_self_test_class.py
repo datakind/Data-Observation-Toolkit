@@ -172,13 +172,13 @@ class BaseSelfTestClass(unittest.TestCase):
 
         try:
             if do_recreate_schema:
-                for sch in schema_list:
+                for sch in set(schema_list):
                     self.drop_self_tests_db_schema(sch, conn, cursor)
 
                     query_create = sql.SQL(
                         """
                         CREATE SCHEMA {name};
-                    """
+                        """
                     ).format(name=sql.Identifier(sch))
                     cursor.execute(query_create)
                     conn.commit()
@@ -199,11 +199,11 @@ class BaseSelfTestClass(unittest.TestCase):
                             queries.append("".join(query_lines))
                             query_lines = []
 
-                    for query in queries:
-                        if "create table if not exists" in query.lower():
-                            # execute only table creation queries TODO reconsider
-                            cursor.execute(query)
-                            conn.commit()
+                    # for query in queries:
+                    #     if "create table if not exists" in query.lower():
+                    #         # execute only table creation queries TODO reconsider
+                    #         cursor.execute(query)
+                    #         conn.commit()
 
                     # execute all queries
                     cursor.execute("".join(all_query_lines))
