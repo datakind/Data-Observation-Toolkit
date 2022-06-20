@@ -21,8 +21,6 @@ from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-orde
 from utils.dbt_logs import (  # pylint: disable=wrong-import-order
     DbtOutputProcessedRow,
     read_dbt_logs,
-    _get_test_parameters,
-    _get_test_type,
     process_dbt_logs_row,
 )
 
@@ -110,9 +108,9 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             for exp_k, exp_v in exp_line.items():
                 if exp_k in ["timing", "execution_time", "thread_id"]:
                     continue
+                out_line_v = out_line.get(exp_k)
                 if isinstance(exp_v, dict):
                     for exp_k_2, exp_v_2 in exp_v.items():
-                        out_line_v = out_line.get(exp_k)
                         if exp_k_2 in ["created_at"]:
                             continue
                         self.assertEqual(
@@ -122,7 +120,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                         )
                 else:
                     self.assertEqual(
-                        out_line.get(exp_k),
+                        out_line_v,
                         exp_v,
                         f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
                     )

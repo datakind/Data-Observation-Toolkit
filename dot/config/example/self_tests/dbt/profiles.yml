@@ -6,7 +6,7 @@ default:
   outputs:
     dev:
       type: postgres
-      host: dot_db
+      host: localhost
       user: postgres
       pass: password
       port: 5432
