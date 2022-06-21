@@ -8,7 +8,7 @@ default:
       type: postgres
       host: localhost
       user: postgres
-      pass: password
+      pass: postgres
       port: 5432
       dbname: dot_db
       schema: self_tests_public

@@ -34,7 +34,7 @@ jobs:
           pip install -r dot/requirements_dot.txt
           cp dot/config/example/self_tests/dot_config_github.yml dot/self_tests/data/base_self_test/dot_config.yml
           mkdir -p $HOME/.dbt
-          cp dot/config/example/self_tests/dbt/profiles.yml $HOME/.dbt/profiles.yml
+          cp dot/config/example/self_tests/dbt/profiles_github.yml $HOME/.dbt/profiles.yml
           ./setup_hooks.sh
           .git/hooks/pre-commit
 
