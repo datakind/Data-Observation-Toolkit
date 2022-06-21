@@ -105,6 +105,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                 f"there should be 1 and only 1 output w unique_id {unique_id}",
             )
             out_line = out_lines[0]
+            # TODO refactor into recursive
             for exp_k, exp_v in exp_line.items():
                 if exp_k in ["timing", "execution_time", "thread_id"]:
                     continue
@@ -113,11 +114,22 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                     for exp_k_2, exp_v_2 in exp_v.items():
                         if exp_k_2 in ["created_at"]:
                             continue
-                        self.assertEqual(
-                            out_line_v.get(exp_k_2),
-                            exp_v_2,
-                            f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
-                        )
+                        out_line_v_2 = out_line_v.get(exp_k_2)
+                        if isinstance(exp_v_2, dict):
+                            for exp_k_3, exp_v_3 in exp_v_2.items():
+                                if exp_k_2 in ["root_path"]:
+                                    continue
+                                self.assertEqual(
+                                    out_line_v_2.get(exp_k_3),
+                                    exp_v_3,
+                                    f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
+                                )
+                        else:
+                            self.assertEqual(
+                                out_line_v_2,
+                                exp_v_2,
+                                f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
+                            )
                 else:
                     self.assertEqual(
                         out_line_v,
