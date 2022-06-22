@@ -42,6 +42,10 @@ class DbtUtilsTest(BaseSelfTestClass):
             logger=setup_custom_logger("self_tests/output/test.log", logging.INFO),
             target_path="self_tests/data/dot_output_files/dbt/target",
         )
+
+        output.to_csv('self_tests/data/op.csv')
+
+
         expected = pd.read_csv(
             "self_tests/data/expected/extract_df_from_dbt_test_results_json.csv",
             index_col=0,

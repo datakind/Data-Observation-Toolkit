@@ -1,10 +1,10 @@
 ,run_id,test_id,entity_id,test_type,column_name,id_column_name,test_parameters,test_status,test_status_message,failed_tests_view,failed_tests_view_sql
-test.dbt_model_1.not_negative_string_column_dot_model__fpview_registration_value__value.e15d766b3b,4541476c-814e-43fe-ab38-786f36beecbc,54196c00-98cf-3b57-a5e0-155c726552da,95bd0f60-ab59-48fc-a62e-f256f5f3e6de,not_negative_string_column,value,,{'name': 'value'},fail,"got 1 result, configured to fail if != 0",tr_dot_model__fpview_registration_value," SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list
+test.dbt_model_1.not_negative_string_column_dot_model__fpview_registration_value__value.e15d766b3b,4541476c-814e-43fe-ab38-786f36beecbc,85106e71-378d-3f8e-a9d6-2f056becf09b,b22a0dd5-f26a-3f7a-a413-867b4c5b1882,not_negative_string_column,value,,{'name': 'value'},fail,"got 1 result, configured to fail if != 0",tr_dot_model__fpview_registration_value," SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list
    FROM self_tests_public_tests.dot_model__fpview_registration
   WHERE dot_model__fpview_registration.value::character varying::text ~~ '-%'::text
  HAVING count(*) > 0;"
-test.dbt_model_1.not_null_dot_model__ancview_pregnancy_patient_id.af4157ba8c,4541476c-814e-43fe-ab38-786f36beecbc,8957b754-5db0-35e6-b648-98c932b70ea1,66f5d13a-8f74-4f97-836b-334d97932781,not_null,patient_id,,{},fail,"got 1 result, configured to fail if != 0",tr_dot_model__ancview_pregnancy_not_null_patient_id," SELECT dot_model__ancview_pregnancy.patient_id,
+test.dbt_model_1.not_null_dot_model__ancview_pregnancy_patient_id.af4157ba8c,4541476c-814e-43fe-ab38-786f36beecbc,97f6844e-ec43-3a55-b8ba-0a5c27671ff6,3ed4d6ed-74b1-32cb-b74f-b51ebaa13294,not_null,patient_id,,{},fail,"got 1 result, configured to fail if != 0",tr_dot_model__ancview_pregnancy_not_null_patient_id," SELECT dot_model__ancview_pregnancy.patient_id,
     dot_model__ancview_pregnancy.value
    FROM self_tests_public_tests.dot_model__ancview_pregnancy
   WHERE dot_model__ancview_pregnancy.patient_id IS NULL;"
-test.dbt_model_1.not_null_dot_model__fpview_registration_uuid.d2f7403403,4541476c-814e-43fe-ab38-786f36beecbc,8f15a2d1-3c4b-3a07-9143-e1e8c62a99c0,95bd0f60-ab59-48fc-a62e-f256f5f3e6de,not_null,uuid,,{},pass,,,
+test.dbt_model_1.not_null_dot_model__fpview_registration_uuid.d2f7403403,4541476c-814e-43fe-ab38-786f36beecbc,38df794b-8f95-3404-8a83-e777a085a53b,b22a0dd5-f26a-3f7a-a413-867b4c5b1882,not_null,uuid,,{},pass,,,
