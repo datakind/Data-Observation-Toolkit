@@ -25,38 +25,37 @@ INSERT INTO dot.scenarios VALUES('ASSESS-1', 'Inconsistent data', 'Process error
 INSERT INTO dot.scenarios VALUES('TREAT-1', 'Incorrect treatment', 'Process errors', 'Incorrect treatment', 'Outliers', 'Drug protocol not followed for Malaria treatment; FP for people on tubal ligation, pregnant or had vasectomy');
 
 -- dot.test_types
-INSERT INTO dot.test_types VALUES('relationships', 'dbt', 'Test missing relationships between records', 'multi_table', 'name: danger_signs_with_no_pregnancy| to: ref(''pregnancy'')| field: uuid');
-INSERT INTO dot.test_types VALUES('unique', 'dbt', 'Test to confirm uniqueness ', 'column', '');
-INSERT INTO dot.test_types VALUES('not_negative_string_column', 'dbt', 'Test to confirm all positive', 'column', 'name: patient_age_in_years');
-INSERT INTO dot.test_types VALUES('not_null', 'dbt', 'Test to confirm if null', 'column', '');
-INSERT INTO dot.test_types VALUES('accepted_values', 'dbt', 'Test to confirm values adhere to specified list', 'column', 'values: [True, False]');
-INSERT INTO dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', '""select
-    reported,
-    reported_by_parent as chw_uuid,
-    count(*)
-from {{ ref(''household_visit'') }}
-group by 1, 2
-having count(*) > 100""');
-INSERT INTO dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', 'table_specific_reported_date: reported| table_specific_patient_uuid: patient_id| table_specific_uuid: uuid');
-INSERT INTO dot.test_types VALUES('associated_columns_not_null', 'dbt', 'Test to confirm related columns not null', 'column', '');
-INSERT INTO dot.test_types VALUES('expect_similar_means_across_reporters', 'great_expectations', 'Test to compare means across reporters (eg of temperature)', 'column', '');
-INSERT INTO dot.test_types VALUES('fake_expectation_for_test_purposes', 'great_expectations', 'Great expectation test test, ignore', 'column', '');
-INSERT INTO dot.test_types VALUES('expression_is_true', 'dbt', 'Test to confirm a value of an expression given a condition', 'any', 'name: "t_referral_follow_up_negative"| expression: "not(treat_malnutrition and danger_sign)"| condition: "not(fu_ref_rec or fu_rec)"');
+INSERT INTO dot.test_types VALUES('relationships', 'dbt', 'Test missing relationships between records', 'multi_table',  true, true);
+INSERT INTO dot.test_types VALUES('unique', 'dbt', 'Test to confirm uniqueness ', 'column', false,true);
+INSERT INTO dot.test_types VALUES('not_negative_string_column', 'dbt', 'Test to confirm all positive', 'column', false, true);
+INSERT INTO dot.test_types VALUES('not_null', 'dbt', 'Test to confirm if null', 'column', false, true);
+INSERT INTO dot.test_types VALUES('accepted_values', 'dbt', 'Test to confirm values adhere to specified list', 'column',  true, true);
+INSERT INTO dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', true, false);
+INSERT INTO dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', true, false);
+INSERT INTO dot.test_types VALUES('associated_columns_not_null', 'dbt', 'Test to confirm related columns not null', 'column', true, false);
+INSERT INTO dot.test_types VALUES('expect_similar_means_across_reporters', 'great_expectations', 'Test to compare means across reporters (eg of temperature)', 'column', true, false);
+INSERT INTO dot.test_types VALUES('expression_is_true', 'dbt', 'Test to confirm a value of an expression given a condition', 'any', true, false);
 
 
 -- dot.test_parameters_interface
-INSERT INTO dot.test_parameters_interface VALUES('relationships', 'name', 'function_argument', 'Name of the test');
-INSERT INTO dot.test_parameters_interface VALUES('relationships', 'reference', 'function_argument', 'Referenced field to be checked if missing');
-INSERT INTO dot.test_parameters_interface VALUES('relationships', 'field', 'function_argument', 'Field being checked');
-INSERT INTO dot.test_parameters_interface VALUES('not_negative_string_column', 'name', 'function_argument', 'Name of column to be check3ed for non-negative values');
-INSERT INTO dot.test_parameters_interface VALUES('accepted_values', 'values', 'function_argument', 'List of accepted values for the field being checked');
-INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_reported_date', 'function_argument', 'Column which indicates when form created');
-INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_patient_uuid', 'function_argument', 'Column which holds to patient uuid');
-INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_uuid', 'function_argument', 'UUID for records in the table (form) being checked');
-INSERT INTO dot.test_parameters_interface VALUES('custom_sql', '', 'sql_statement', 'Custom SQL to use to determine test fails, SQL is defined in columns test_parameter');
-INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'name', 'function_argument', 'Name of the test');
-INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'condition', 'function_argument', 'Where clause of rows that are going to be checked');
-INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'expression', 'function_argument', 'If not true, the row fails the test');
+-- INSERT INTO dot.test_parameters_interface VALUES('relationships', 'name', 'function_argument', 'Name of the test');
+INSERT INTO dot.test_parameters_interface VALUES('relationships', 'reference', 'view/table', $$ref('dot_model__ancview_pregnancy')$$, 'Referenced field to be checked if missing');
+INSERT INTO dot.test_parameters_interface VALUES('relationships', 'field', 'entity any field', 'uuid', 'Field being checked');
+-- INSERT INTO dot.test_parameters_interface VALUES('not_negative_string_column', 'name', 'function_argument', 'Name of column to be check3ed for non-negative values');
+INSERT INTO dot.test_parameters_interface VALUES('accepted_values', 'values', 'list of values', $$["dog","cat","ostrich"]$$,'List of accepted values for the field being checked');
+INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_reported_date', 'entity date field', 'reported', 'Column which indicates when form created');
+INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_patient_uuid', 'entity id field', 'patient_id',  'Column which holds to patient uuid');
+INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_uuid', 'entity id field', 'uuid', 'UUID for records in the table (form) being checked');
+INSERT INTO dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_period', 'one of (hour, day, week)', 'day','Specified period to check for duplicates (hour, day, week)');
+INSERT INTO dot.test_parameters_interface VALUES('custom_sql', 'query', 'sql statement', $$SELECT COUNT(*) WHERE COLOR='green'$$,'Custom SQL to use to determine test fails, SQL is defined in columns test_parameter');
+-- INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'name', 'function_argument', 'Name of the test');
+INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'condition', 'entity columns boolean logic', '(patient_age_in_months<24) and (malaria_give_act is not null)','Where clause of rows that are going to be checked');
+INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'expression', 'entity columns boolean logic', 'malaria_act_dosage is not null', 'If not true, the row fails the test');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'key', 'entity id field', 'reported_by', 'The key to check means by, ie a person-specific id');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'quantity', 'entity numeric field', 'temperature', 'The name of the numeric field to analyze for variation');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'form_name', 'entity id field', 'dot_model__iccmview_assessment', 'The name of entity view where data is');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'id_column', 'entity any field', 'reported_by', 'The id column to group by for mean');  -- Seems like a duplicate of key?
+
 
 -- dot.scenario_test_types
 INSERT INTO dot.scenario_test_types VALUES('MISSING-1', 'associated_columns_not_null');
