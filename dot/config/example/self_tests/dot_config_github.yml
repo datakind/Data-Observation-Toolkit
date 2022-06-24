@@ -3,19 +3,19 @@ dot:
   output_schema_suffix: tests
 dot_db:
   type: postgres
-  host: dot_db
+  host: localhost
   user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  pass: postgres
   port: 5432
   dbname: dot_db
-  schema: dot
+  schema: self_tests_dot
   threads: 4
 Muso_db:
   type: postgres
-  host: dot_db
+  host: localhost
   user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  pass: postgres
   port: 5432
   dbname: dot_db
-  schema: public
+  schema: self_tests_public
   threads: 4

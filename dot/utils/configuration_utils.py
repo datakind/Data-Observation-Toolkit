@@ -20,7 +20,7 @@ GE_CONFIG_VARIABLES_FINAL_FILENAME = (
 DBT_PROJECT_SEPARATOR = "/"
 
 
-def _get_config_filename(path: str) -> str:
+def _get_filename_safely(path: str) -> str:
     """
     Internal function - checks if the path exists
 
@@ -34,7 +34,7 @@ def _get_config_filename(path: str) -> str:
             path of the file
     """
     if not os.path.isfile(path):
-        raise FileNotFoundError(f"Cannot find config file {path}")
+        raise FileNotFoundError(f"Cannot find file {path}")
     return path
 
 
@@ -93,7 +93,7 @@ def load_credentials(project_id: str, connection_params: DbParamsConnection) -> 
               connection_params : DbParamsConnection
                   enum type
     """
-    with open(_get_config_filename(dot_config_FILENAME)) as f:
+    with open(_get_filename_safely(dot_config_FILENAME)) as f:
         db_config = yaml.load(f, Loader=yaml.FullLoader)
 
     db_credentials = _get_credentials(db_config, project_id, connection_params)
@@ -168,11 +168,11 @@ def _create_config_file(
     """
     config_file_lines = []
     try:
-        with open(_get_config_filename(config_project_file_name), "r") as fr:
+        with open(_get_filename_safely(config_project_file_name), "r") as fr:
             # read project dependent file, if exists
             config_file_lines = fr.readlines()
     except FileNotFoundError:
-        with open(_get_config_filename(config_example_file_name), "r") as fr:
+        with open(_get_filename_safely(config_example_file_name), "r") as fr:
             # read example file and apply required transformations
             lines = fr.readlines()
             config_file_lines = transform_example_file_function(
@@ -269,7 +269,7 @@ def create_dbt_project_yaml(project_id: str) -> None:
               project_id : str
                   Project ID, eg 'Muso'. Must align with project_id in dot.projects
     """
-    with open(_get_config_filename(dot_config_FILENAME)) as f:
+    with open(_get_filename_safely(dot_config_FILENAME)) as f:
         dot_config = yaml.load(f, Loader=yaml.FullLoader)
 
     _create_config_file(
@@ -440,7 +440,7 @@ def get_dbt_config_custom_schema_output_objects(
                   schema suffix for test objects
     """
     if dot_config is None:
-        with open(dot_config_FILENAME) as f:
+        with open(_get_filename_safely(dot_config_FILENAME)) as f:
             dot_config = yaml.load(f, Loader=yaml.FullLoader)
 
     return dot_config.get("dot", {}).get("output_schema_suffix", None)

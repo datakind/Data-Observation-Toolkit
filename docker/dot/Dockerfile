@@ -7,7 +7,7 @@ RUN apt-get update
 RUN pip install --upgrade pip
 
 # This uses the requirements as defined in the dot directory
-COPY ./dot/requirements_data_confidence.txt requirements_data_confidence.txt
+COPY ./dot/requirements_dot.txt requirements_dot.txt
 COPY ./dot/install_dot.sh install_dot.sh
 RUN ./install_dot.sh
 

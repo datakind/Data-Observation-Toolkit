@@ -17,13 +17,17 @@ CREATE TABLE IF NOT EXISTS dot.test_types(
     library VARCHAR(300) NOT NULL,
     description VARCHAR(1000) NOT NULL,
     scope VARCHAR(300) CHECK(scope in ('column','single_table', 'multi_table','any')),
-    example_test_parameters VARCHAR(1000) NULL
+    uses_parameters BOOLEAN NOT NULL,
+    uses_column BOOLEAN NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dot.test_parameters_interface(
     test_type VARCHAR(300) NOT NULL,
-    parameter VARCHAR(300) NULL,
-    parameter_type VARCHAR(300) CHECK(parameter_type IN ('function_argument','sql_statement')),
+    parameter VARCHAR(300) NOT NULL,
+    parameter_type VARCHAR(300) CHECK(parameter_type IN ('entity any field', 'entity id field', 'entity columns boolean logic',
+                                                         'view/table', 'entity date field', 'one of (hour, day, week)',
+                                                         'entity numeric field','sql statement','list of values')),
+    example VARCHAR(300) NOT NULL,
     description VARCHAR(1000) NOT NULL,
     UNIQUE (test_type, parameter),
     CONSTRAINT fk_test_type
@@ -46,10 +50,12 @@ CREATE TABLE IF NOT EXISTS dot.scenario_test_types(
 CREATE TABLE IF NOT EXISTS dot.projects(
     project_id VARCHAR(300) PRIMARY KEY,
     description VARCHAR(1000) NOT NULL,
-    created_on TIMESTAMP WITH TIME ZONE NOT NULL,
     active BOOLEAN,
     project_schema VARCHAR(300) NULL,
-    contacts VARCHAR(1000) NULL
+    contacts VARCHAR(1000) NULL,
+    date_added TIMESTAMP WITH TIME ZONE NOT NULL,
+    date_modified TIMESTAMP WITH TIME ZONE NOT NULL,
+    last_updated_by VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS dot.run_log (
@@ -76,6 +82,9 @@ CREATE TABLE IF NOT EXISTS dot.configured_entities (
   entity_name VARCHAR(300),
   entity_category VARCHAR(300),
   entity_definition VARCHAR(4096),
+  date_added TIMESTAMP WITH TIME ZONE NOT NULL,
+  date_modified TIMESTAMP WITH TIME ZONE NOT NULL,
+  last_updated_by VARCHAR(200) NOT NULL,
   Primary Key (entity_id),
   CONSTRAINT fk_entity_category
       FOREIGN KEY(entity_category)
@@ -95,7 +104,7 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
     test_type VARCHAR(300) NOT NULL,
     column_name VARCHAR(300) NULL,
     column_description VARCHAR(1000) NULL,
-    test_parameters VARCHAR(1000) NULL,
+    test_parameters JSONB NULL,
     date_added TIMESTAMP WITH TIME ZONE NOT NULL,
     date_modified TIMESTAMP WITH TIME ZONE NOT NULL,
     last_updated_by VARCHAR(200) NOT NULL,
@@ -111,6 +120,16 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
 	CONSTRAINT fk_configured_entities
 	  FOREIGN KEY(entity_id)
 	  REFERENCES dot.configured_entities(entity_id)
+);
+
+CREATE TABLE IF NOT EXISTS dot.configured_tests_parameters(
+    test_id UUID PRIMARY KEY,
+    parameter_type VARCHAR(300) CHECK(parameter_type IN ('function_argument','sql_statement')),
+    parameter_name VARCHAR(300) NULL,
+    parameter_value VARCHAR(300) NULL,
+    CONSTRAINT test_id
+      FOREIGN KEY(test_id)
+	  REFERENCES dot.configured_tests(test_id)
 );
 
 CREATE TABLE IF NOT EXISTS dot.test_results(
@@ -165,7 +184,7 @@ declare
    KEY_STRING text;
 BEGIN
    -- If you change how this UUID is generated, be sure to also change how it is created in get_test_id in /utils/utils.py
-   KEY_STRING := new.project_id || new.test_type || new.entity_id || new.column_name || new.test_parameters;
+   KEY_STRING := new.project_id || new.test_type || new.entity_id || new.column_name || COALESCE(CAST(new.test_parameters AS VARCHAR),'');
    NEW.test_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_added := NOW();
    new.date_modified := NOW();
@@ -207,4 +226,36 @@ BEGIN
 	RETURN QUERY EXECUTE 'SELECT row_to_json(dot_model__'|| entity || ') from ' || results_schema || '.dot_model__' || entity || ' WHERE ' || id_col || '=''' || id_col_val || '''';
 END; $$ LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION dot.configured_entities_insert()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+declare
+   KEY_STRING text;
+BEGIN
+   -- If you change how this UUID is generated, be sure to also change how it is created in get_test_id in /utils/utils.py
+   KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
+   NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
+   new.date_added := NOW();
+   new.date_modified := NOW();
+   RETURN NEW;
+END;
+$$;
 
+CREATE OR REPLACE FUNCTION dot.configured_entities_update()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+   new.date_modified := NOW();
+   RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER configured_entities_insert_trigger
+BEFORE INSERT ON dot.configured_entities
+FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_insert() ;
+
+CREATE TRIGGER configured_entities_update_trigger
+BEFORE UPDATE ON dot.configured_entities
+FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_update() ;

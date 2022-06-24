@@ -1,4 +1,3 @@
-.idea*
 dot/config/dot_config.yml
 dot/dbt/dbt_project.yml
 dot/dbt/models/
@@ -6,5 +5,9 @@ dot/dbt/tests/
 dot/generated_files/
 dot/great_expectations/batch_config.json
 dot/great_expectations/great_expectations.yml
-dot/great_expectations/plugins/custom_expectations/__pycache__/
-dot/utils/__pycache__/
+
+dot/self_tests/data/base_self_test/dot_config.yml
+dot/self_tests/output/
+
+.idea*
+__pycache__
