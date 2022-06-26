@@ -780,10 +780,14 @@ def set_summary_stats(
 
         # Get failed row count
         if test_status == "fail":
-            c = pd.read_sql(
-                f"SELECT count(*) FROM {schema_test}.{failed_tests_view}", conn_test
+            df = pd.read_sql(
+                f"SELECT * FROM {schema_test}.{failed_tests_view}", conn_test
             )
-            c = float(c.iloc[0, 0])
+            # Some test views have one row, where they provide a list of failing uuids
+            if 'uuid_list' in df.columns.values and df.shape[0] == 1:
+                c = len(list(df.iloc[0, 0]))
+            else:
+                c = df.shape[0]
         else:
             c = 0
         failed_count.append(c)
