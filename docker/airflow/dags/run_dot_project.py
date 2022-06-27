@@ -12,6 +12,7 @@ from airflow.models import DAG
 from airflow.operators.python import PythonOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.hooks.base import BaseHook
+from airflow.models import Variable
 from sqlalchemy import create_engine
 import json
 
@@ -186,7 +187,6 @@ def sync_object(
     # Save the data
     save_object(object_name_in, target_conn_in, data, column_list, source_conn_in)
 
-
 def run_dot(project_id_in):
     """
     Method to run the DOT.
@@ -220,17 +220,16 @@ def default_config():
     print(config)
     return config
 
-
 with DAG(
     dag_id="run_dot_project",
     schedule_interval="@daily",
     start_date=datetime(year=2022, month=3, day=1),
-    catchup=False,
+    catchup=False
 ) as dag:
 
-    # TODO, we will default, but coming soon this will come from dag con json
-    # {{dag_run.conf['dot_config']}}
-    config = default_config()
+    #config = default_config()
+
+    config = json.loads(Variable.get('dot_config', default_var=default_config()))
 
     """
     target_conn - Airflow connection name for target connection and schema
