@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS dot.entity_categories (
 );
 
 CREATE TABLE IF NOT EXISTS dot.configured_entities (
+  project_id VARCHAR(300) NOT NULL,
   entity_id UUID,
   entity_name VARCHAR(300),
   entity_category VARCHAR(300),
@@ -88,7 +89,10 @@ CREATE TABLE IF NOT EXISTS dot.configured_entities (
   Primary Key (entity_id),
   CONSTRAINT fk_entity_category
       FOREIGN KEY(entity_category)
-      REFERENCES dot.entity_categories(entity_category)
+      REFERENCES dot.entity_categories(entity_category),
+  CONSTRAINT fk_project
+      FOREIGN KEY(project_id)
+	  REFERENCES dot.projects(project_id)
 );
 
 CREATE TABLE IF NOT EXISTS dot.configured_tests(
