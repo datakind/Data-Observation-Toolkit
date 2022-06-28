@@ -97,6 +97,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
         schema_dot=schema_dot,
         conn=conn_dot,
         schema_project=schema_project,
+        project_id=project_id,
         output_path=model_dir,
         logger=logger,
     )
