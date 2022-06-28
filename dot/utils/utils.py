@@ -241,8 +241,8 @@ def get_configured_tests_row(
     # temporary.
     test_params_clause = ''
     if test_parameters != '':
-        test_params_clause = f""" AND regexp_replace(CAST(test_parameters AS VARCHAR), '\W+', '', 'g') =
-                             '{prefix}{test_parameters}';"""
+        test_params_clause = f""" AND regexp_replace(LOWER(CAST(test_parameters AS VARCHAR)), '\W+', '', 'g') =
+                             '{prefix}{test_parameters.lower()}';"""
 
     # Generate a query that will match our test details and return test_id
     query = f"""
