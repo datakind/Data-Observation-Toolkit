@@ -351,7 +351,7 @@ def create_core_entities(
     for f in os.listdir(output_path):
         if ".yml" in f:
             os.remove(os.path.join(output_path, f))
-    
+
     for i, row in configured_entities.iterrows():
         filename = os.path.join(
             output_path, f"{dot_model_PREFIX}{row['entity_name']}.sql"
