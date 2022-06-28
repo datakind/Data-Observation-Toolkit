@@ -10,6 +10,7 @@ from datetime import datetime
 import pandas as pd
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash_operator import BashOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.hooks.base import BaseHook
 from airflow.models import Variable
@@ -128,7 +129,7 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, source_
         executemany_batch_page_size=200,
     )
 
-    schema = "data_" + source_db_in
+    schema = "data_" + source_db_in.replace("-","_")
 
     # Cascade drop target table if in replace mode. This will also drop any DOT model views onto this data
     if MODE == "replace":
@@ -187,7 +188,7 @@ def sync_object(
     # Save the data
     save_object(object_name_in, target_conn_in, data, column_list, source_conn_in)
 
-def run_dot(project_id_in):
+def run_dot_app(project_id_in):
     """
     Method to run the DOT.
     """
@@ -239,6 +240,8 @@ with DAG(
 
     for project in config["dot_projects"]:
 
+        af_tasks = []
+
         """
         project_id  - Project ID, as found in dot.projects table
         objects_to_sync - List of objects to sync, each one with definition of unique field and date field
@@ -251,8 +254,6 @@ with DAG(
         earliest_date_to_sync = project["earliest_date_to_sync"]
         source_conn = project["source_connid"]
 
-        af_tasks = []
-
         # Sync data and link to dot.
         for i in range(len(objects_to_sync)):
 
@@ -263,7 +264,7 @@ with DAG(
             # Get the data from a object in Postgres and copy to target DB
             af_tasks.append(
                 PythonOperator(
-                    task_id="sync_object_" + object_name,
+                    task_id=f"sync_object_{project_id}_{object_name}",
                     python_callable=sync_object,
                     op_kwargs={
                         "object_name_in": object_name,
@@ -279,11 +280,17 @@ with DAG(
             if i > 0:
                 af_tasks[i - 1] >> af_tasks[i]
 
-        run_dot = PythonOperator(
-            task_id="run_dot",
-            python_callable=run_dot,
-            op_kwargs={"project_id_in": project_id},
+        #run_dot = PythonOperator(
+        #    task_id=f"run_dot_{project_id}",
+        #    python_callable=run_dot_app,
+        #    op_kwargs={"project_id_in": project_id},
+        #    dag=dag,
+        #)
+
+        run_dot = BashOperator(
+            task_id=f"run_dot_{project_id}",
             dag=dag,
+            bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}"
         )
 
         af_tasks[-1] >> run_dot
