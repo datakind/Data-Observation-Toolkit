@@ -20,7 +20,7 @@ INSERT INTO self_tests_dot.entity_categories VALUES('anc', 'antenatal care');
 INSERT INTO self_tests_dot.entity_categories VALUES('fp', 'Family planning');
 
 -- this entity has only an entity as it is normally defined; there no impact views in the test setup, thus no data to test
-INSERT INTO self_tests_dot.configured_entities VALUES('66f5d13a-8f74-4f97-836b-334d97932781', 'ancview_delivery', 'anc', '{{ config(materialized=''view'') }}
+INSERT INTO self_tests_dot.configured_entities VALUES('Muso','66f5d13a-8f74-4f97-836b-334d97932781', 'ancview_delivery', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 
 select *
@@ -31,7 +31,7 @@ INSERT INTO self_tests_dot.configured_tests VALUES(TRUE, 'Muso', '7f78de0e-8268-
 $${"table_specific_uuid": "uuid", "table_specific_period": "day", "table_specific_patient_uuid": "patient_id", "table_specific_reported_date": "delivery_date"}$$
 , '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
 
-INSERT INTO self_tests_dot.configured_entities VALUES('95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'fpview_registration', 'fp', 'select * from
+INSERT INTO self_tests_dot.configured_entities VALUES('Muso','95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'fpview_registration', 'fp', 'select * from
 (values (''patient-id1'', ''1''), (''patient_id2'', ''2''), (''patient_id3'', ''3'')) x(patient_id, value)
 ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
