@@ -224,6 +224,18 @@ CREATE TABLE IF NOT EXISTS dot.remediation_log(
 	  REFERENCES dot.configured_tests(test_id)
 );
 
+
+
+CREATE OR REPLACE VIEW dot.test_type_parameters_json
+AS
+    SELECT
+        test_type,
+        CONCAT('{',replace(replace(string_agg(CONCAT('"' , parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')) as "json_sample"
+    FROM
+        dot.test_parameters_interface
+    GROUP BY
+        test_type;
+
 CREATE OR REPLACE FUNCTION dot.get_test_result_data_record(entity varchar(300), id_col text, id_col_val text, results_schema text)
 RETURNS table (j json) as $$
 BEGIN
