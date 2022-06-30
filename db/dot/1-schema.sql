@@ -275,3 +275,19 @@ FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_insert() ;
 CREATE TRIGGER configured_entities_update_trigger
 BEFORE UPDATE ON dot.configured_entities
 FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_update() ;
+
+-- Utility function that returns JSON of all possible parameters. Used in UI to generate full field set
+CREATE OR REPLACE FUNCTION dot.test_params_all_json()
+RETURNS text
+LANGUAGE plpgsql
+AS $$
+declare
+   full_json text;
+BEGIN
+   full_json := (SELECT
+                   CONCAT('{',replace(replace(string_agg(CONCAT('"' ,test_type, '%%%', parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')
+				 FROM
+				    dot.test_parameters_interface);
+   return full_json;
+END;
+$$;
