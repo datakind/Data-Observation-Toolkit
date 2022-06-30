@@ -230,7 +230,7 @@ CREATE OR REPLACE VIEW dot.test_type_parameters_json
 AS
     SELECT
         test_type,
-        CONCAT('{',replace(replace(string_agg(CONCAT('"' , parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')) as "json_sample"
+        CONCAT('{',replace(replace(string_agg(CONCAT('"' , parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}') as "json_sample"
     FROM
         dot.test_parameters_interface
     GROUP BY
