@@ -74,6 +74,32 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         create_failed_dbt_test_models(project_id, logger, "view")
         run_dbt_test(project_id, logger)
 
+    def check_output_recursive(
+        self,
+        exp_line: str,
+        out_line: str,
+        skip_keys: dict = {
+            0: ["timing", "execution_time", "thread_id"],
+            1: ["created_at", "root_path"],
+        },
+        recursion_level: int = 0,
+    ):
+        """check outputs recursively for dbt logs"""
+        for exp_k, exp_v in exp_line.items():
+            if exp_k in skip_keys.get(recursion_level, []):
+                continue
+            out_line_v = out_line.get(exp_k)
+            if isinstance(exp_v, dict):
+                self.check_output_recursive(
+                    exp_v, out_line_v, skip_keys, recursion_level + 1
+                )
+            else:
+                self.assertEqual(
+                    out_line_v,
+                    exp_v,
+                    f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
+                )
+
     @patch("utils.configuration_utils._get_filename_safely")
     def test_read_dbt_logs_safe(
         self, mock_get_filename_safely
@@ -105,37 +131,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                 f"there should be 1 and only 1 output w unique_id {unique_id}",
             )
             out_line = out_lines[0]
-            # TODO refactor into recursive
-            for exp_k, exp_v in exp_line.items():
-                if exp_k in ["timing", "execution_time", "thread_id"]:
-                    continue
-                out_line_v = out_line.get(exp_k)
-                if isinstance(exp_v, dict):
-                    for exp_k_2, exp_v_2 in exp_v.items():
-                        if exp_k_2 in ["created_at"]:
-                            continue
-                        out_line_v_2 = out_line_v.get(exp_k_2)
-                        if isinstance(exp_v_2, dict):
-                            for exp_k_3, exp_v_3 in exp_v_2.items():
-                                if exp_k_2 in ["root_path"]:
-                                    continue
-                                self.assertEqual(
-                                    out_line_v_2.get(exp_k_3),
-                                    exp_v_3,
-                                    f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
-                                )
-                        else:
-                            self.assertEqual(
-                                out_line_v_2,
-                                exp_v_2,
-                                f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
-                            )
-                else:
-                    self.assertEqual(
-                        out_line_v,
-                        exp_v,
-                        f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
-                    )
+            self.check_output_recursive(exp_line, out_line)
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_process_dbt_logs_row_safe(
