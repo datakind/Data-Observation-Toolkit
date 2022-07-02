@@ -321,7 +321,9 @@ def create_core_entities(
         logger object
     """
 
-    query = sql.SQL(f"select * from {schema_dot}.configured_entities where project_id='{project_id}'")
+    query = sql.SQL(
+        f"select * from {schema_dot}.configured_entities where project_id='{project_id}'"
+    )
 
     configured_entities = pd.read_sql(query, conn)
     if not os.path.isdir(output_path):

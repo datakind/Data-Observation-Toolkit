@@ -49,8 +49,7 @@ class DbtUtilsTest(BaseSelfTestClass):
             target_path="self_tests/data/dot_output_files/dbt/target",
         )
 
-        output.to_csv('self_tests/data/op.csv')
-
+        output.to_csv("self_tests/data/op.csv")
 
         expected = pd.read_csv(
             "self_tests/data/expected/extract_df_from_dbt_test_results_json.csv",

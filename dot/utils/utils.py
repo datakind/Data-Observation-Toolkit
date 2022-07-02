@@ -239,8 +239,8 @@ def get_configured_tests_row(
 
     # This whole function must go away, we need to pass test_ids through dbt and ge. Below is
     # temporary.
-    test_params_clause = ''
-    if test_parameters != '':
+    test_params_clause = ""
+    if test_parameters != "":
         test_params_clause = f""" AND regexp_replace(LOWER(CAST(test_parameters AS VARCHAR)), '\W+', '', 'g') =
                              '{prefix}{test_parameters.lower()}';"""
 
@@ -785,7 +785,7 @@ def set_summary_stats(
                 f"SELECT * FROM {schema_test}.{failed_tests_view}", conn_test
             )
             # Some test views have one row, where they provide a list of failing uuids
-            if 'uuid_list' in df.columns.values and df.shape[0] == 1:
+            if "uuid_list" in df.columns.values and df.shape[0] == 1:
                 c = len(list(df.iloc[0, 0]))
             else:
                 c = df.shape[0]
