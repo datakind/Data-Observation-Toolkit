@@ -40,5 +40,5 @@ CREATE TABLE self_tests_public.fpview_registration (
 INSERT INTO self_tests_public.fpview_registration
 SELECT * FROM (values ('patient-id1', '1'), ('patient_id2', '2'), ('patient_id3', '-3')) x(uuid, value);
 
-INSERT INTO self_tests_dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, 'UUID is not null', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_null', 'uuid', '', NULL, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
-INSERT INTO self_tests_dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 5, 'value not negative', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'value', '', $${"name": "value"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
+INSERT INTO self_tests_dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, 'UUID is not null', '', '', 'b22a0dd5-f26a-3f7a-a413-867b4c5b1882', 'not_null', 'uuid', '', NULL, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
+INSERT INTO self_tests_dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 5, 'value not negative', '', '', 'b22a0dd5-f26a-3f7a-a413-867b4c5b1882', 'not_negative_string_column', 'value', '', $${"name": "value"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Example');
