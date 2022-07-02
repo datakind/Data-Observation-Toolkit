@@ -204,16 +204,11 @@ def create_profiles_yaml(project_id: str, db_credentials_project: dict) -> None:
         config_file_lines, final_config_file_name, **kwargs
     ):  # pylint: disable=unused-argument
         # put profiles.yaml into home
-        if os.path.isfile(final_config_file_name):
-            # if running from a local test, the user takes care of
-            # configuring the right profiles.yaml
-            pass
-        else:
-            d = "/".join(final_config_file_name.split("/")[:-1])
-            if not os.path.isdir(d):
-                os.makedirs(d)
-            with open(final_config_file_name, "w") as fw:
-                fw.writelines(config_file_lines)
+        d = "/".join(final_config_file_name.split("/")[:-1])
+        if not os.path.isdir(d):
+            os.makedirs(d)
+        with open(final_config_file_name, "w") as fw:
+            fw.writelines(config_file_lines)
 
     _create_config_file(
         f"./config/{project_id}/dbt/profiles.yml",

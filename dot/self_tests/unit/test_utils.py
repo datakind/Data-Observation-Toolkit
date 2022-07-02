@@ -48,8 +48,8 @@ class UtilsTest(BaseSelfTestClass):
         run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
         test_summary_row = {
             "run_id": run_id,
-            "test_id": "ef6bb39d-7a89-3972-b5b6-719d4435e7f9",
-            "entity_id": "95bd0f60-ab59-48fc-a62e-f256f5f3e6de",
+            "test_id": "8317ea22-70d1-32d2-b061-e25e0aac9f8e",
+            "entity_id": "52aa8e99-5221-3aac-bca5-b52b80b90929",
             "test_type": "custom_sql",
             "column_name": "",
             # "id_column_name": "patient_id",
@@ -71,7 +71,7 @@ class UtilsTest(BaseSelfTestClass):
 
         generated_test_id = get_test_id(
             test_type="possible_duplicate_forms",
-            entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
+            entity_id="adc007dd-2407-3dc2-95a7-002067e741f9",
             column="",
             project_id="Muso",
             test_parameters="""$$
@@ -85,7 +85,7 @@ class UtilsTest(BaseSelfTestClass):
                 "\n", ""
             ),
         )
-        expected_test_id = "0a055ffd-c753-3c27-9de9-a4665352513f"
+        expected_test_id = "5501f109-a017-3594-96ea-eb8438187509"
         self.assertEqual(
             expected_test_id,
             generated_test_id,
@@ -108,7 +108,7 @@ class UtilsTest(BaseSelfTestClass):
                 "'7f78de0e-8268-3da6-8845-9a445457cc9a',"
                 "'DUPLICATE-1',"
                 "3, '', '', '', "
-                "'66f5d13a-8f74-4f97-836b-334d97932781',"
+                "'adc007dd-2407-3dc2-95a7-002067e741f9',"
                 "'possible_duplicate_forms', '', '',"
                 """$${
                    'table_specific_uuid': 'uuid',
@@ -136,7 +136,7 @@ class UtilsTest(BaseSelfTestClass):
                     INSERT INTO self_tests_dot.configured_tests 
                     VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca70',
                     'TREAT-1', 5, 'Test for new family planning method (NFP-1)', 
-                    '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', 
+                    '', '', '52aa8e99-5221-3aac-bca5-b52b80b90929', 'custom_sql', 
                     '', '', $${"query":"SELECT
                               patient_id as primary_table_id_field,
                               value
@@ -159,7 +159,7 @@ class UtilsTest(BaseSelfTestClass):
         with self.assertRaises(ReferenceError):
             _ = get_configured_tests_row(
                 test_type="possible_duplicate_forms",
-                entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
+                entity_id="adc007dd-2407-3dc2-95a7-002067e741f9",
                 column="",
                 project_id="Muso",
                 test_parameters="""
@@ -181,12 +181,12 @@ class UtilsTest(BaseSelfTestClass):
 
         configured_tests_row = get_configured_tests_row(
             test_type="possible_duplicate_forms",
-            entity_id="66f5d13a-8f74-4f97-836b-334d97932781",
+            entity_id="adc007dd-2407-3dc2-95a7-002067e741f9",
             column="",
             project_id="Muso",
             test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
         )
-        expected_test_id = "0a055ffd-c753-3c27-9de9-a4665352513f"
+        expected_test_id = "5501f109-a017-3594-96ea-eb8438187509"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -202,7 +202,7 @@ class UtilsTest(BaseSelfTestClass):
             "description": "",
             "impact": "",
             "proposed_remediation": "",
-            "entity_id": "66f5d13a-8f74-4f97-836b-334d97932781",
+            "entity_id": "adc007dd-2407-3dc2-95a7-002067e741f9",
             "test_type": "possible_duplicate_forms",
             "column_name": "",
             "column_description": "",
@@ -224,7 +224,7 @@ class UtilsTest(BaseSelfTestClass):
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         self.assertEqual(
-            "66f5d13a-8f74-4f97-836b-334d97932781",
+            "adc007dd-2407-3dc2-95a7-002067e741f9",
             get_entity_id_from_name("Muso", "dot_model__ancview_delivery"),
         )
 
@@ -237,7 +237,7 @@ class UtilsTest(BaseSelfTestClass):
 
         self.assertEqual(
             "dot_model__ancview_delivery",
-            get_entity_name_from_id("Muso", "66f5d13a-8f74-4f97-836b-334d97932781"),
+            get_entity_name_from_id("Muso", "adc007dd-2407-3dc2-95a7-002067e741f9"),
         )
 
     @patch("utils.configuration_utils._get_filename_safely")

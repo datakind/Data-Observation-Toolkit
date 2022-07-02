@@ -75,9 +75,51 @@
                     "object":"useview_assessment",
                     "id_field":"uuid",
                     "date_field":"reported"
+                }
+            ]
+        },
+        {
+            "project_id":"Brac",
+            "source_connid": "brac-ug",
+            "earliest_date_to_sync":"2021-03-01",
+            "objects":[
+                {
+                    "object":"ancview_danger_sign",
+                    "id_field":"uuid",
+                    "date_field":"reported"
                 },
                 {
-                    "object":"formview_assessment",
+                    "object":"ancview_delivery",
+                    "id_field":"uuid",
+                    "date_field":"reported"
+                },
+                {
+                    "object":"ancview_pregnancy",
+                    "id_field":"uuid",
+                    "date_field":"reported"
+                },
+                {
+                    "object":"ancview_pregnancy_visit",
+                    "id_field":"uuid",
+                    "date_field":"reported"
+                },
+                {
+                    "object":"hhview_visits",
+                    "id_field":"uuid",
+                    "date_field":"reported"
+                },
+                {
+                    "object":"iccmview_assessment",
+                    "id_field":"uuid",
+                    "date_field":"reported"
+                },
+                {
+                    "object":"iccmview_assessment_follow_up",
+                    "id_field":"uuid",
+                    "date_field":"reported"
+                },
+                {
+                    "object":"pncview_visits",
                     "id_field":"uuid",
                     "date_field":"reported"
                 }

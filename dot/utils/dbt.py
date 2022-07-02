@@ -298,6 +298,7 @@ def create_core_entities(
     schema_dot: str,
     conn: psycopg2.extensions.connection,
     schema_project: str,
+    project_id: str,
     output_path: str,
     logger: logging.Logger,
 ) -> None:
@@ -312,19 +313,27 @@ def create_core_entities(
         db connection
     schema_project: str
         project schema
+    project_id: str
+        project_id
     output_path: str
         output path for the files
     logger: logging.Logger
         logger object
     """
-    query = sql.SQL("select * from {schema}.configured_entities").format(
-        schema=sql.Identifier(schema_dot)
-    )
+
+    query = sql.SQL(f"select * from {schema_dot}.configured_entities where project_id='{project_id}'")
+
     configured_entities = pd.read_sql(query, conn)
     if not os.path.isdir(output_path):
         os.makedirs(output_path)
     logger.info("Generating DBT core entities' files ...")
-    for _, row in configured_entities.iterrows():
+
+    # Remove existing files so entities can be deactivated
+    for f in os.listdir(output_path):
+        if ".yml" in f:
+            os.remove(os.path.join(output_path, f))
+
+    for i, row in configured_entities.iterrows():
         filename = os.path.join(
             output_path, f"{dot_model_PREFIX}{row['entity_name']}.sql"
         )

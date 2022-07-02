@@ -496,13 +496,7 @@ of the deployed app URL.
 Appsmith release bug fixes and enhancements. To get these:
 
 1. In `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml stop`
-2. `docker rm appsmith`
-3. In a clean directory: `curl -L https://bit.ly/32jBNin -o $PWD/docker-compose.yml`
-4. `docker-compose pull && docker-compose rm -fsv appsmith && docker-compose up -d`
-5. Back in `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
-
-Note, these will remove your saved configuration and app, so be sure to make note of these before doing the above
-steps.
+2. `docker compose -f docker-compose-with-appsmith-ui.yml pull appsmith && docker-compose -f docker-compose-with-appsmith-ui.yml rm -fsv appsmith && docker-compose -f docker-compose-with-appsmith-ui.yml up -d`
 
 # Advanced topics
 
@@ -745,7 +739,15 @@ Or to run just DOT stage ...
 #### Adding more projects
 
 If configuring Airflow in production, you will need to adjust `./docker/dot/dot_config.yml` accordingly. You can also 
-add new projects by extending the projects array in the [Airflow configuration JSON](https://github.com/datakind/Data-Observation-Toolkit/blob/master/docker/airflow/dags/dot_projects.json)
+add new projects by extending the projects array in the default file [Airflow configuration JSON](./docker/airflow/dags/dot_projects.json).
+
+For more flexibility, you can also define the dot run by using Airflow variables:
+
+1. Under **Admin > Variables** create a new variable called `dot_config`
+2. Copy the default [Airflow configuration JSON](./docker/airflow/dags/dot_projects.json) and paste as the variable value
+3. Add a description
+
+Now the DOT DAG will use this variable when running, which means you can further edit as required.
 
 ## How the DOT works 
 
@@ -937,45 +939,11 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 ##### Using Docker
 
-The recommended way is to run self-tests in Docker, as this is how dot is typically deployed and 
-ensures you're testing the exact same environment. 
+The Docker build provided above to run DOT, also includes self-test. So once you have the container running, all you
+need to do is ..
 
-- Set [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 
-`dot/self_tests/data/base_self_test` as follows ...
-
-```
-dot:
-  save_passed_tests: False
-  output_schema_suffix: tests
-dot_db:
-  type: postgres
-  host: dot_db
-  user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5432
-  dbname: dot_db
-  schema: self_tests_dot
-  threads: 4
-Muso_db:
-  type: postgres
-  host: dot_db
-  user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5432
-  dbname: dot_db
-  schema: self_tests_public
-  threads: 4
-```
-
-- Start a terminal on the container
-```
-docker exec -it dot /bin/bash
-```
-- Run the tests
-```
-cd dot
-pytest self_tests/unit
-```
+1. `exec -it dot /bin/bash`
+2. `pytest dot/self_tests/unit`
 
 ##### On your local machine
 
@@ -1016,7 +984,6 @@ And finally you can run the tests from a terminal as follows:
 ```
 pytest dot/self_tests/unit
 ```
-
 
 #### Guidelines for adding new tests
 - Existing tests are at [the self-tests folder](dot/self_tests/unit)
