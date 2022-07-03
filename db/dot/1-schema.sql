@@ -285,7 +285,8 @@ declare
    full_json text;
 BEGIN
    full_json := (SELECT
-                   CONCAT('{',replace(replace(string_agg(CONCAT('"' ,test_type, '%%%', parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')
+                   -- CONCAT('{',replace(replace(string_agg(CONCAT('"' ,test_type, '%%%', parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')
+                   CONCAT('{',replace(replace(string_agg(CONCAT('"' ,parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')
 				 FROM
 				    dot.test_parameters_interface);
    return full_json;
