@@ -482,18 +482,30 @@ You should now have the DOT webapp running in development mode. To run in end-us
 Note: If you want to remove appsmith information on the deployed app, add `?embed=True` at the end
 of the deployed app URL.
 
-## Test configuration
+## Using the UI
 
-- To edit any test, click on the edit button on the left
-- To add a test, click the 'Add test' button above the table
-- To Activate/Deactive tests, select them using far-left radio buttons then click button 'Activate/Deactivate' tests 
-  button above table 
-- To delete tests, select them using far-left radio buttons then click button 'Delete' tests 
-  button above table 
+Once you log into appsmith using the URL above and have imported the DOT App, you can click on it and select 'Launch'
+to use it. It supports maintaining configuration as well as monitoring DOT runs.
+
+You can also share the app with other people if registered on the same appsmith instance. This becomes more appropriate 
+in production deployments.
+
+## Developing the UI
+
+Clicking 'Edit' on the imported app gives you the ability to edit the app. See the [appsmith help site](https://docs.appsmith.com) for more information 
+on this.
+
+Key things to note:
+
+- All validation, defaulting, tool tips are controlled via the Database as much as possible. See the 'Queries' section
+- Of particular note is that the test_parameters JSON generates a form. This was done once, be aware it will remove many 
+  settings if you click regenerate. I have a feature request open with appsmith to create fields with default types, 
+  values and validation functions, but for now we are adding new fields manually. Note that you might be able to 
+  reinstate the logic en masse by looking at the raw appsmith app JSON file
 
 ## Updating to latest version of appsmith
 
-Appsmith release bug fixes and enhancements. To get these:
+Appsmith release bug fixes and enhancements. By default the DOT docker build will do this automatically. To do this manually:
 
 1. In `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml stop`
 2. `docker rm appsmith`
