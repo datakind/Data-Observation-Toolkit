@@ -5,6 +5,7 @@ This is a DAG for running the DOT. It will:
        database and copy them to the DOT database
     2. Run DOT
 """
+import json
 from os import system
 from datetime import datetime
 import pandas as pd
@@ -15,7 +16,6 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.hooks.base import BaseHook
 from airflow.models import Variable
 from sqlalchemy import create_engine
-import json
 
 
 def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in):
@@ -32,7 +32,8 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
     date_field: String
         Date field on each record for this object
     source_conn_in: String
-       Airflow connection ID where data lives. Note, the connection name must exactly equal the db name.
+       Airflow connection ID where data lives.
+       Note, the connection name must exactly equal the db name.
 
     """
 
@@ -129,9 +130,10 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, source_
         executemany_batch_page_size=200,
     )
 
-    schema = "data_" + source_db_in.replace("-","_")
+    schema = "data_" + source_db_in.replace("-", "_")
 
-    # Cascade drop target table if in replace mode. This will also drop any DOT model views onto this data
+    # Cascade drop target table if in replace mode.
+    # This will also drop any DOT model views onto this data
     if MODE == "replace":
         with PostgresHook(
             postgres_conn_id=target_conn_in, schema=target_conn_in
@@ -188,6 +190,7 @@ def sync_object(
     # Save the data
     save_object(object_name_in, target_conn_in, data, column_list, source_conn_in)
 
+
 def run_dot_app(project_id_in):
     """
     Method to run the DOT.
@@ -199,8 +202,8 @@ def run_dot_app(project_id_in):
 def default_config():
     """
 
-    Sets configuration to determine how the DAG will run from Airflow config. Used if called didn't provide
-    configuration
+    Sets configuration to determine how the DAG will run from Airflow config.
+    Used if called didn't provide configuration
 
     Input
     -----
@@ -221,16 +224,17 @@ def default_config():
     print(config)
     return config
 
+
 with DAG(
     dag_id="run_dot_project",
     schedule_interval="@daily",
     start_date=datetime(year=2022, month=3, day=1),
-    catchup=False
+    catchup=False,
 ) as dag:
 
-    #config = default_config()
+    # config = default_config()
 
-    config = json.loads(Variable.get('dot_config', default_var=default_config()))
+    config = json.loads(Variable.get("dot_config", default_var=default_config()))
 
     """
     target_conn - Airflow connection name for target connection and schema
@@ -244,7 +248,8 @@ with DAG(
 
         """
         project_id  - Project ID, as found in dot.projects table
-        objects_to_sync - List of objects to sync, each one with definition of unique field and date field
+        objects_to_sync - List of objects to sync, each one with definition 
+            of unique field and date field
         earliest_date_to_sync - Only sync data after this date for project
         source_conn - Airflow connection to define where source data is
         source_db   - Source database name
@@ -280,17 +285,17 @@ with DAG(
             if i > 0:
                 af_tasks[i - 1] >> af_tasks[i]
 
-        #run_dot = PythonOperator(
+        # run_dot = PythonOperator(
         #    task_id=f"run_dot_{project_id}",
         #    python_callable=run_dot_app,
         #    op_kwargs={"project_id_in": project_id},
         #    dag=dag,
-        #)
+        # )
 
         run_dot = BashOperator(
             task_id=f"run_dot_{project_id}",
             dag=dag,
-            bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}"
+            bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}",
         )
 
         af_tasks[-1] >> run_dot

@@ -131,7 +131,7 @@ def get_db_params_from_config(
         user=db_credentials["user"],
         password=db_credentials["pass"],
         port=db_credentials["port"],
-        dbname=db_credentials["dbname"]
+        dbname=db_credentials["dbname"],
     )
 
     # Added to prevent timeout in self-tests due to locked select query transation

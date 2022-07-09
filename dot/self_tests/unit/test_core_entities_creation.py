@@ -30,7 +30,12 @@ class CoreEntitiesCreationTest(BaseSelfTestClass):
         schema_project = "data_muso"
         project_id = "Muso"
         create_core_entities(
-            schema, conn, schema_project, project_id, output_dir, logger=logging.getLogger()
+            schema,
+            conn,
+            schema_project,
+            project_id,
+            output_dir,
+            logger=logging.getLogger(),
         )
         conn.close()
 

@@ -69,20 +69,21 @@ class UtilsTest(BaseSelfTestClass):
         """test yaml file creation for 1 core entity -see file in filename below"""
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
-
         generated_test_id = get_test_id(
             test_type="possible_duplicate_forms",
             entity_id="adc007dd-2407-3dc2-95a7-002067e741f9",
             column="",
             project_id="Muso",
-            test_parameters='''$$
+            test_parameters="""$$
                 {
                    'table_specific_uuid': 'uuid',
                    'table_specific_period': 'day',
                    'table_specific_patient_uuid': 'patient_id',
                    'table_specific_reported_date': 'delivery_date',
                 }$$
-            '''.replace('\n','')
+            """.replace(
+                "\n", ""
+            ),
         )
         expected_test_id = "5501f109-a017-3594-96ea-eb8438187509"
         self.assertEqual(
@@ -109,12 +110,12 @@ class UtilsTest(BaseSelfTestClass):
                 "3, '', '', '', "
                 "'adc007dd-2407-3dc2-95a7-002067e741f9',"
                 "'possible_duplicate_forms', '', '',"
-                '''$${
+                """$${
                    'table_specific_uuid': 'uuid',
                    'table_specific_patient_uuid': 'patient_id',
                    'table_specific_reported_date': 'delivery_date',
                 }$$
-                ,'''
+                ,"""
                 "'2021-12-23 19:00:00.000 -0500',"
                 "'2021-12-23 19:00:00.000 -0500',"
                 "'Lorenzo');",
@@ -161,14 +162,14 @@ class UtilsTest(BaseSelfTestClass):
                 entity_id="adc007dd-2407-3dc2-95a7-002067e741f9",
                 column="",
                 project_id="Muso",
-                test_parameters='''
+                test_parameters="""
                 {
                    'table_specific_uuid': 'uuid',
                    'table_specific_period': 'day',
                    'table_specific_patient_uuid': 'patient_id',
                    'table_specific_reported_date': 'delivery_date',
                 }
-                ''',
+                """,
             )
 
     @patch("utils.configuration_utils._get_filename_safely")
@@ -184,7 +185,6 @@ class UtilsTest(BaseSelfTestClass):
             column="",
             project_id="Muso",
             test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
-
         )
         expected_test_id = "5501f109-a017-3594-96ea-eb8438187509"
         self.assertEqual(
