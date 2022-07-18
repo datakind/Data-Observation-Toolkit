@@ -20,9 +20,11 @@ from utils.configuration_utils import (
     DbParamsConfigFile,
     DbParamsConnection,
     get_dbt_config_model_paths,
-    get_dbt_config_test_paths,
     adapt_core_entities,
-    _get_filename_safely,
+)
+from utils.dbt_logs import (
+    read_dbt_logs,
+    process_dbt_logs_row,
 )
 
 
@@ -185,6 +187,31 @@ def run_dbt_chv_tests(logger):
     run_sub_process(cmd, "./dbt", logger)
 
 
+def get_view_definition(project_id: str, short_test_name: str) -> str:
+    """
+    Figures out the view definition of a failing test
+    Parameters
+    ----------
+    project_id: str
+        e.g. Muso, for obtaining credentials
+    short_test_name: str
+        short name of the test (will correspond to the name of the view too)
+
+    Returns
+    -------
+      str
+         SQL for the view definition
+    """
+    schema_test, engine_test, conn_test = get_db_params_from_config(
+        DbParamsConfigFile["dot_config.yml"],
+        DbParamsConnection["project_test"],
+        project_id,
+    )
+    q = f"select pg_get_viewdef('{schema_test}.{short_test_name}', true)"
+    view_definition = pd.read_sql(q, conn_test)
+    return str(view_definition.iloc[0, 0])
+
+
 def extract_df_from_dbt_test_results_json(
     run_id: str,
     project_id: str,
@@ -217,89 +244,43 @@ def extract_df_from_dbt_test_results_json(
 
     logger.info("Extracting DBT test summary dataframe ...")
 
-    dbt_results = {}
-    manifest = {}
-
-    # Read generated json files. Assumes the cleanup has run and most recent
-    # results are in _archive files
-    for t in ["all", "test"]:
-        suffix = t if t == "test" else "archive"
-        filename = _get_filename_safely(f"{target_path}/run_results_{suffix}.json")
-        with open(filename) as f:
-            dbt_results[t] = json.load(f)
-        # Manifest, see https://docs.getdbt.com/reference/artifacts/manifest-json
-        filename = f"{target_path}/manifest_{suffix}.json"
-        with open(filename) as f:
-            manifest[t] = json.load(f)
+    dbt_results = read_dbt_logs(target_path)
 
     # Extract test results and save to dataframe
     dbt_tests_summary = {}
-    for i in dbt_results["all"]["results"]:
-        node = manifest["all"]["nodes"][i["unique_id"]]
-        _, short_test_name = get_short_test_name(node)
-        test_type = node.get("test_metadata", {}).get("name")
-        test_status = i["status"].lower()
-        test_message = i["message"].lower() if i["message"] else ""
+    for row in dbt_results:
+        processed_row = process_dbt_logs_row(row)
 
-        column_name = node.get("column_name")
-        entity_name = node["original_file_path"].split("/")[-1].split(".")[0]
-
-        test_parameters = node.get("test_metadata", {}).get("kwargs", {})
-        if "model" in test_parameters:
-            del test_parameters["model"]
-        if "column_name" in test_parameters:
-            del test_parameters["column_name"]
-
-        # Where clauses live under the config node
-        where_clause = node.get("config", {}).get("where", {})
-        if where_clause is not None:
-            test_parameters["where"] = where_clause
-
-        test_parameters = str(test_parameters)
-
-        # Custom sql (dbt/tests/*.sql) tests do not have the same structure
-        # and we have to get SQL from file
-        if test_type is None:
-            if f"{get_dbt_config_test_paths()}/" in node["original_file_path"]:
-                test_type = "custom_sql"
-                with open("dbt/" + node["original_file_path"]) as f:
-                    test_parameters = f.read()
-
-        # For custom sql tests the view name has "id_XX" at the end, needs to be stripped
-        entity_name = entity_name.split("_id")[0]
-
-        entity_id = get_entity_id_from_name(project_id, entity_name)
+        entity_id = get_entity_id_from_name(project_id, processed_row.entity_name)
         configured_test_row = get_configured_tests_row(
-            test_type, entity_id, column_name, project_id, test_parameters
+            processed_row.test_type,
+            entity_id,
+            processed_row.column_name,
+            project_id,
+            processed_row.test_parameters,
         )
         test_id = configured_test_row["test_id"]
         id_column_name = configured_test_row.get("id_column_name")
 
         # Get result view SQL definition
-        if test_status == "fail":
-            schema_test, engine_test, conn_test = get_db_params_from_config(
-                DbParamsConfigFile["dot_config.yml"],
-                DbParamsConnection["project_test"],
-                project_id,
+        failed_tests_view = ""
+        view_definition = ""
+        if processed_row.test_status == "fail":
+            view_definition = get_view_definition(
+                project_id, processed_row.short_test_name
             )
-            q = f"select pg_get_viewdef('{schema_test}.{short_test_name}', true)"
-            view_definition = pd.read_sql(q, conn_test)
-            view_definition = str(view_definition.iloc[0, 0])
-            failed_tests_view = short_test_name
-        else:
-            failed_tests_view = ""
-            view_definition = ""
+            failed_tests_view = processed_row.short_test_name
 
-        dbt_tests_summary[i["unique_id"]] = {
+        dbt_tests_summary[processed_row.unique_id] = {
             "run_id": run_id,
             "test_id": test_id,
             "entity_id": entity_id,
-            "test_type": test_type,
-            "column_name": column_name,
+            "test_type": processed_row.test_type,
+            "column_name": processed_row.column_name,
             "id_column_name": id_column_name,
-            "test_parameters": test_parameters,
-            "test_status": test_status,
-            "test_status_message": test_message,
+            "test_parameters": processed_row.test_parameters,
+            "test_status": processed_row.test_status,
+            "test_status_message": processed_row.test_message,
             "failed_tests_view": failed_tests_view,
             "failed_tests_view_sql": view_definition,
         }
@@ -340,7 +321,9 @@ def create_core_entities(
         logger object
     """
 
-    query = sql.SQL(f"select * from {schema_dot}.configured_entities where project_id='{project_id}'")
+    query = sql.SQL(
+        f"select * from {schema_dot}.configured_entities where project_id='{project_id}'"
+    )
 
     configured_entities = pd.read_sql(query, conn)
     if not os.path.isdir(output_path):

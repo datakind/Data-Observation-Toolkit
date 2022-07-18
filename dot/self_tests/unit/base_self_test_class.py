@@ -22,6 +22,7 @@ from utils.connection_utils import (  # pylint: disable=wrong-import-position
 )
 from utils.configuration_utils import (  # pylint: disable=wrong-import-position
     dot_config_FILENAME,
+    DBT_PROJECT_FINAL_FILENAME,
 )
 
 
@@ -56,6 +57,8 @@ class BaseSelfTestClass(unittest.TestCase):
             return "self_tests/data/base_self_test/dot_config.yml"
         if path == "./config/example/project_name/dbt/dbt_project.yml":
             return path
+        if path == DBT_PROJECT_FINAL_FILENAME:
+            return "./config/example/project_name/dbt/dbt_project.yml"
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     @patch("utils.configuration_utils._get_filename_safely")
@@ -169,13 +172,13 @@ class BaseSelfTestClass(unittest.TestCase):
 
         try:
             if do_recreate_schema:
-                for sch in schema_list:
+                for sch in set(schema_list):
                     self.drop_self_tests_db_schema(sch, conn, cursor)
 
                     query_create = sql.SQL(
                         """
                         CREATE SCHEMA {name};
-                    """
+                        """
                     ).format(name=sql.Identifier(sch))
                     cursor.execute(query_create)
                     conn.commit()
@@ -196,11 +199,11 @@ class BaseSelfTestClass(unittest.TestCase):
                             queries.append("".join(query_lines))
                             query_lines = []
 
-                    for query in queries:
-                        if "create table if not exists" in query.lower():
-                            # execute only table creation queries TODO reconsider
-                            cursor.execute(query)
-                            conn.commit()
+                    # for query in queries:
+                    #     if "create table if not exists" in query.lower():
+                    #         # execute only table creation queries TODO reconsider
+                    #         cursor.execute(query)
+                    #         conn.commit()
 
                     # execute all queries
                     cursor.execute("".join(all_query_lines))

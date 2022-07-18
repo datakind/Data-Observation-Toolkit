@@ -224,6 +224,18 @@ CREATE TABLE IF NOT EXISTS dot.remediation_log(
 	  REFERENCES dot.configured_tests(test_id)
 );
 
+
+
+CREATE OR REPLACE VIEW dot.test_type_parameters_json
+AS
+    SELECT
+        test_type,
+        CONCAT('{',replace(replace(string_agg(CONCAT('"' , parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}') as "json_sample"
+    FROM
+        dot.test_parameters_interface
+    GROUP BY
+        test_type;
+
 CREATE OR REPLACE FUNCTION dot.get_test_result_data_record(entity varchar(300), id_col text, id_col_val text, results_schema text)
 RETURNS table (j json) as $$
 BEGIN
@@ -263,3 +275,20 @@ FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_insert() ;
 CREATE TRIGGER configured_entities_update_trigger
 BEFORE UPDATE ON dot.configured_entities
 FOR EACH ROW EXECUTE PROCEDURE dot.configured_entities_update() ;
+
+-- Utility function that returns JSON of all possible parameters. Used in UI to generate full field set
+CREATE OR REPLACE FUNCTION dot.test_params_all_json()
+RETURNS text
+LANGUAGE plpgsql
+AS $$
+declare
+   full_json text;
+BEGIN
+   full_json := (SELECT
+                   -- CONCAT('{',replace(replace(string_agg(CONCAT('"' ,test_type, '%%%', parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')
+                   CONCAT('{',replace(replace(string_agg(CONCAT('"' ,parameter , '": "' , example, '"'), ', '),'"[','['),']"',']'),'}')
+				 FROM
+				    dot.test_parameters_interface);
+   return full_json;
+END;
+$$;

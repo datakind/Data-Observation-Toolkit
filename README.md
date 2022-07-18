@@ -86,8 +86,10 @@ below.
 
 Then to run DOT:
 
-`cd dot`
-`python3 ./run_everything.py --project_id '<project name>'`
+```
+cd dot
+python3 ./run_everything.py --project_id '<project name>'
+```
 
 For example, if you used the provided Medic Muso database dump, you would run with ...
 
@@ -482,21 +484,39 @@ You should now have the DOT webapp running in development mode. To run in end-us
 Note: If you want to remove appsmith information on the deployed app, add `?embed=True` at the end
 of the deployed app URL.
 
-## Test configuration
+## Using the UI
 
-- To edit any test, click on the edit button on the left
-- To add a test, click the 'Add test' button above the table
-- To Activate/Deactive tests, select them using far-left radio buttons then click button 'Activate/Deactivate' tests 
-  button above table 
-- To delete tests, select them using far-left radio buttons then click button 'Delete' tests 
-  button above table 
+Once you log into appsmith using the URL above and have imported the DOT App, you can click on it and select 'Launch'
+to use it. It supports maintaining configuration as well as monitoring DOT runs.
+
+You can also share the app with other people if registered on the same appsmith instance. This becomes more appropriate 
+in production deployments.
+
+## Developing the UI
+
+Clicking 'Edit' on the imported app gives you the ability to edit the app. See the [appsmith help site](https://docs.appsmith.com) for more information 
+on this.
+
+Key things to note:
+
+- All validation, defaulting, tool tips are controlled via the Database as much as possible. See the 'Queries' section
+- Of particular note is that the test_parameters JSON generates a form. This was done once, be aware it will remove many 
+  settings if you click regenerate. I have a feature request open with appsmith to create fields with default types, 
+  values and validation functions, but for now we are adding new fields manually. Note that you might be able to 
+  reinstate the logic en masse by looking at the raw appsmith app JSON file
 
 ## Updating to latest version of appsmith
 
-Appsmith release bug fixes and enhancements. To get these:
+Appsmith release bug fixes and enhancements. By default the DOT docker build will do this automatically. To do this manually:
 
 1. In `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml stop`
-2. `docker compose -f docker-compose-with-appsmith-ui.yml pull appsmith && docker-compose -f docker-compose-with-appsmith-ui.yml rm -fsv appsmith && docker-compose -f docker-compose-with-appsmith-ui.yml up -d`
+2. `docker rm appsmith`
+3. In a clean directory: `curl -L https://bit.ly/32jBNin -o $PWD/docker-compose.yml`
+4. `docker-compose pull && docker-compose rm -fsv appsmith && docker-compose up -d`
+5. Back in `./docker` run `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
+
+Note, these will remove your saved configuration and app, so be sure to make note of these before doing the above
+steps.
 
 # Advanced topics
 
@@ -739,15 +759,7 @@ Or to run just DOT stage ...
 #### Adding more projects
 
 If configuring Airflow in production, you will need to adjust `./docker/dot/dot_config.yml` accordingly. You can also 
-add new projects by extending the projects array in the default file [Airflow configuration JSON](./docker/airflow/dags/dot_projects.json).
-
-For more flexibility, you can also define the dot run by using Airflow variables:
-
-1. Under **Admin > Variables** create a new variable called `dot_config`
-2. Copy the default [Airflow configuration JSON](./docker/airflow/dags/dot_projects.json) and paste as the variable value
-3. Add a description
-
-Now the DOT DAG will use this variable when running, which means you can further edit as required.
+add new projects by extending the projects array in the [Airflow configuration JSON](https://github.com/datakind/Data-Observation-Toolkit/blob/master/docker/airflow/dags/dot_projects.json)
 
 ## How the DOT works 
 
