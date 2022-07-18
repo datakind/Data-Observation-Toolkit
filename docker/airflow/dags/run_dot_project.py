@@ -227,7 +227,7 @@ def default_config():
 
 with DAG(
     dag_id="run_dot_project",
-    schedule_interval="@daily",
+    schedule_interval="@weekly",
     start_date=datetime(year=2022, month=3, day=1),
     catchup=False,
 ) as dag:
