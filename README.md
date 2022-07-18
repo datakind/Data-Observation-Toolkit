@@ -86,8 +86,10 @@ below.
 
 Then to run DOT:
 
-`cd dot`
-`python3 ./run_everything.py --project_id '<project name>'`
+```
+cd dot
+python3 ./run_everything.py --project_id '<project name>'
+```
 
 For example, if you used the provided Medic Muso database dump, you would run with ...
 
