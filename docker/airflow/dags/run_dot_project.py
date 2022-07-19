@@ -58,7 +58,7 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
     data = cursor.fetchall()
 
     sql_stmt = (
-        "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"
+        "SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"
         + object_name_in
         + "'"
         + "AND table_schema = '"
@@ -75,15 +75,21 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
 
     # Convert to a clean list (Tuples are duplicated)
     column_list = []
-    columns = [a[0] for a in columns]
-    for col in list(columns):
+    cols = [a[0] for a in columns]
+    for col in list(cols):
         if "(" not in col:
             column_list.append(col)
 
-    return data, column_list
+    type_list = []
+    types = [a[1] for a in columns]
+    for type in list(types):
+        if "(" not in col:
+            type_list.append(type)
+
+    return data, column_list, type_list
 
 
-def save_object(object_name_in, target_conn_in, data_in, column_list_in, source_db_in):
+def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in):
     """
 
     Saves data to target DOT database in data schema.
@@ -98,6 +104,8 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, source_
        Data being saved to target table
     column_list_in: List
        List of table columns for target table
+    type_list_in: List
+       List of table column types for target table
     source_db_in: String
        Name of source database (same as source connid string)
 
@@ -146,6 +154,7 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, source_
             cur.execute(query)
 
     print(data.info())
+    print(type_list_in)
 
     # Test to see if schema exists, if not, create
     with PostgresHook(
@@ -159,6 +168,18 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, source_
     print("Saving data to: " + schema + "." + object_name_in)
     data.to_sql(object_name_in, engine, index=False, if_exists="replace", schema=schema)
 
+    print("Preserving data types ...")
+    for i in range(len(column_list_in)):
+        col = column_list_in[i]
+        type = type_list_in[i]
+        using = f'USING {col}::{type}'
+        query = f'ALTER TABLE {schema}.{object_name_in} ALTER COLUMN {col} TYPE {type} {using};'
+        with PostgresHook(
+            postgres_conn_id=target_conn_in, schema=target_conn_in
+        ).get_conn() as conn:
+            cur = conn.cursor()
+            print(query)
+            cur.execute(query)
 
 def sync_object(
     object_name_in, earliest_date_to_sync, date_field, source_conn_in, target_conn_in
@@ -183,12 +204,12 @@ def sync_object(
     """
 
     # Get the data
-    data, column_list = get_object(
+    data, column_list, type_list = get_object(
         object_name_in, earliest_date_to_sync, date_field, source_conn_in
     )
 
     # Save the data
-    save_object(object_name_in, target_conn_in, data, column_list, source_conn_in)
+    save_object(object_name_in, target_conn_in, data, column_list, type_list, source_conn_in)
 
 
 def run_dot_app(project_id_in):
@@ -232,7 +253,7 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    # config = default_config()
+    #config = default_config()
 
     config = json.loads(Variable.get("dot_config", default_var=default_config()))
 
