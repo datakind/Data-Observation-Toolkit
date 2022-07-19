@@ -75,6 +75,11 @@
                     "object":"useview_assessment",
                     "id_field":"uuid",
                     "date_field":"reported"
+                },
+                {
+                    "object":"formview_assessment",
+                    "id_field":"uuid",
+                    "date_field":"reported"
                 }
             ]
         },
