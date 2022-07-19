@@ -253,9 +253,9 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    #config = default_config()
+    config = default_config()
 
-    config = json.loads(Variable.get("dot_config", default_var=default_config()))
+    #config = json.loads(Variable.get("dot_config", default_var=default_config()))
 
     """
     target_conn - Airflow connection name for target connection and schema
