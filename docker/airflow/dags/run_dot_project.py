@@ -227,7 +227,7 @@ def default_config():
 
 with DAG(
     dag_id="run_dot_project",
-    schedule_interval="@daily",
+    schedule_interval="@weekly",
     start_date=datetime(year=2022, month=3, day=1),
     catchup=False,
 ) as dag:
@@ -242,9 +242,9 @@ with DAG(
 
     target_conn = config["target_connid"]
 
-    for project in config["dot_projects"]:
+    af_tasks = []
 
-        af_tasks = []
+    for project in config["dot_projects"]:
 
         """
         project_id  - Project ID, as found in dot.projects table
@@ -281,21 +281,13 @@ with DAG(
                     dag=dag,
                 )
             )
-            # Run sequentially for each object so we don't hammer the DB
-            if i > 0:
-                af_tasks[i - 1] >> af_tasks[i]
 
-        # run_dot = PythonOperator(
-        #    task_id=f"run_dot_{project_id}",
-        #    python_callable=run_dot_app,
-        #    op_kwargs={"project_id_in": project_id},
-        #    dag=dag,
-        # )
-
-        run_dot = BashOperator(
+        af_tasks.append(BashOperator(
             task_id=f"run_dot_{project_id}",
             dag=dag,
             bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}",
-        )
+        ))
 
-        af_tasks[-1] >> run_dot
+    for i in range(len(af_tasks)):
+        if i > 0:
+            af_tasks[i - 1] >> af_tasks[i]
