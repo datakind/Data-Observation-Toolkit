@@ -168,7 +168,6 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_li
     print("Saving data to: " + schema + "." + object_name_in)
     data.to_sql(object_name_in, engine, index=False, if_exists="replace", schema=schema)
 
-    print("Preserving data types ...")
     for i in range(len(column_list_in)):
         col = column_list_in[i]
         type = type_list_in[i]
@@ -211,6 +210,33 @@ def sync_object(
     # Save the data
     save_object(object_name_in, target_conn_in, data, column_list, type_list, source_conn_in)
 
+def drop_dot_tests_schema(target_conn_in, schema_to_drop):
+    """
+
+        We are syncing new data where new columns and columns types might change. Postgres will prevent ALTER TABLE
+        if any views exist, so we will drop the dot test schema which contains these. These will be recreated in the
+        dot run. This assumes the dot tests schema is <data schema>_tests.
+
+        Input
+        -----
+        target_conn_in: Target database
+        schema_to_drop: Schema to, err, drop
+
+        Action
+        ------
+
+        dot tests schema is dropped from the database.
+
+    """
+
+    # Test to see if schema exists, if not, create
+    with PostgresHook(
+            postgres_conn_id=target_conn_in, schema=target_conn_in
+    ).get_conn() as conn:
+        cur = conn.cursor()
+        query = f'DROP SCHEMA IF EXISTS {schema_to_drop} CASCADE;'
+        print(query)
+        cur.execute(query)
 
 def run_dot_app(project_id_in):
     """
@@ -274,6 +300,20 @@ with DAG(
         objects_to_sync = project["objects"]
         earliest_date_to_sync = project["earliest_date_to_sync"]
         source_conn = project["source_connid"]
+
+        # Drop the DOT tests schema so we can import new data, columns and types
+        schema_to_drop = "data_" + source_conn.replace("-", "_") + "_tests"
+        af_tasks.append(
+            PythonOperator(
+                task_id=f'drop_schema__{schema_to_drop}',
+                python_callable=drop_dot_tests_schema,
+                op_kwargs={
+                    "target_conn_in": target_conn,
+                    "schema_to_drop": schema_to_drop
+                },
+                dag=dag,
+            )
+        )
 
         # Sync data and link to dot.
         for i in range(len(objects_to_sync)):
