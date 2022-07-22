@@ -239,12 +239,9 @@ def default_config():
     """
 
     # All files will be relative to $AIRFLOW_HOME
-    with open("./dags/dot_projects.json") as file:
-        config = json.load(file)
-
-    print(config)
+    file = open("./dags/dot_projects.json")
+    config=file.read()
     return config
-
 
 with DAG(
     dag_id="run_dot_project",
@@ -253,9 +250,7 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    config = default_config()
-
-    #config = json.loads(Variable.get("dot_config", default_var=default_config()))
+    config = json.loads(Variable.get("dot_config", default_var=default_config()))
 
     """
     target_conn - Airflow connection name for target connection and schema
