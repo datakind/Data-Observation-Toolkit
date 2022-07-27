@@ -250,7 +250,7 @@ def default_config():
     """
 
     Sets configuration to determine how the DAG will run from Airflow config.
-    Used if called didn't provide configuration
+    Used if called didn't provide configuration. Returns file handle.
 
     Input
     -----
@@ -259,18 +259,14 @@ def default_config():
     Output
     ------
 
-    config: Dictionary
-       Configuration of what projects to run and tables to sync
+    config: File handle
+       Configuration file handle of json file for what projects to run and tables to sync
 
     """
 
     # All files will be relative to $AIRFLOW_HOME
-    with open("./dags/dot_projects.json") as file:
-        config = json.load(file)
-
-    print(config)
-    return config
-
+    file = open("./dags/dot_projects.json")
+    return file
 
 with DAG(
     dag_id="run_dot_project",
@@ -279,9 +275,7 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    config = default_config()
-
-    #config = json.loads(Variable.get("dot_config", default_var=default_config()))
+    config = json.loads(Variable.get("dot_config", default_var=default_config().read()))
 
     """
     target_conn - Airflow connection name for target connection and schema
