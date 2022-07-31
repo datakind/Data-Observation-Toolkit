@@ -1,5 +1,4 @@
 dot:
-  save_passed_tests: False
   output_schema_suffix: tests
 dot_db:
   type: postgres
@@ -10,21 +9,22 @@ dot_db:
   dbname: dot_db
   schema: dot
   threads: 4
-Muso_db:
-  type: postgres
-  host: dot_db
-  user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5432
-  dbname: dot_db
-  schema: public
-  threads: 4
-Brac_db:
-  type: postgres
-  host: dot_db
-  user: postgres
-  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5432
-  dbname: dot_db
-  schema: datakind
-  threads: 4
+projects:
+  Muso_db:
+    type: postgres
+    host: dot_db
+    user: postgres
+    pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+    port: 5432
+    dbname: dot_db
+    schema: public
+    threads: 4
+  Brac_db:
+    type: postgres
+    host: dot_db
+    user: postgres
+    pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+    port: 5432
+    dbname: dot_db
+    schema: datakind
+    threads: 4
