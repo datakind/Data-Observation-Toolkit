@@ -1,18 +1,3 @@
--- required static data
-INSERT INTO self_tests_dot.scenarios VALUES('DUPLICATE-1', 'Duplicate data', 'Data entry error', 'Duplicate data entered', 'Duplicate records', 'Multiple person records for the same person');
-INSERT INTO self_tests_dot.scenarios VALUES('TREAT-1', 'Incorrect treatment', 'Process errors', 'Incorrect treatment', 'Outliers', 'Drug protocol not followed for Malaria treatment; FP for people on tubal ligation, pregnant or had vasectomy');
-
-INSERT INTO self_tests_dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', true, false);
-INSERT INTO self_tests_dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', true, false);
-
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_reported_date', 'entity date field', 'reported', 'Column which indicates when form created');
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_patient_uuid', 'entity id field', 'patient_id',  'Column which holds to patient uuid');
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_uuid', 'entity id field', 'uuid', 'UUID for records in the table (form) being checked');
-INSERT INTO self_tests_dot.test_parameters_interface VALUES('possible_duplicate_forms', 'table_specific_period', 'one of (hour, day, week)', 'day','Specified period to check for duplicates (hour, day, week)');
-
-INSERT INTO self_tests_dot.scenario_test_types VALUES('DUPLICATE-1', 'possible_duplicate_forms');
-INSERT INTO self_tests_dot.scenario_test_types VALUES('TREAT-1', 'custom_sql');
-
 -- non static data -entities and tests +
 INSERT INTO self_tests_dot.projects SELECT 'Muso', 'Muso project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
 

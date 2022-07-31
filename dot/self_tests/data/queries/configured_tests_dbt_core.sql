@@ -1,10 +1,3 @@
--- required static data
-INSERT INTO self_tests_dot.scenarios VALUES('MISSING-1', 'Missing fields', 'Data entry error', 'Form data entry error', 'Null fields', 'Blank fields');
-INSERT INTO self_tests_dot.scenarios VALUES('INCONSISTENT-1', 'Inconsistent data', 'Data entry error', 'Form data entry error', 'Outliers', 'Jaundice alert=No when fever+jaundice; Incorrect LMP, wrong visit dates');
-
-INSERT INTO self_tests_dot.test_types VALUES('not_negative_string_column', 'dbt', 'Test to confirm all positive', 'column', false, true);
-INSERT INTO self_tests_dot.test_types VALUES('not_null', 'dbt', 'Test to confirm if null', 'column', false, true);
-
 -- non static data -entities and tests +
 INSERT INTO self_tests_dot.projects SELECT 'Muso', 'Muso project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
 
