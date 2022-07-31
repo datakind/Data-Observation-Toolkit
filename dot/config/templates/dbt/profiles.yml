@@ -1,0 +1,17 @@
+{# templates/dbt/profiles.yml #}
+
+config:
+  partial_parse: False
+
+default:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: {{ host }}
+      user: {{ user }}
+      pass: {{ password }}
+      port: {{ port }}
+      dbname: {{ dbname }}
+      schema: {{ schema }}
+      threads: 4
