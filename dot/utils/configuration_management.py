@@ -23,7 +23,10 @@ from utils.configuration_utils import (
     get_dbt_config_test_paths,
     DBT_PROJECT_FINAL_FILENAME,
     GE_BATCH_CONFIG_FINAL_FILENAME,
-    dot_config_FILENAME
+    dot_config_FILENAME,
+    DBT_PROFILES_FINAL_FILENAME,
+    GE_GREAT_EXPECTATIONS_FINAL_FILENAME ,
+    GE_CONFIG_VARIABLES_FINAL_FILENAME
 )
 from utils.dbt import create_core_entities
 from utils.utils import get_entity_name_from_id
@@ -143,49 +146,53 @@ def generate_master_config_files(project_id, logger=logging.Logger):
 
     with open(dot_config_FILENAME) as f:
         project_db_config = yaml.load(f, Loader=yaml.FullLoader)
-        project_db_config = project_db_config['projects'][f'{project_id}_db']
+        project_db_config = project_db_config[f'{project_id}_db']
 
     # Load Jinja configuration file templates
     environment = Environment(loader=FileSystemLoader("./config/templates/"))
 
     # DBT: Create DBT Project yaml
     template_name = "dbt/dbt_project.yml"
-    output_file = f"./config/{project_id}/dbt/dbt_project.yml"
+    #output_file = f"./config/{project_id}/dbt/dbt_project.yml"
+    output_file = DBT_PROJECT_FINAL_FILENAME
     write_config_from_template(environment, template_name, output_file, logger, project_id=project_id)
     if output_schema_suffix:
-        config_file_text = f"""
-        models:
-            dbt_model_1:
-                core:
-                    +schema: `{output_schema_suffix}'
-                test:
-                    +schema: `{output_schema_suffix}'
-        """
+        config_file_text = "\n".join(["",
+             "models:",
+             "    dbt_model_1:",
+             "        core:",
+            f"            +schema: '{output_schema_suffix}'",
+             "        test:",
+            f"            +schema: '{output_schema_suffix}'"])
     with open(output_file, "a") as f:
         f.write(config_file_text)
 
     # DBT: Create profiles yaml
     template_name = "dbt/profiles.yml"
-    output_file = f"./config/{project_id}/dbt/profiles.yml"
+    #output_file = f"./config/{project_id}/dbt/profiles.yml"
+    output_file = DBT_PROFILES_FINAL_FILENAME
     write_config_from_template(environment, template_name, output_file, logger, host=project_db_config['host'],\
-                               user=project_db_config['user'], password=project_db_config['pass'],\
+                               user=project_db_config['user'], password=extract_dbt_config_env_variable(project_db_config['pass']),\
                                port=project_db_config['port'], dbname=project_db_config['dbname'],\
                                schema=project_db_config['schema'])
 
     # GE: Great expectations yaml
     template_name = "great_expectations/great_expectations.yml"
-    output_file = f"./config/{project_id}/ge/great_expectations.yml"
+    #output_file = f"./config/{project_id}/ge/great_expectations.yml"
+    output_file = GE_GREAT_EXPECTATIONS_FINAL_FILENAME
     write_config_from_template(environment, template_name, output_file, logger, project_id=project_id)
 
     # GE: Batch config JSON
     template_name = "great_expectations/batch_config.json"
-    output_file = f"./config/{project_id}/ge/batch_config.json"
+    #output_file = f"./config/{project_id}/ge/batch_config.json"
+    output_file = GE_BATCH_CONFIG_FINAL_FILENAME
     # No variables to update, but using same mechanism for consistency
     write_config_from_template(environment, template_name, output_file, logger)
 
     # GE: Config variables yaml
     template_name = "great_expectations/config_variables.yml"
-    output_file = f"./config/{project_id}/ge/config_variables.yml"
+    #output_file = f"./config/{project_id}/ge/config_variables.yml"
+    output_file = GE_CONFIG_VARIABLES_FINAL_FILENAME
     write_config_from_template(environment, template_name, output_file, logger, project_db_host=project_db_config['host'],\
                                project_db_username=project_db_config['user'],\
                                project_db_password=extract_dbt_config_env_variable(project_db_config['pass']),\
@@ -216,12 +223,6 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
     # read dot_config for project credentials
     db_credentials_project = load_credentials(project_id, DbParamsConnection["project"])
 
-    create_dbt_project_yaml(project_id)
-    create_profiles_yaml(project_id, db_credentials_project)
-    create_great_expectations_yaml(project_id)
-    create_batch_config_json(project_id)
-    create_config_variables_yaml(project_id, db_credentials_project)
-
     # dbt setup project-dependent "dbt_project.yml"
     with open(DBT_PROJECT_FINAL_FILENAME) as f:
         dbt_config = yaml.load(f, Loader=yaml.FullLoader)
@@ -235,7 +236,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
     with open(GE_BATCH_CONFIG_FINAL_FILENAME) as f:
         ge_batch_config = json.load(f)
 
-    # G GE directories
+    # GE directories
     ge_dir = f"./great_expectations/expectations/{project_id}"
     ge_test_suite_name = ge_batch_config["expectation_suite_name"]
 

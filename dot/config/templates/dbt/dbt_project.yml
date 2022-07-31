@@ -9,9 +9,9 @@ profile: 'default'
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
 # found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models/{{ project_id }} "]  # here the tool sets the output to a project-dependent folder
+model-paths: ["models/{{ project_id }}"]  # here the tool sets the output to a project-dependent folder
 analysis-paths: ["analysis"]
-test-paths: ["tests/{{ project_id }} "]  # here the tool sets the output  to a project-dependent folder
+test-paths: ["tests/{{ project_id }}"]  # here the tool sets the output  to a project-dependent folder
 seed-paths: ["data"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
