@@ -1,8 +1,4 @@
 -- non static data -entities and tests +
-INSERT INTO self_tests_dot.projects SELECT 'Muso', 'Muso project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
-
-INSERT INTO self_tests_dot.entity_categories VALUES('anc', 'antenatal care');
-INSERT INTO self_tests_dot.entity_categories VALUES('fp', 'Family planning');
 
 -- this entity has only an entity as it is normally defined; there no impact views in the test setup, thus no data to test
 INSERT INTO self_tests_dot.configured_entities VALUES('Muso','66f5d13a-8f74-4f97-836b-334d97932781', 'ancview_delivery', 'anc', '{{ config(materialized=''view'') }}
