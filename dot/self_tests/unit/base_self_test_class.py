@@ -1,8 +1,9 @@
+""" base class for self tests"""
 import unittest
 import os
 import sys
 import shutil
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Iterable
 from mock import patch
 
 import psycopg2 as pg
@@ -132,10 +133,51 @@ class BaseSelfTestClass(unittest.TestCase):
         cursor.execute(query_drop)
         conn.commit()
 
+    @staticmethod
+    def get_queries_from_file(f, schema):
+        """
+        Gets queries from file
+
+        Parameters
+        ----------
+        f: file
+            file object
+        schema: str
+            schema for self tests
+
+        Returns
+        -------
+            transformed query lines
+        """
+        # queries = []
+        # query_lines = []
+        all_query_lines = []
+        lines = f.readlines()
+        for line in lines:
+            if "create schema" in line.lower():
+                continue
+            line = line.replace("dot.", f"{schema}.")
+            # query_lines.append(line)
+            all_query_lines.append(line)
+            # if ";" in line:
+            #    queries.append("".join(query_lines))
+            #    query_lines = []
+
+        # for query in queries:
+        #     if "create table if not exists" in query.lower():
+        #         # execute only table creation queries TODO reconsider
+        #         cursor.execute(query)
+        #         conn.commit()
+        return all_query_lines
+
     def create_self_tests_db_schema(
         self,
         additional_query: str = None,
         schema_filepath: str = "../db/dot/1-schema.sql",
+        additional_filepaths: Iterable[str] = [
+            "../db/dot/2-upload_static_data.sql",
+            "./self_tests/data/queries/common_to_all_tests.sql",
+        ],
         do_recreate_schema: bool = True,
     ):
         """
@@ -148,6 +190,8 @@ class BaseSelfTestClass(unittest.TestCase):
             string with valid queries to run
         schema_filepath
             path of the file that creates the schema
+        additional_filepaths
+            list of paths of the files that e.g. uploads the static data, creates project, etc
         do_recreate_schema
             drops and recreates the schema, True by default
 
@@ -185,29 +229,20 @@ class BaseSelfTestClass(unittest.TestCase):
 
             if schema_filepath is not None:
                 with open(schema_filepath, "r") as f:
-                    queries = []
-                    query_lines = []
-                    all_query_lines = []
-                    lines = f.readlines()
-                    for line in lines:
-                        if "create schema" in line.lower():
-                            continue
-                        line = line.replace("dot.", f"{schema}.")
-                        query_lines.append(line)
-                        all_query_lines.append(line)
-                        if ";" in line:
-                            queries.append("".join(query_lines))
-                            query_lines = []
-
-                    # for query in queries:
-                    #     if "create table if not exists" in query.lower():
-                    #         # execute only table creation queries TODO reconsider
-                    #         cursor.execute(query)
-                    #         conn.commit()
+                    all_query_lines = self.get_queries_from_file(f, schema)
 
                     # execute all queries
                     cursor.execute("".join(all_query_lines))
                     conn.commit()
+
+            if additional_filepaths is not None:
+                for additional_filepath in additional_filepaths:
+                    with open(additional_filepath, "r") as f:
+                        all_query_lines = self.get_queries_from_file(f, schema)
+
+                        # execute all queries
+                        cursor.execute("".join(all_query_lines))
+                        conn.commit()
 
             if additional_query:
                 cursor.execute(additional_query)
