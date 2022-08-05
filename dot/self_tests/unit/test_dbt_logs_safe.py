@@ -96,7 +96,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             else:
                 self.assertEqual(
                     out_line_v,
-                    exp_v,
+                    exp_v.replace("self_tests_", "") if isinstance(exp_v, str) else exp_v,
                     f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
                 )
 
