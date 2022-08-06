@@ -74,6 +74,13 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         create_failed_dbt_test_models(project_id, logger, "view")
         run_dbt_test(project_id, logger)
 
+    @staticmethod
+    def _cleanup_schema_name(value):
+        """
+        Cleans up schema from self_tests_dot to dot
+        """
+        return value.replace("self_tests_", "") if isinstance(value, str) else value
+
     def check_output_recursive(
         self,
         exp_line: str,
@@ -95,8 +102,8 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
                 )
             else:
                 self.assertEqual(
-                    out_line_v,
-                    exp_v.replace("self_tests_", "") if isinstance(exp_v, str) else exp_v,
+                    self._cleanup_schema_name(out_line_v),
+                    self._cleanup_schema_name(exp_v),
                     f"failed key {exp_k}; expected: {exp_v}, output: {out_line.get(exp_k)}",
                 )
 
