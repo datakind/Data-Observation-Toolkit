@@ -89,7 +89,9 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
     return data, column_list, type_list
 
 
-def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in):
+def save_object(
+    object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
+):
     """
 
     Saves data to target DOT database in data schema.
@@ -171,14 +173,15 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_li
     for i in range(len(column_list_in)):
         col = column_list_in[i]
         type = type_list_in[i]
-        using = f'USING {col}::{type}'
-        query = f'ALTER TABLE {schema}.{object_name_in} ALTER COLUMN {col} TYPE {type} {using};'
+        using = f"USING {col}::{type}"
+        query = f"ALTER TABLE {schema}.{object_name_in} ALTER COLUMN {col} TYPE {type} {using};"
         with PostgresHook(
             postgres_conn_id=target_conn_in, schema=target_conn_in
         ).get_conn() as conn:
             cur = conn.cursor()
             print(query)
             cur.execute(query)
+
 
 def sync_object(
     object_name_in, earliest_date_to_sync, date_field, source_conn_in, target_conn_in
@@ -208,35 +211,40 @@ def sync_object(
     )
 
     # Save the data
-    save_object(object_name_in, target_conn_in, data, column_list, type_list, source_conn_in)
+    save_object(
+        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
+    )
+
 
 def drop_dot_tests_schema(target_conn_in, schema_to_drop):
     """
 
-        We are syncing new data where new columns and columns types might change. Postgres will prevent ALTER TABLE
-        if any views exist, so we will drop the dot test schema which contains these. These will be recreated in the
-        dot run. This assumes the dot tests schema is <data schema>_tests.
+    We are syncing new data where new columns and columns types might change.
+    Postgres will prevent ALTER TABLE if any views exist, so we will drop the dot test schema
+    which contains these. These will be recreated in the dot run.
+    This assumes the dot tests schema is <data schema>_tests.
 
-        Input
-        -----
-        target_conn_in: Target database
-        schema_to_drop: Schema to, err, drop
+    Input
+    -----
+    target_conn_in: Target database
+    schema_to_drop: Schema to, err, drop
 
-        Action
-        ------
+    Action
+    ------
 
-        dot tests schema is dropped from the database.
+    dot tests schema is dropped from the database.
 
     """
 
     # Test to see if schema exists, if not, create
     with PostgresHook(
-            postgres_conn_id=target_conn_in, schema=target_conn_in
+        postgres_conn_id=target_conn_in, schema=target_conn_in
     ).get_conn() as conn:
         cur = conn.cursor()
-        query = f'DROP SCHEMA IF EXISTS {schema_to_drop} CASCADE;'
+        query = f"DROP SCHEMA IF EXISTS {schema_to_drop} CASCADE;"
         print(query)
         cur.execute(query)
+
 
 def run_dot_app(project_id_in):
     """
@@ -268,6 +276,7 @@ def default_config():
     file = open("./dags/dot_projects.json")
     return file
 
+
 with DAG(
     dag_id="run_dot_project",
     schedule_interval="@weekly",
@@ -289,7 +298,7 @@ with DAG(
 
         """
         project_id  - Project ID, as found in dot.projects table
-        objects_to_sync - List of objects to sync, each one with definition 
+        objects_to_sync - List of objects to sync, each one with definition
             of unique field and date field
         earliest_date_to_sync - Only sync data after this date for project
         source_conn - Airflow connection to define where source data is
@@ -304,11 +313,11 @@ with DAG(
         schema_to_drop = "data_" + source_conn.replace("-", "_") + "_tests"
         af_tasks.append(
             PythonOperator(
-                task_id=f'drop_schema__{schema_to_drop}',
+                task_id=f"drop_schema__{schema_to_drop}",
                 python_callable=drop_dot_tests_schema,
                 op_kwargs={
                     "target_conn_in": target_conn,
-                    "schema_to_drop": schema_to_drop
+                    "schema_to_drop": schema_to_drop,
                 },
                 dag=dag,
             )
@@ -337,11 +346,13 @@ with DAG(
                 )
             )
 
-        af_tasks.append(BashOperator(
-            task_id=f"run_dot_{project_id}",
-            dag=dag,
-            bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}",
-        ))
+        af_tasks.append(
+            BashOperator(
+                task_id=f"run_dot_{project_id}",
+                dag=dag,
+                bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}",
+            )
+        )
 
     for i in range(len(af_tasks)):
         if i > 0:

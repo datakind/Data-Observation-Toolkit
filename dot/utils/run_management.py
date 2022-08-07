@@ -8,7 +8,11 @@ import traceback
 import datetime
 import pandas as pd
 from utils.connection_utils import create_sqlalchemy_engine
-from utils.configuration_management import generate_tests_from_db, generate_master_config_files, create_project_directories
+from utils.configuration_management import (
+    generate_tests_from_db,
+    generate_master_config_files,
+    create_project_directories,
+)
 from utils.utils import (
     save_tests_to_db,
     get_test_rows,
