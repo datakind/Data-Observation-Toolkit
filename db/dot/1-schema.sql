@@ -200,7 +200,11 @@ CREATE OR REPLACE FUNCTION dot.configured_tests_update()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
+declare
+   KEY_STRING text;
 BEGIN
+   KEY_STRING := new.project_id || new.test_type || new.entity_id || new.column_name || COALESCE(CAST(new.test_parameters AS VARCHAR),'');
+   NEW.test_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_modified := NOW();
    RETURN NEW;
 END;
@@ -262,7 +266,12 @@ CREATE OR REPLACE FUNCTION dot.configured_entities_update()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
+declare
+   KEY_STRING text;
 BEGIN
+   -- If you change how this UUID is generated, be sure to also change how it is created in get_test_id in /utils/utils.py
+   KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
+   NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_modified := NOW();
    RETURN NEW;
 END;
