@@ -32,7 +32,7 @@ INSERT INTO dot.test_types VALUES('not_null', 'dbt', 'Test to confirm if null', 
 INSERT INTO dot.test_types VALUES('accepted_values', 'dbt', 'Test to confirm values adhere to specified list', 'column',  true, true);
 INSERT INTO dot.test_types VALUES('custom_sql', 'dbt', 'Custom SQL, if rows returned test failed', 'any', true, false);
 INSERT INTO dot.test_types VALUES('possible_duplicate_forms', 'dbt', 'Test to confirm duplicate records', 'single_table', true, false);
-INSERT INTO dot.test_types VALUES('associated_columns_not_null', 'dbt', 'Test to confirm related columns not null', 'column', true, false);
+INSERT INTO dot.test_types VALUES('associated_columns_not_null', 'dbt', 'Test to confirm related columns not null', 'column', false, true);
 INSERT INTO dot.test_types VALUES('expect_similar_means_across_reporters', 'great_expectations', 'Test to compare means across reporters (eg of temperature)', 'column', true, false);
 INSERT INTO dot.test_types VALUES('expression_is_true', 'dbt', 'Test to confirm a value of an expression given a condition', 'any', true, false);
 
