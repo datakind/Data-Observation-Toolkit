@@ -14,7 +14,10 @@
                 {
                     "object":"ancview_delivery",
                     "id_field":"uuid",
-                    "date_field":"reported"
+                    "date_field":"reported",
+                    "columns_to_exclude": [
+                        "delivery_date"
+                    ]
                 },
                 {
                     "object":"ancview_pregnancy",

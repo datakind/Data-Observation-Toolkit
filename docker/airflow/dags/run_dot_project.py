@@ -18,7 +18,7 @@ from airflow.models import Variable
 from sqlalchemy import create_engine
 
 
-def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in):
+def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in, columns_to_exclude):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -34,7 +34,8 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
     source_conn_in: String
        Airflow connection ID where data lives.
        Note, the connection name must exactly equal the db name.
-
+    columns_to_exclude: Array
+        A list of names to exclude from the sync
     """
 
     connection = BaseHook.get_connection(source_conn_in)
@@ -86,6 +87,22 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
         if "(" not in col:
             type_list.append(type)
 
+    # Remove any PII columns as set in JSON file 'columns_to_exclude' for the entity.
+    data = pd.DataFrame(data=data, columns=column_list)
+    data.drop(columns_to_exclude, inplace=True, axis=1)
+    indices = []
+    for i in range(0, len(column_list)):
+        if column_list[i] in columns_to_exclude:
+            indices.append(i)
+
+    for i in reversed(indices):
+        del column_list[i]
+        del type_list[i]
+
+    print(column_list)
+    print(type_list)
+    print(data)
+
     return data, column_list, type_list
 
 
@@ -113,8 +130,6 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_li
 
     # Temporary, replace existing data. TODO support delta loads
     MODE = "replace"
-
-    data = pd.DataFrame(data=data_in, columns=column_list_in)
 
     connection = BaseHook.get_connection(target_conn_in)
     connection_string = (
@@ -153,7 +168,7 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_li
             print(query)
             cur.execute(query)
 
-    print(data.info())
+    print(data_in.info())
     print(type_list_in)
 
     # Test to see if schema exists, if not, create
@@ -166,7 +181,7 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_li
         cur.execute(query)
 
     print("Saving data to: " + schema + "." + object_name_in)
-    data.to_sql(object_name_in, engine, index=False, if_exists="replace", schema=schema)
+    data_in.to_sql(object_name_in, engine, index=False, if_exists="replace", schema=schema)
 
     for i in range(len(column_list_in)):
         col = column_list_in[i]
@@ -181,7 +196,7 @@ def save_object(object_name_in, target_conn_in, data_in, column_list_in, type_li
             cur.execute(query)
 
 def sync_object(
-    object_name_in, earliest_date_to_sync, date_field, source_conn_in, target_conn_in
+    object_name_in, earliest_date_to_sync, date_field, source_conn_in, target_conn_in, columns_to_exclude
 ):
     """
 
@@ -199,12 +214,13 @@ def sync_object(
        Airflow connection ID where data lives, must be same as name of DB
     target_conn_in: String
        ID of Airflow connection, must same as name of DB
-
+    columns_to_exclude: Array
+        A list of names to exclude from the sync
     """
 
     # Get the data
     data, column_list, type_list = get_object(
-        object_name_in, earliest_date_to_sync, date_field, source_conn_in
+        object_name_in, earliest_date_to_sync, date_field, source_conn_in, columns_to_exclude
     )
 
     # Save the data
@@ -320,7 +336,8 @@ with DAG(
             object_name = objects_to_sync[i]["object"]
             date_field = objects_to_sync[i]["date_field"]
             id_field = objects_to_sync[i]["id_field"]
-
+            columns_to_exclude = objects_to_sync[i]["columns_to_exclude"] if "columns_to_exclude" in objects_to_sync[i] else []
+            
             # Get the data from a object in Postgres and copy to target DB
             af_tasks.append(
                 PythonOperator(
@@ -332,6 +349,7 @@ with DAG(
                         "date_field": date_field,
                         "source_conn_in": source_conn,
                         "target_conn_in": target_conn,
+                        "columns_to_exclude": columns_to_exclude
                     },
                     dag=dag,
                 )
