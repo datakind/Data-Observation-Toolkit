@@ -23,19 +23,22 @@ class UtilsTest(BaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        # "../db/dot/2-upload_static_data.sql"
         with open(
-            "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
-        ) as f:  # pylint: disable=invalid-name
-            self.create_self_tests_db_schema(
-                "\n".join(
-                    [
-                        "ALTER TABLE self_tests_dot.configured_tests "
-                        "ADD COLUMN id_column_name VARCHAR(300) NULL;",
-                        f.read(),
-                    ]
+            "self_tests/data/queries/configured_tests_sample.sql", "r"
+        ) as f1:  # pylint: disable=invalid-name
+            with open(
+                    "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
+            ) as f2:  # pylint: disable=invalid-name
+                self.create_self_tests_db_schema(
+                    "\n".join(
+                        [
+                            "ALTER TABLE self_tests_dot.configured_tests "
+                            "ADD COLUMN id_column_name VARCHAR(300) NULL;",
+                            f1.read(),
+                            f2.read(),
+                        ]
+                    )
                 )
-            )
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()

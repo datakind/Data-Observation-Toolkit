@@ -97,15 +97,15 @@ CREATE TABLE IF NOT EXISTS dot.configured_entities (
 
 CREATE TABLE IF NOT EXISTS dot.configured_tests(
     test_activated BOOLEAN NOT NULL,
-    project_id VARCHAR(300) NOT NULL,
+    project_id VARCHAR(300) NOT NULL references dot.projects on update cascade,
     test_id UUID PRIMARY KEY,
-    scenario_id VARCHAR(300) NOT NULL,
+    scenario_id VARCHAR(300) NOT NULL references dot.scenarios on update cascade,
     priority INT NOT NULL CHECK (priority in (1,2,3,4,5,6,7,8,9,10)),
     description VARCHAR(1000) NOT NULL,
     impact VARCHAR(1000) NULL,
     proposed_remediation VARCHAR(1000) NULL,
-    entity_id UUID NOT NULL,
-    test_type VARCHAR(300) NOT NULL,
+    entity_id UUID NOT NULL references dot.configured_entities on update cascade,
+    test_type VARCHAR(300) NOT NULL references dot.test_types on update cascade,
     column_name VARCHAR(300) NULL,
     column_description VARCHAR(1000) NULL,
     test_parameters JSONB NULL,
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
 );
 
 CREATE TABLE IF NOT EXISTS dot.configured_tests_parameters(
-    test_id UUID PRIMARY KEY,
+    test_id UUID PRIMARY KEY references dot.configured_tests on update cascade,
     parameter_type VARCHAR(300) CHECK(parameter_type IN ('function_argument','sql_statement')),
     parameter_name VARCHAR(300) NULL,
     parameter_value VARCHAR(300) NULL,
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests_parameters(
 CREATE TABLE IF NOT EXISTS dot.test_results(
   test_result_id VARCHAR(300) NOT NULL,
   run_id UUID,
-  test_id UUID,
+  test_id UUID references dot.configured_tests on update cascade,
   entity_id UUID,
   status TEXT,
   view_name VARCHAR(300) NULL,
@@ -156,9 +156,9 @@ CREATE TABLE IF NOT EXISTS dot.test_results(
 
 CREATE TABLE IF NOT EXISTS dot.test_results_summary (
   run_id UUID,
-  test_id UUID,
-  entity_id UUID,
-  test_type VARCHAR(300) NOT NULL,
+  test_id UUID references dot.configured_tests on update cascade,
+  entity_id UUID references dot.configured_entities on update cascade,
+  test_type VARCHAR(300) NOT NULL references dot.test_types on update cascade,
   column_name VARCHAR(300) NULL,
   test_parameters VARCHAR(1000) NULL,
   test_status TEXT,
@@ -200,7 +200,11 @@ CREATE OR REPLACE FUNCTION dot.configured_tests_update()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
+declare
+   KEY_STRING text;
 BEGIN
+   KEY_STRING := new.project_id || new.test_type || new.entity_id || new.column_name || COALESCE(CAST(new.test_parameters AS VARCHAR),'');
+   NEW.test_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_modified := NOW();
    RETURN NEW;
 END;
@@ -249,7 +253,6 @@ AS $$
 declare
    KEY_STRING text;
 BEGIN
-   -- If you change how this UUID is generated, be sure to also change how it is created in get_test_id in /utils/utils.py
    KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
    NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_added := NOW();
@@ -262,7 +265,13 @@ CREATE OR REPLACE FUNCTION dot.configured_entities_update()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
+declare
+   KEY_STRING text;
+   OLD_ENTITY_ID uuid;
+   NEW_ENTITY_ID uuid;
 BEGIN
+   KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
+   NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_modified := NOW();
    RETURN NEW;
 END;
