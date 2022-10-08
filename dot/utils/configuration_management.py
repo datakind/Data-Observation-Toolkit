@@ -5,27 +5,225 @@ and great expectations, using data stored in database table dot.configured_tests
 import json
 import os
 import logging
+import re
 import yaml
 import pandas as pd
+from jinja2 import Environment, FileSystemLoader
 from utils.connection_utils import add_ge_schema_parameters, get_db_params_from_config
 from utils.configuration_utils import (
-    load_credentials,
     DbParamsConfigFile,
     DbParamsConnection,
-    create_profiles_yaml,
-    create_dbt_project_yaml,
-    create_great_expectations_yaml,
-    create_batch_config_json,
-    create_config_variables_yaml,
     get_dbt_config_model_paths,
     get_dbt_config_test_paths,
     DBT_PROJECT_FINAL_FILENAME,
     GE_BATCH_CONFIG_FINAL_FILENAME,
+    dot_config_FILENAME,
+    DBT_PROFILES_FINAL_FILENAME,
+    GE_GREAT_EXPECTATIONS_FINAL_FILENAME,
+    GE_CONFIG_VARIABLES_FINAL_FILENAME,
 )
 from utils.dbt import create_core_entities
 from utils.utils import get_entity_name_from_id
 
 # %%
+
+
+def create_project_directories(project_id, logger=logging.Logger):
+    """Function to generate project_directories if they don't exist. Creates ...
+
+     |dot
+      | | config
+      | | |<project_id>
+      | | | | dbt
+      | | | | ge
+      | |dbt
+      | | |models
+      | | | |<project_id>
+      | | | | |core
+      | | | | |test
+      | | |tests
+      | | | |<project_id>
+      | |great_expectations
+      | | |expectations
+      | | | |<project_id>
+
+    Parameters
+    ----------
+    project_id : str
+        Project id as found in dot.project_id, eg 'Muso'
+    logger: Logger object
+        Used for passing in logger object
+
+    """
+
+    dirs = [
+        f"./config/{project_id}",
+        f"./config/{project_id}/dbt",
+        f"./config/{project_id}/ge",
+        "./dbt/core/models",
+        f"./dbt/core/models/{project_id}",
+        f"./dbt/core/models/{project_id}/core",
+        f"./dbt/core/models/{project_id}/test",
+        "./dbt/core/tests",
+        f"./dbt/core/tests/{project_id}",
+        "./great_expectations/expectations",
+        f"./great_expectations/expectations/{project_id}",
+    ]
+
+    # Create any missing folder
+    for d in dirs:
+        if not os.path.exists(d):
+            logger.info(f"Creating project directory {d}")
+            os.makedirs(d)
+
+
+def extract_dbt_config_env_variable(dbt_setting: dict) -> str:
+    """Takes a dbt config file and replaces any environment variable syntax with the
+    environment variable. Syntax looks like this ...
+
+    pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+
+     Parameters
+     ----------
+     dbt_setting : dict
+         credentials dictionary
+     Returns
+     -------
+     val : str
+         The environment variable value
+
+    """
+    val = dbt_setting
+    if "env_var" in dbt_setting:
+        env_variable = re.search(r"env_var\(\'(.*?)\'\)", dbt_setting).group(1)
+        return os.getenv(env_variable)
+    return val
+
+
+def write_config_from_template(
+    environment, template_name, output_file, logger, **kwargs
+):
+    """
+    Writes a config file from a template
+    """
+    logger.info(
+        f"Using template {template_name} and writing to config file {output_file} ..."
+    )
+    template = environment.get_template(template_name)
+    content = template.render(**kwargs)
+    with open(output_file, mode="w", encoding="utf-8") as f:
+        f.write(content)
+        logger.info(f"   Wrote {output_file}")
+
+
+def generate_master_config_files(project_id, logger=logging.Logger):
+
+    """Function to generate master configuration files using the entries in
+     config/dot_config.yml and also to set up required output directories (per project)
+
+    Parameters
+    ----------
+    project_id : str
+        Project id as found in dot.project_id, eg 'Muso'
+    logger: Logger object
+        Used for passing in logger object
+
+    Returns
+    -------
+
+     no function returns but will output config files as follows:
+
+     |____config
+          | |____<project_name>
+          | | |____dbt
+          | | | |____profiles.yml
+          | | | |____dbt_project.yml
+          | | |____ge
+          | | | |____great_expectations.yml
+          | | | |____config_variables.yml
+          | | | |____batch_config.json
+    """
+
+    with open(dot_config_FILENAME) as f:
+        dot_config = yaml.load(f, Loader=yaml.FullLoader)
+        output_schema_suffix = dot_config.get("dot", {}).get("output_schema_suffix")
+
+    with open(dot_config_FILENAME) as f:
+        project_db_config = yaml.load(f, Loader=yaml.FullLoader)
+        project_db_config = project_db_config[f"{project_id}_db"]
+
+    # Load Jinja configuration file templates
+    environment = Environment(loader=FileSystemLoader("./config/templates/"))
+
+    # DBT: Create DBT Project yaml
+    template_name = "dbt/dbt_project.yml"
+    # output_file = f"./config/{project_id}/dbt/dbt_project.yml"
+    output_file = DBT_PROJECT_FINAL_FILENAME
+    write_config_from_template(
+        environment, template_name, output_file, logger, project_id=project_id
+    )
+    if output_schema_suffix:
+        config_file_text = "\n".join(
+            [
+                "",
+                "models:",
+                "    dbt_model_1:",
+                "        core:",
+                f"            +schema: '{output_schema_suffix}'",
+                "        test:",
+                f"            +schema: '{output_schema_suffix}'",
+            ]
+        )
+    with open(output_file, "a") as f:
+        f.write(config_file_text)
+
+    # DBT: Create profiles yaml
+    template_name = "dbt/profiles.yml"
+    # output_file = f"./config/{project_id}/dbt/profiles.yml"
+    output_file = DBT_PROFILES_FINAL_FILENAME
+    write_config_from_template(
+        environment,
+        template_name,
+        output_file,
+        logger,
+        host=project_db_config["host"],
+        user=project_db_config["user"],
+        password=extract_dbt_config_env_variable(project_db_config["pass"]),
+        port=project_db_config["port"],
+        dbname=project_db_config["dbname"],
+        schema=project_db_config["schema"],
+    )
+
+    # GE: Great expectations yaml
+    template_name = "great_expectations/great_expectations.yml"
+    # output_file = f"./config/{project_id}/ge/great_expectations.yml"
+    output_file = GE_GREAT_EXPECTATIONS_FINAL_FILENAME
+    write_config_from_template(
+        environment, template_name, output_file, logger, project_id=project_id
+    )
+
+    # GE: Batch config JSON
+    template_name = "great_expectations/batch_config.json"
+    # output_file = f"./config/{project_id}/ge/batch_config.json"
+    output_file = GE_BATCH_CONFIG_FINAL_FILENAME
+    # No variables to update, but using same mechanism for consistency
+    write_config_from_template(environment, template_name, output_file, logger)
+
+    # GE: Config variables yaml
+    template_name = "great_expectations/config_variables.yml"
+    # output_file = f"./config/{project_id}/ge/config_variables.yml"
+    output_file = GE_CONFIG_VARIABLES_FINAL_FILENAME
+    write_config_from_template(
+        environment,
+        template_name,
+        output_file,
+        logger,
+        project_db_host=project_db_config["host"],
+        project_db_username=project_db_config["user"],
+        project_db_password=extract_dbt_config_env_variable(project_db_config["pass"]),
+        project_db_port=project_db_config["port"],
+        project_db_database=project_db_config["dbname"],
+    )
 
 
 def generate_tests_from_db(project_id, logger=logging.Logger):
@@ -50,15 +248,6 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
       - Great expectations: ./great_expectations/expectations/*.json
     """
     # ======================== Set config & output directories =========================
-    # read dot_config for project credentials
-    db_credentials_project = load_credentials(project_id, DbParamsConnection["project"])
-
-    create_dbt_project_yaml(project_id)
-    create_profiles_yaml(project_id, db_credentials_project)
-    create_great_expectations_yaml(project_id)
-    create_batch_config_json(project_id)
-    create_config_variables_yaml(project_id, db_credentials_project)
-
     # dbt setup project-dependent "dbt_project.yml"
     with open(DBT_PROJECT_FINAL_FILENAME) as f:
         dbt_config = yaml.load(f, Loader=yaml.FullLoader)
@@ -66,20 +255,14 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
     # dbt directories
     model_dir = f"./dbt/{get_dbt_config_model_paths(dbt_config)}/core"
     tests_dir = f"./dbt/{get_dbt_config_test_paths(dbt_config)}"
-    fail_tests_dir = f"./dbt/{get_dbt_config_model_paths(dbt_config)}/test"
 
     # GE batch config
     with open(GE_BATCH_CONFIG_FINAL_FILENAME) as f:
         ge_batch_config = json.load(f)
 
-    # G GE directories
+    # GE directories
     ge_dir = f"./great_expectations/expectations/{project_id}"
     ge_test_suite_name = ge_batch_config["expectation_suite_name"]
-
-    # create any missing folder
-    for d in [model_dir, tests_dir, fail_tests_dir, ge_dir]:
-        if not os.path.exists(d):
-            os.makedirs(d)
 
     # connections & schemas
     schema_dot, _, conn_dot = get_db_params_from_config(
@@ -240,8 +423,8 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
         "data_asset_type": "CustomSqlAlchemyDataset",
         "expectation_suite_name": ge_test_suite_name,
         "expectations": [],
-        # Note that here a version is pinned, it is also pinned in ge_test.json, so it will have to be updated if the
-        # version changes
+        # Note that here a version is pinned, it is also pinned in ge_test.json,
+        # so it will have to be updated if the version changes
         "meta": {"great_expectations.__version__": "0.10.12"},
     }
 

@@ -557,7 +557,10 @@ The main config file must be called `dot_config.yml` and located at the top [con
 this file will be ignored for version control. You may use the [example dot_config yaml](dot/config/example/dot_config.yml)
 as a template.
 
-Besides the DOT DB connection in the paragraph above, see below for additional config options.
+The DOT DB connection details are propagated through Jinja templates to other config files that belong to DBT and 
+Great Expectations. See the [config README](dot/config/README.md) for more details on this.
+
+Besides the connection details in this paragraph, see below for additional config options.
 
 #### Connection parameters for each of the projects to run
 
@@ -591,28 +594,6 @@ Note that this mechanism uses a DBT feature, and that the same applies to the GE
 
 The key `save_passed_tests` accepts boolean values. If set to true, tha results of the passing tests will be also stored
 to the DOT DB. If not, only the results of failing tests will be stored.
-
-### Other config file locations
-Optional configuration for DBT and Great Expectations can be added, per project, in a structure as follows.
-
-```bash
-|____config
-| |____<project_name>
-| | |____dbt
-| | | |____profiles.yml
-| | | |____dbt_project.yml
-| | |____ge
-| | | |____great_expectations.yml
-| | | |____config_variables.yml
-| | | |____batch_config.json
-```
-In general these customizations will not be needed, but only in some scenarios with particular requirements; these 
-require a deeper knowledge of the DOT and of either DBT and/or Great Expectations.
-
-There are examples for all the files above under [this folder](dot/config/example/project_name). For each of the 
-files you want to customize, you may copy and adapt the examples provided following the directory structure above.
-
-More details in the [config README](dot/config/README.md).
 
 ## How to visualize the results using Superset
 

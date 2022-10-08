@@ -1,3 +1,5 @@
+{# templates/great_expectations/batch_config.json #}
+
 {
     "datasource_name": "mm",
     "query": "select 1 as c",

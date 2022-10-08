@@ -8,7 +8,11 @@ import traceback
 import datetime
 import pandas as pd
 from utils.connection_utils import create_sqlalchemy_engine
-from utils.configuration_management import generate_tests_from_db
+from utils.configuration_management import (
+    generate_tests_from_db,
+    generate_master_config_files,
+    create_project_directories,
+)
 from utils.utils import (
     save_tests_to_db,
     get_test_rows,
@@ -59,6 +63,12 @@ def run_dot_stages(project_id, logger, run_id):
     dbt_test_rows = pd.DataFrame()
     ge_test_summary = pd.DataFrame()
     ge_test_rows = pd.DataFrame()
+
+    # Create any directories dot needs for outputs and configuration files
+    create_project_directories(project_id, logger=logger)
+
+    # Generate master config files
+    generate_master_config_files(project_id, logger=logger)
 
     # Generate config files from DB
     if (

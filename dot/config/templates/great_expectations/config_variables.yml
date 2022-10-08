@@ -1,3 +1,5 @@
+{# templates/great_expectations/config_variables.yml #}
+
 # This config file supports variable substitution which enables: 1) keeping
 # secrets out of source control & 2) environment-based configuration changes
 # such as staging vs prod.
@@ -18,8 +20,8 @@
 instance_id: 67616838-4d81-4db9-9e53-b8fdad70f331
 mm:
   drivername: postgresql
-  host: dot_db
-  port: '5432'
-  username: postgres
-  password: password
-  database: dot_db
+  host: {{ project_db_host  }}
+  port: '{{ project_db_port  }}'
+  username: {{ project_db_username  }}
+  password: {{ project_db_password }}
+  database: {{ project_db_database  }}
