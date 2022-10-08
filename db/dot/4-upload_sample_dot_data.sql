@@ -1,8 +1,25 @@
-INSERT INTO dot.projects SELECT 'Muso', 'Muso project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
-INSERT INTO dot.projects SELECT 'Brac', 'Brac project',  true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
+CREATE TABLE IF NOT EXISTS flight_data(
+    departure_time DATETIME NULL,
+    airline VARCHAR(200) NULL,
+    origin_airport  VARCHAR(200) NULL,
+    origin_iata  VARCHAR(200) NULL,
+    destination_airport VARCHAR(200) NULL,
+    destination_iata VARCHAR(200) NULL,
+    stops INT NULL,
+    price FLOAT NULL
+);
+
+CREATE TABLE IF NOT EXISTS airport_data(
+    airport  VARCHAR(200) NULL,
+    airport_iata  VARCHAR(200) NULL
+);
+
+
+
+INSERT INTO dot.projects SELECT 'Scan1', 'Scan 1 project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
 
 -- entity categories
-INSERT INTO dot.entity_categories VALUES('anc', 'Antenatal care');
+INSERT INTO dot.entity_categories VALUES('', 'Antenatal care');
 INSERT INTO dot.entity_categories VALUES('fp', 'Family planning');
 INSERT INTO dot.entity_categories VALUES('core', 'Core entities such as chw, patient, etc');
 INSERT INTO dot.entity_categories VALUES('iccm', 'Integrated community case management on child mortality');
