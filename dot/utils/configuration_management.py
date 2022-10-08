@@ -111,10 +111,10 @@ def write_config_from_template(
     )
     template = environment.get_template(template_name)
     content = template.render(**kwargs)
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
     with open(output_file, mode="w", encoding="utf-8") as f:
         f.write(content)
         logger.info(f"   Wrote {output_file}")
-
 
 def generate_master_config_files(project_id, logger=logging.Logger):
 
@@ -401,6 +401,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
 
     # Now, let's generate the non-schema custom_sql test files
     logger.info("Generating non-schema custom sql DBT test files ...")
+    os.makedirs(os.path.dirname(tests_dir + "/test.txt"), exist_ok=True)
     for f in os.listdir(tests_dir):
         if ".sql" in f:
             os.remove(os.path.join(tests_dir, f))
@@ -446,6 +447,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
 
             ge_test_file["expectations"].append(expectation)
 
+    os.makedirs(os.path.dirname(ge_dir + "/test.txt"), exist_ok=True)
     for f in os.listdir(ge_dir):
         if ".json" in f:
             os.remove(os.path.join(ge_dir, f))

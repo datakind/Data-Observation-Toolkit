@@ -72,6 +72,7 @@ def create_failed_dbt_test_models(
     logger.info("======== Create failed DBT test models  ========")
 
     # Purge old tests
+    os.makedirs(os.path.dirname(f"dbt/{get_dbt_config_model_paths()}/test/test.txt"), exist_ok=True)
     for i in os.listdir(f"dbt/{get_dbt_config_model_paths()}/test/"):
         if i.endswith("sql"):
             os.remove(f"dbt/{get_dbt_config_model_paths()}/test/" + i)
