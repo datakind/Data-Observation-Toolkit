@@ -11,6 +11,7 @@ import numpy as np
 from datetime import datetime
 from datetime import timedelta
 import random
+import uuid
 
 NUMBER_OF_FLIGHTS = 100
 
@@ -69,8 +70,12 @@ print("Expect similar means across reporters (airlines) ...")
 duplicate = flight_data.iloc[4]
 flight_data.loc[flight_data["airline"]=="British Airways","price"] = 0.1*flight_data.loc[flight_data["airline"]=="British Airways","price"]
 
+flight_data = flight_data.reset_index()
+airport_data = airport_data.reset_index()
+
 flights_sql = '''
 CREATE TABLE IF NOT EXISTS flight_data(
+    uuid UUID PRIMARY KEY,
     departure_time TIMESTAMP WITH TIME ZONE NULL,
     airline VARCHAR(200) NULL,
     origin_airport  VARCHAR(200) NULL,
@@ -83,18 +88,21 @@ CREATE TABLE IF NOT EXISTS flight_data(
 
 '''
 for index, r in flight_data.iterrows():
-    flights_sql += f"INSERT INTO flight_data VALUES('{r['departure_time']}','{r['airline']}', '{r['origin_airport']}','{r['origin_iata']}'," \
+    uuid_str = uuid.uuid3(uuid.NAMESPACE_OID, str(r['origin_airport'])+str(r['departure_time'])+str(index))
+    flights_sql += f"INSERT INTO flight_data VALUES('{uuid_str}', '{r['departure_time']}','{r['airline']}', '{r['origin_airport']}','{r['origin_iata']}'," \
           f"'{r['destination_airport']}', '{r['destination_iata']}', '{r['stops']}', {r['price']} );\n"
 
 airports_sql = '''
 CREATE TABLE IF NOT EXISTS airport_data(
+    uuid UUID PRIMARY KEY,
     airport  VARCHAR(200) NULL,
     airport_iata  VARCHAR(200) NULL
 );
 
 '''
 for index, r in airport_data.iterrows():
-    airports_sql += f"INSERT INTO airport_data VALUES('{r['origin_airport']}','{r['origin_iata']}');\n"
+    uuid_str = uuid.uuid3(uuid.NAMESPACE_OID, r['origin_airport']+str(index))
+    airports_sql += f"INSERT INTO airport_data VALUES('{uuid_str}','{r['origin_airport']}','{r['origin_iata']}');\n"
 
 airports_sql = airports_sql.replace("'nan'", "NULL").replace("'NaT'", "NULL")
 flights_sql = flights_sql.replace("'nan'", "NULL").replace("'NaT'", "NULL")
