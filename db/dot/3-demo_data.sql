@@ -1,3 +1,4 @@
+BEGIN;
 
 CREATE TABLE IF NOT EXISTS airport_data(
     airport  VARCHAR(200) NULL,
@@ -99,72 +100,72 @@ INSERT INTO airport_data VALUES('Harbin Yangjiagang airport','HRB');
 INSERT INTO airport_data VALUES('Harbin Yangjiagang airport','HRB');
 
 CREATE TABLE IF NOT EXISTS flight_data(
-    departure_time DATETIME NULL,
+    departure_time TIMESTAMP WITH TIME ZONE NULL,
     airline VARCHAR(200) NULL,
     origin_airport  VARCHAR(200) NULL,
     origin_iata  VARCHAR(200) NULL,
     destination_airport VARCHAR(200) NULL,
     destination_iata VARCHAR(200) NULL,
-    stops INT NULL,
+    stops VARCHAR(30) NULL,
     price FLOAT NULL
 );
 
 INSERT INTO flight_data VALUES('2022-01-01 11:13:08.230010','Ural Airlines', 'Southwest Florida International airport','RSW','Hartsfield-Jackson Atlanta International airport', 'ATL', 'non-stop', 791.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:13:18.230010','Oman Air', 'Alicante airport','ALC','Edinburgh International airport', 'EDI', 'non-stop', nan );
-INSERT INTO flight_data VALUES('2022-01-01 11:13:38.230010','China Southern Airlines', 'nan','SXM','Camilo Daza airport', 'CUC', 'non-stop', -100.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:13:18.230010','Oman Air', 'Alicante airport','ALC','Edinburgh International airport', 'EDI', 'non-stop', NULL );
+INSERT INTO flight_data VALUES('2022-01-01 11:13:38.230010','China Southern Airlines', NULL,'SXM','Camilo Daza airport', 'CUC', 'non-stop', -100.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:14:08.230010','AirAsia India', 'Bodo airport','BOO','Gothenburg airport', 'GOT', '1', 630.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:14:48.230010','Jeju Air', 'Tancredo Neves International airport','CNF','Norman Y Mineta San Jose International airport', 'SJC', 'non-stop', 631.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:15:38.230010','Vietnam Airlines', 'Harbin Yangjiagang airport','HRB','General Abelardo L Rodriguez International Airpo', 'TIJ', 'non-stop', 378.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:16:38.230010','AirAsia India', 'Taiwan Taoyuan International airport','TPE','Jorge Amado airport', 'IOS', '97', 667.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:17:48.230010','Skymark Airlines', 'Zagreb airport','nan','Timehri International airport', 'GEO', 'non-stop', 245.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:19:08.230010','S7 Airlines', 'Arturo Merino Benitez International airport','SCL','Sesquicentenario airport', 'nan', '2', 399.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:17:48.230010','Skymark Airlines', 'Zagreb airport',NULL,'Timehri International airport', 'GEO', 'non-stop', 245.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:19:08.230010','S7 Airlines', 'Arturo Merino Benitez International airport','SCL','Sesquicentenario airport', NULL, '2', 399.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:20:38.230010','AirAsia India', 'Jorge Amado airport','IOS','Piarco airport', 'POS', '2', 521.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:22:18.230010','Allegiant Air', 'nan','TFS','Governador Jorge Teixeira de Oliveira Internatio', 'PVH', 'non-stop', 681.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:24:08.230010','Ethiopian Airlines', 'Nashville International airport','BNA','Prinses Juliana International airport', 'SXM', 'nan', 429.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:26:08.230010','China Southern Airlines', 'nan','MCT','Timehri International airport', 'GEO', 'nan', 708.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:22:18.230010','Allegiant Air', NULL,'TFS','Governador Jorge Teixeira de Oliveira Internatio', 'PVH', 'non-stop', 681.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:24:08.230010','Ethiopian Airlines', 'Nashville International airport','BNA','Prinses Juliana International airport', 'SXM', NULL, 429.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:26:08.230010','China Southern Airlines', NULL,'MCT','Timehri International airport', 'GEO', NULL, 708.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:28:18.230010','Alaska Airlines', 'Indianapolis International airport','IND','Sao Jose do Rio Preto airport', 'SJP', '1', 353.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:30:38.230010','Tropic Air', 'Lijiang','LJG','Rosario airport', 'ROS', '2', 315.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:33:08.230010','Skymark Airlines', 'Zurich International airport','ZRH','Jorge Wilsterman airport', 'CBB', '2', 395.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:35:48.230010','China United Airlines', 'Tribhuvan International airport','KTM','General Mitchell International airport', 'MKE', 'non-stop', 451.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:38:38.230010','nan', 'Shandong','TNA','Jianoiao airport', 'HGH', '2', 322.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:41:38.230010','nan', 'Helsinki Vantaa airport','HEL','Naples International airport', 'NAP', '2', 876.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:44:48.230010','Wings Air', 'Koltsovo airport','SVX','Dallas Love Field airport', 'DAL', 'nan', 991.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:38:38.230010',NULL, 'Shandong','TNA','Jianoiao airport', 'HGH', '2', 322.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:41:38.230010',NULL, 'Helsinki Vantaa airport','HEL','Naples International airport', 'NAP', '2', 876.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:44:48.230010','Wings Air', 'Koltsovo airport','SVX','Dallas Love Field airport', 'DAL', NULL, 991.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:48:08.230010','VietJet Air', 'Krasnodar-Pashovskiy airport','KRR','Borispol airport', 'KBP', '2', 205.0 );
-INSERT INTO flight_data VALUES('2022-01-01 11:51:38.230010','China Eastern Airlines', 'Carlos Ibanez de Campo International airport','nan','Hasanuddin airport', 'UPG', '3', 527.0 );
+INSERT INTO flight_data VALUES('2022-01-01 11:51:38.230010','China Eastern Airlines', 'Carlos Ibanez de Campo International airport',NULL,'Hasanuddin airport', 'UPG', '3', 527.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:55:18.230010','Vietnam Airlines', 'Glasgow International airport','GLA','Sepinggan airport', 'BPN', 'non-stop', 614.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:59:08.230010','Cape Air', 'Arturo Merino Benitez International airport','SCL','Chengdushuang Liu airport', 'CTU', 'non-stop', 889.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:03:08.230010','JetBlue Airways', 'Rio de Janeiro-Antonio Carlos Jobim Internationa','GIG','Okecie International airport', 'WAW', 'non-stop', 816.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:07:18.230010','Spring Airlines', 'Otopeni airport','OTP','HAL Bangalore International airport', 'BLR', 'non-stop', 890.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:11:38.230010','Sichuan Airlines', 'Ningbo airport','NGB','Manchester International airport', 'MAN', 'non-stop', 754.0 );
-INSERT INTO flight_data VALUES('2022-01-01 12:16:08.230010','Cape Air', 'Louisville International airport','SDF','Tribhuvan International airport', 'KTM', 'non-stop', nan );
-INSERT INTO flight_data VALUES('NaT','Skymark Airlines', 'Cancun airport','CUN','Trelew Almirante Zar airport', 'REL', 'nan', 625.0 );
+INSERT INTO flight_data VALUES('2022-01-01 12:16:08.230010','Cape Air', 'Louisville International airport','SDF','Tribhuvan International airport', 'KTM', 'non-stop', NULL );
+INSERT INTO flight_data VALUES(NULL,'Skymark Airlines', 'Cancun airport','CUN','Trelew Almirante Zar airport', 'REL', NULL, 625.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:25:38.230010','Skymark Airlines', 'Austin-Bergstrom International airport','AUS','Arrecife airport', 'ACE', '1', 251.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:30:38.230010','Batik Air', 'Kurumoch airport','KUF','Philip S W Goldson International airport', 'BZE', '1', 822.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:35:48.230010','Sichuan Airlines', 'Malpensa International airport','MXP','Eppley Airfield', 'OMA', 'non-stop', 646.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:41:08.230010','Allegiant Air', 'Zhuhai airport','ZUH','Tolmachevo airport', 'OVB', '3', 943.0 );
 INSERT INTO flight_data VALUES('2022-01-01 12:46:38.230010','Indonesia AirAsia', 'Santa Genoveva airport','GYN','Tucson International airport', 'TUS', 'non-stop', 536.0 );
-INSERT INTO flight_data VALUES('2022-01-01 12:52:18.230010','Batik Air', 'Koltsovo airport','SVX','Belize', 'PLJ', '2', nan );
-INSERT INTO flight_data VALUES('2022-01-01 12:58:08.230010','Juneyao Airlines', 'Marechal Cunha Machado International airport','SLZ','Hartsfield-Jackson Atlanta International airport', 'ATL', 'non-stop', nan );
+INSERT INTO flight_data VALUES('2022-01-01 12:52:18.230010','Batik Air', 'Koltsovo airport','SVX','Belize', 'PLJ', '2', NULL );
+INSERT INTO flight_data VALUES('2022-01-01 12:58:08.230010','Juneyao Airlines', 'Marechal Cunha Machado International airport','SLZ','Hartsfield-Jackson Atlanta International airport', 'ATL', 'non-stop', NULL );
 INSERT INTO flight_data VALUES('2022-01-01 13:04:08.230010','VietJet Air', 'Zhengzhou airport','CGO','Cataratas del Iguazu airport', 'IGR', '2', 935.0 );
-INSERT INTO flight_data VALUES('2022-01-01 13:10:18.230010','nan', 'George Bush Intercontinental airport','IAH','Burbank Glendale Pasadena airport', 'BUR', '1', 492.0 );
-INSERT INTO flight_data VALUES('2022-01-01 13:16:38.230010','Nok Air', 'Belize','CUK','nan', 'THR', '2', 569.0 );
+INSERT INTO flight_data VALUES('2022-01-01 13:10:18.230010',NULL, 'George Bush Intercontinental airport','IAH','Burbank Glendale Pasadena airport', 'BUR', '1', 492.0 );
+INSERT INTO flight_data VALUES('2022-01-01 13:16:38.230010','Nok Air', 'Belize','CUK',NULL, 'THR', '2', 569.0 );
 INSERT INTO flight_data VALUES('2022-01-01 13:23:08.230010','GoAir', 'Hongqiao airport','SHA','Manchester International airport', 'MAN', '3', 386.0 );
 INSERT INTO flight_data VALUES('2022-01-01 13:29:48.230010','GoAir', 'Sepinggan airport','BPN','San Francisco International airport', 'SFO', 'non-stop', 412.0 );
 INSERT INTO flight_data VALUES('2022-01-01 13:36:38.230010','Frontier Airlines', 'Jorge Wilsterman airport','CBB','Tampa International airport', 'TPA', 'non-stop', 961.0 );
 INSERT INTO flight_data VALUES('2022-01-01 13:43:38.230010','Ural Airlines', 'Halifax International airport','YHZ','Zhangguizhuang airport', 'TSN', 'non-stop', 880.0 );
 INSERT INTO flight_data VALUES('2022-01-01 13:50:48.230010','Air New Zealand', 'Hsien Yang airport','XIY','Durham International airport', 'RDU', '3', 811.0 );
-INSERT INTO flight_data VALUES('2022-01-01 13:58:08.230010','American Airlines', 'nan','LDB','Zhengzhou airport', 'CGO', '2', 634.0 );
+INSERT INTO flight_data VALUES('2022-01-01 13:58:08.230010','American Airlines', NULL,'LDB','Zhengzhou airport', 'CGO', '2', 634.0 );
 INSERT INTO flight_data VALUES('2022-01-01 14:05:38.230010','Nam Air', 'Shijiazhuang','SJW','Orlando International airport', 'MCO', '2', 271.0 );
-INSERT INTO flight_data VALUES('2022-01-01 14:13:18.230010','Hainan Airlines', 'Zurich International airport','ZRH','El Plumerillo airport', 'MDZ', '1', 556.0 );
+INSERT INTO flight_data VALUES('2022-01-01 14:13:18.230010','HaiNULL Airlines', 'Zurich International airport','ZRH','El Plumerillo airport', 'MDZ', '1', 556.0 );
 INSERT INTO flight_data VALUES('2022-01-01 14:21:08.230010','Indonesia AirAsia', 'Geneva airport','GVA','Mccarran International airport', 'LAS', 'non-stop', 977.0 );
-INSERT INTO flight_data VALUES('2022-01-01 14:29:08.230010','nan', 'Bali International airport','DPS','San Pedro airport', 'SPR', 'non-stop', nan );
+INSERT INTO flight_data VALUES('2022-01-01 14:29:08.230010',NULL, 'Bali International airport','DPS','San Pedro airport', 'SPR', 'non-stop', NULL );
 INSERT INTO flight_data VALUES('2022-01-01 14:37:18.230010','Royal Air Maroc', 'New Incheon International airport','ICN','Portland International airport', 'PDX', '3', 614.0 );
 INSERT INTO flight_data VALUES('2022-01-01 14:45:38.230010','Lucky Air', 'Velikiydvor airport','MSQ','Stuttgart airport', 'STR', '3', 943.0 );
 INSERT INTO flight_data VALUES('2022-01-01 14:54:08.230010','Allegiant Air', 'Hong Kong International airport','HKG','Will Rogers World airport', 'OKC', 'non-stop', 801.0 );
 INSERT INTO flight_data VALUES('2022-01-01 15:02:48.230010','AirAsia India', 'Kahului airport','OGG','Brussels airport', 'BRU', 'non-stop', 372.0 );
-INSERT INTO flight_data VALUES('2022-01-01 15:11:38.230010','Lion Air', 'nan','SJC','nan', 'MCZ', 'nan', 216.0 );
+INSERT INTO flight_data VALUES('2022-01-01 15:11:38.230010','Lion Air', NULL,'SJC',NULL, 'MCZ', NULL, 216.0 );
 INSERT INTO flight_data VALUES('2022-01-01 15:20:38.230010','Ethiopian Airlines', 'San Francisco International airport','SFO','Borispol airport', 'KBP', '1', 958.0 );
-INSERT INTO flight_data VALUES('2022-01-01 15:29:48.230010','Tropic Air', 'Chennai International airport','MAA','Shijiazhuang', 'SJW', '3', nan );
+INSERT INTO flight_data VALUES('2022-01-01 15:29:48.230010','Tropic Air', 'Chennai International airport','MAA','Shijiazhuang', 'SJW', '3', NULL );
 INSERT INTO flight_data VALUES('2022-01-01 15:39:08.230010','Spring Airlines', 'Chou Shui Tzu airport','DLC','Rio de Janeiro-Antonio Carlos Jobim Internationa', 'GIG', '3', 297.0 );
 INSERT INTO flight_data VALUES('2022-01-01 15:48:38.230010','Spirit Airlines', 'Durham International airport','RDU','Orio Al Serio airport', 'BGY', '1', 631.0 );
 INSERT INTO flight_data VALUES('2022-01-01 15:58:18.230010','Skymark Airlines', 'Doha International airport','DOH','Rostov East airport', 'ROV', '1', 601.0 );
@@ -172,41 +173,43 @@ INSERT INTO flight_data VALUES('2022-01-01 16:08:08.230010','GoAir', 'Dusseldorf
 INSERT INTO flight_data VALUES('2022-01-01 16:18:08.230010','Air China', 'Sultan Abdul Aziz Shah airport','SZB','Cap C Martinez de Pinillos airport', 'TRU', '1', 778.0 );
 INSERT INTO flight_data VALUES('2022-01-01 16:28:18.230010','Ethiopian Airlines', 'Pulkuvo 2 airport','LED','Chennai International airport', 'MAA', '2', 991.0 );
 INSERT INTO flight_data VALUES('2022-01-01 16:38:38.230010','Chengdu Airlines', 'New Chitose airport','CTS','Dafang Shen airport', 'CGQ', '2', 231.0 );
-INSERT INTO flight_data VALUES('2022-01-01 16:49:08.230010','Chengdu Airlines', 'Vienna Schwechat International airport','VIE','nan', 'POS', '1', 606.0 );
+INSERT INTO flight_data VALUES('2022-01-01 16:49:08.230010','Chengdu Airlines', 'Vienna Schwechat International airport','VIE',NULL, 'POS', '1', 606.0 );
 INSERT INTO flight_data VALUES('2022-01-01 16:59:48.230010','Chengdu Airlines', 'Mineral''nyye Vody','MRV','San Antonio International airport', 'SAT', '1', 349.0 );
 INSERT INTO flight_data VALUES('2022-01-01 17:10:38.230010','Southern Airways Express', 'New Orleans International airport','MSY','Coronel Aviador Cesar Bombonato airport', 'UDI', 'non-stop', 939.0 );
-INSERT INTO flight_data VALUES('2022-01-01 17:21:38.230010','Wings Air', 'Velikiydvor airport','nan','Los Cabos International airport', 'SJD', '3', 633.0 );
+INSERT INTO flight_data VALUES('2022-01-01 17:21:38.230010','Wings Air', 'Velikiydvor airport',NULL,'Los Cabos International airport', 'SJD', '3', 633.0 );
 INSERT INTO flight_data VALUES('2022-01-01 17:32:48.230010','Indonesia AirAsia', 'Kagoshima airport','KOJ','Trelew Almirante Zar airport', 'REL', 'non-stop', 399.0 );
 INSERT INTO flight_data VALUES('2022-01-01 17:44:08.230010','Batik Air', 'Jorge Wilsterman airport','CBB','General Mitchell International airport', 'MKE', '1', 391.0 );
 INSERT INTO flight_data VALUES('2022-01-01 17:55:38.230010','GoAir', 'Stuttgart airport','STR','Lambert St Louis International airport', 'STL', 'non-stop', 568.0 );
 INSERT INTO flight_data VALUES('2022-01-01 18:07:18.230010','Air China', 'Trelew Almirante Zar airport','REL','Lihue airport', 'LIH', '1', 369.0 );
 INSERT INTO flight_data VALUES('2022-01-01 18:19:08.230010','Air China', 'Osaka International airport','ITM','Pinto Martins International airport', 'FOR', '2', 302.0 );
-INSERT INTO flight_data VALUES('NaT','AirAsia India', 'Santarem International airport','STM','Reno-Tahoe International airport', 'RNO', '2', 509.0 );
+INSERT INTO flight_data VALUES(NULL,'AirAsia India', 'Santarem International airport','STM','Reno-Tahoe International airport', 'RNO', '2', 509.0 );
 INSERT INTO flight_data VALUES('2022-01-01 18:43:18.230010','Ural Airlines', 'Barcelona International airport','BCN','Lyon airport', 'LYS', '1', 553.0 );
 INSERT INTO flight_data VALUES('2022-01-01 18:55:38.230010','West Air (China)', 'Aéroport International Pierre-Elliott-Trudeau d','YUL','Bali International airport', 'DPS', '2', 372.0 );
-INSERT INTO flight_data VALUES('2022-01-01 19:08:08.230010','nan', 'Kansas city International airport','MCI','Kelowna International airport', 'YLW', '3', nan );
-INSERT INTO flight_data VALUES('2022-01-01 19:20:48.230010','China United Airlines', 'Zia International airport Dhaka','DAC','nan', 'DCA', '2', 725.0 );
-INSERT INTO flight_data VALUES('NaT','Maya Island Air', 'Cyril E King International airport','STT','Teniente Benjamin Matienzo airport', 'TUC', '1', 606.0 );
-INSERT INTO flight_data VALUES('2022-01-01 19:46:38.230010','Shandong Airlines', 'Dafang Shen airport','CGQ','Rebiechowo airport', 'GDN', 'nan', nan );
-INSERT INTO flight_data VALUES('NaT','Sriwijaya Air', 'Stuttgart airport','STR','Osaka International airport', 'ITM', '1', 553.0 );
-INSERT INTO flight_data VALUES('NaT','Southern Airways Express', 'El Tepual International airport','PMC','Sacramento International airport', 'SMF', '2', 745.0 );
+INSERT INTO flight_data VALUES('2022-01-01 19:08:08.230010',NULL, 'Kansas city International airport','MCI','Kelowna International airport', 'YLW', '3', NULL );
+INSERT INTO flight_data VALUES('2022-01-01 19:20:48.230010','China United Airlines', 'Zia International airport Dhaka','DAC',NULL, 'DCA', '2', 725.0 );
+INSERT INTO flight_data VALUES(NULL,'Maya Island Air', 'Cyril E King International airport','STT','Teniente Benjamin Matienzo airport', 'TUC', '1', 606.0 );
+INSERT INTO flight_data VALUES('2022-01-01 19:46:38.230010','Shandong Airlines', 'Dafang Shen airport','CGQ','Rebiechowo airport', 'GDN', NULL, NULL );
+INSERT INTO flight_data VALUES(NULL,'Sriwijaya Air', 'Stuttgart airport','STR','Osaka International airport', 'ITM', '1', 553.0 );
+INSERT INTO flight_data VALUES(NULL,'Southern Airways Express', 'El Tepual International airport','PMC','Sacramento International airport', 'SMF', '2', 745.0 );
 INSERT INTO flight_data VALUES('2022-01-01 20:26:38.230010','LATAM Airlines', 'George Bush Intercontinental airport','IAH','Santa Maria airport', 'AJU', 'non-stop', 910.0 );
-INSERT INTO flight_data VALUES('2022-01-01 20:40:18.230010','Southern Airways Express', 'Puerto del Rosario airport','nan','Jorge Wilsterman airport', 'CBB', '1', 790.0 );
+INSERT INTO flight_data VALUES('2022-01-01 20:40:18.230010','Southern Airways Express', 'Puerto del Rosario airport',NULL,'Jorge Wilsterman airport', 'CBB', '1', 790.0 );
 INSERT INTO flight_data VALUES('2022-01-01 20:54:08.230010','AirAsia', 'Barajas airport','MAD','Arturo Merino Benitez International airport', 'SCL', '3', 563.0 );
 INSERT INTO flight_data VALUES('2022-01-01 21:08:08.230010','Southwest Airlines', 'Eldorado International airport','BOG','Domodedovo airport', 'DME', '1', 609.0 );
-INSERT INTO flight_data VALUES('2022-01-01 21:22:18.230010','VietJet Air', 'Hartsfield-Jackson Atlanta International airport','ATL','Sardar Vallabhbhai Patel International airport', 'AMD', 'nan', 382.0 );
+INSERT INTO flight_data VALUES('2022-01-01 21:22:18.230010','VietJet Air', 'Hartsfield-Jackson Atlanta International airport','ATL','Sardar Vallabhbhai Patel International airport', 'AMD', NULL, 382.0 );
 INSERT INTO flight_data VALUES('2022-01-01 21:36:38.230010','Jeju Air', 'Ynukovo airport','VKO','Val de Caes International airport', 'BEL', '3', 840.0 );
 INSERT INTO flight_data VALUES('2022-01-01 21:51:08.230010','United Airlines', 'Ministro Victor Konder International airport','NVT','Afonso Pena International airport', 'CWB', '2', 330.0 );
 INSERT INTO flight_data VALUES('2022-01-01 22:05:48.230010','Air India', 'George Bush Intercontinental airport','IAH','Dusseldorf International airport', 'DUS', '2', 595.0 );
 INSERT INTO flight_data VALUES('2022-01-01 22:20:38.230010','China United Airlines', 'Salta airport','SLA','Kimhae International airport', 'PUS', '1', 328.0 );
 INSERT INTO flight_data VALUES('2022-01-01 22:35:38.230010','Southwest Airlines', 'Sesquicentenario airport','ADZ','Cap J A Quinones Gonzales airport', 'CIX', '1', 902.0 );
 INSERT INTO flight_data VALUES('2022-01-01 22:50:48.230010','Wings Air', 'Maquehue airport','ZCO','Toronto Lester B Pearson International airport', 'YYZ', '1', 909.0 );
-INSERT INTO flight_data VALUES('2022-01-01 23:06:08.230010','Delta Air Lines', 'Las Palmas airport','LPA','Bordeaux airport', 'nan', 'non-stop', 956.0 );
+INSERT INTO flight_data VALUES('2022-01-01 23:06:08.230010','Delta Air Lines', 'Las Palmas airport','LPA','Bordeaux airport', NULL, 'non-stop', 956.0 );
 INSERT INTO flight_data VALUES('2022-01-01 23:21:38.230010','China United Airlines', 'Liuting airport','TAO','Fort Worth International airport', 'DFW', '1', 764.0 );
 INSERT INTO flight_data VALUES('2022-01-01 23:37:18.230010','Nam Air', 'Greater Cincinnati International airport','CVG','Orio Al Serio airport', 'BGY', 'non-stop', 666.0 );
 INSERT INTO flight_data VALUES('2022-01-01 23:53:08.230010','China Southern Airlines', 'Kansai International airport','KIX','Chou Shui Tzu airport', 'DLC', 'non-stop', 842.0 );
-INSERT INTO flight_data VALUES('2022-01-02 00:09:08.230010','AirAsia India', 'Nice-Cote d''Azur airport','NCE','Porto airport', 'OPO', 'nan', 342.0 );
+INSERT INTO flight_data VALUES('2022-01-02 00:09:08.230010','AirAsia India', 'Nice-Cote d''Azur airport','NCE','Porto airport', 'OPO', NULL, 342.0 );
 INSERT INTO flight_data VALUES('2022-01-02 00:25:18.230010','Wings Air', 'Noi Bai airport','HAN','Governador Andre Franco Montoro International Ai', 'GRU', '1', 671.0 );
-INSERT INTO flight_data VALUES('2022-01-02 00:41:38.230010','Shanghai Airlines', 'Santa Maria airport','AJU','Catania Fontanarossa airport', 'CTA', 'nan', 737.0 );
+INSERT INTO flight_data VALUES('2022-01-02 00:41:38.230010','Shanghai Airlines', 'Santa Maria airport','AJU','Catania Fontanarossa airport', 'CTA', NULL, 737.0 );
 INSERT INTO flight_data VALUES('2022-01-02 00:58:08.230010','Shandong Airlines', 'Cnl Fap Fran Seca Vignetta airport','IQT','Chiang Mai International airport', 'CNX', '1', 494.0 );
 INSERT INTO flight_data VALUES('2022-01-01 11:14:48.230010','Jeju Air', 'Tancredo Neves International airport','CNF','Norman Y Mineta San Jose International airport', 'SJC', 'non-stop', 631.0 );
+
+COMMIT;

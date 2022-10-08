@@ -27,34 +27,9 @@ services:
       - ./dot/dot_config.yml:/app/dot/config/dot_config.yml
       - ../dot/config/example/self_tests/dot_config_docker.yml:/app/dot/self_tests/data/base_self_test/dot_config.yml
 
-  superset:
-    image: apache/superset
-    ports:
-        - "8080:8088"
-    container_name: superset
-
-  #dot-webapp-server:
-  #  build:
-  #      context: ..
-  #      dockerfile: ./docker/webapp/server/Dockerfile
-  #  image: dot-webapp-server
-  #  container_name: dot-web-app-server
-  #  environment:
-  #      DB_PASSWORD: ${POSTGRES_PASSWORD}
+  #superset:
+  #  image: apache/superset
   #  ports:
-  #        - "3002:3002"
-  #  volumes:
-  #    - ../webapp/server:/usr/src/app
-  #    - ./webapp/server/env:/usr/src/app/.env
+  #      - "8080:8088"
+  #  container_name: superset
 
-  #dot-webapp-frontend:
-  #  build:
-  #      context: ..
-  #      dockerfile: ./docker/webapp/frontend/Dockerfile
-  #  image: dot-webapp-frontend
-  #  container_name: dot-web-app-frontend
-  #  ports:
-  #        - "3000:3000"
-  #  volumes:
-  #    - ../webapp/frontend:/usr/src/app
-  #    - ./webapp/frontend/env:/usr/src/app/.env

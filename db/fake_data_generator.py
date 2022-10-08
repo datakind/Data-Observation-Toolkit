@@ -1,3 +1,8 @@
+"""
+This script will generate fake data which can be used to demo DOT. See below
+for code to generate each test type scenario. Script saves a sql file in ./dot which
+will be included as part of Docker build.
+"""
 import pandas as pd
 from faker import Faker
 from faker_airtravel import AirTravelProvider
@@ -66,13 +71,13 @@ flight_data.loc[flight_data["airline"]=="British Airways","price"] = 0.1*flight_
 
 flights_sql = '''
 CREATE TABLE IF NOT EXISTS flight_data(
-    departure_time DATETIME NULL,
+    departure_time TIMESTAMP WITH TIME ZONE NULL,
     airline VARCHAR(200) NULL,
     origin_airport  VARCHAR(200) NULL,
     origin_iata  VARCHAR(200) NULL,
     destination_airport VARCHAR(200) NULL,
     destination_iata VARCHAR(200) NULL,
-    stops INT NULL,
+    stops VARCHAR(30) NULL,
     price FLOAT NULL
 );
 
@@ -90,6 +95,10 @@ CREATE TABLE IF NOT EXISTS airport_data(
 '''
 for index, r in airport_data.iterrows():
     airports_sql += f"INSERT INTO airport_data VALUES('{r['origin_airport']}','{r['origin_iata']}');\n"
+
+airports_sql = airports_sql.replace("'nan'", "NULL").replace("'NaT'", "NULL")
+flights_sql = flights_sql.replace("'nan'", "NULL").replace("'NaT'", "NULL")
+flights_sql = flights_sql.replace("nan", "NULL")
 
 with open('./dot/3-demo_data.sql', 'w') as f:
     f.write(airports_sql)
