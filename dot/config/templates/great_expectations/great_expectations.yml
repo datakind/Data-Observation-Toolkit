@@ -1,3 +1,5 @@
+{# templates/great_expectations/great_expectations.yml #}
+
 # Welcome to Great Expectations! Always know what to expect from your data.
 #
 # Here you can define datasources, batch kwargs generators, integrations and
@@ -58,13 +60,13 @@ stores:
     class_name: ExpectationsStore
     store_backend:
       class_name: TupleFilesystemStoreBackend
-      base_directory: expectations/  # the tool changes this into a project-dependent directory
+      base_directory: expectations/{{ project_id }}  # the tool changes this into a project-dependent directory
 
   validations_store:
     class_name: ValidationsStore
     store_backend:
       class_name: TupleFilesystemStoreBackend
-      base_directory: uncommitted/validations/  # the tool changes this into a project-dependent directory
+      base_directory: uncommitted/validations/{{ project_id }}  # the tool changes this into a project-dependent directory
 
   evaluation_parameter_store:
     # Evaluation Parameters enable dynamic expectations. Read more here:

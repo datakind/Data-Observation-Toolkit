@@ -1,5 +1,4 @@
 dot:
-  save_passed_tests: False
   output_schema_suffix: tests
 dot_db:
   type: postgres
