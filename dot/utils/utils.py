@@ -479,7 +479,6 @@ def get_test_rows(
     id_col_names = ["uuid_list", "uuid", "index", "reported_by", "value_field"]
 
     for _, row in tests_summary.iterrows():
-
         failed_tests_view = row["failed_tests_view"]
         entity_id = row["entity_id"]
         entity_or_primary_table = get_entity_name_from_id(project_id, row["entity_id"])
@@ -530,6 +529,17 @@ def get_test_rows(
         # DB somehow. What's here if not generic for all deployments
         unique_column_name = None
         for c in id_col_names:
+            # Special handling for unique test type
+            if test_type == "unique":
+                unique_column_name = "unique_field"
+                failing_ids = entity_df.loc[
+                    entity_df[column_name].isin(
+                        test_results_df['unique_field']
+                    ),
+                    "uuid",  # TODO Add 'primary_table_id_field' as a column in entity defintion and use that here. It won't always be uuid
+                ].tolist()
+                unique_column_name = column_name
+                break
             if c in test_results_df_cols:
                 # If a list of ids, use those
                 if c == "uuid_list":
@@ -557,11 +567,6 @@ def get_test_rows(
                         "uuid",
                     ].tolist()
                     break
-                # Special handling for unique test type
-                if test_type == "unique":
-                    unique_column_name = "unique_field"
-                    failing_ids = test_results_df[unique_column_name].tolist()
-                    break
                 # Rest are basic id fields
                 if c != column_name:
                     unique_column_name = c
@@ -581,6 +586,8 @@ def get_test_rows(
 
         # Catch gaps in logic
         if unique_column_name is None:
+            logger.info(row)
+            logger.info(test_results_df_cols)
             logger.error(
                 "Unknown ID column for test_type "
                 + test_type
@@ -598,10 +605,14 @@ def get_test_rows(
             + entity_or_primary_table
             + " has id field "
             + unique_column_name
+            + " test view:"
+            + failed_tests_view
         )
 
         # Using our list of failing IDs, generate dataframe for failed_test_rows
         try:
+            if not isinstance(failing_ids, list):
+                failing_ids = [ failing_ids ]
             passing_ids = entity_df.loc[
                 ~entity_df[unique_column_name].isin(failing_ids), unique_column_name
             ].to_list()
