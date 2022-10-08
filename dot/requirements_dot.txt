@@ -30,13 +30,6 @@ decorator==5.1.0
 defusedxml==0.7.1
 entrypoints==0.3
 fonttools==4.28.3
-google-api-core==1.31.2
-google-auth==1.35.0
-google-cloud-bigquery==2.31.0
-google-cloud-core==1.7.2
-google-crc32c==1.3.0
-google-resumable-media==2.1.0
-googleapis-common-protos==1.53.0
 great-expectations==0.12.10
 grpcio==1.42.0
 hologram==0.0.14
@@ -125,7 +118,6 @@ seaborn==0.11.2
 Send2Trash==1.8.0
 setuptools-scm==6.3.2
 six==1.16.0
-snowflake-connector-python==2.5.1
 SQLAlchemy==1.3.24
 sqlparse==0.4.2
 termcolor==1.1.0
