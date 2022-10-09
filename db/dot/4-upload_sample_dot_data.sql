@@ -55,7 +55,7 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-349
 '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Matt');
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f18', 'BIAS-1', 6,
-'Price outlier airlines', '', '', '7b689796-afde-3930-87be-ed8b7c7a0474', 'expect_similar_means_across_reporters',
+'Price outlier airlines', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'expect_similar_means_across_reporters',
 'price', '', $${"key": "airline","quantity": "price","data_table": "dot_model__all_flight_data","id_column": "airline",
 "target_table":"dot_model__airlines_data"}$$, '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Matt');
 
