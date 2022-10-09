@@ -18,7 +18,7 @@ from utils.configuration_utils import DbParamsConfigFile, DbParamsConnection
 dot_model_PREFIX = "dot_model__"
 
 
-def setup_custom_logger(log_name, log_level):
+def setup_custom_logger(log_name, log_level, file_logger=False):
     """Sets up a custom logger which logs to file as well as console
 
     Parameters
@@ -27,6 +27,8 @@ def setup_custom_logger(log_name, log_level):
         Location of log file, eg './logs/run_everything.log'
     log_level : logging level
         from logging module, eg logging.INFO, logging.DEBUG
+    file_logger : Boolean
+        Log to file as well as standard out
 
     Returns
     -------
@@ -36,13 +38,14 @@ def setup_custom_logger(log_name, log_level):
     formatter = logging.Formatter(
         fmt="%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
-    handler = logging.FileHandler(log_name)
-    handler.setFormatter(formatter)
+    logger = logging.getLogger(log_name)
+    if file_logger == True:
+        handler = logging.FileHandler(log_name)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
     screen_handler = logging.StreamHandler(stream=sys.stdout)
     screen_handler.setFormatter(formatter)
-    logger = logging.getLogger(log_name)
     logger.setLevel(log_level)
-    logger.addHandler(handler)
     logger.addHandler(screen_handler)
     return logger
 
@@ -540,6 +543,16 @@ def get_test_rows(
                 ].tolist()
                 unique_column_name = column_name
                 break
+            if test_type == "expect_similar_means_across_reporters":
+                tp = json.loads(test_parameters.replace("'",'"'))
+                unique_column_name = tp['id_column']
+                failing_ids = entity_df.loc[
+                    entity_df[unique_column_name].isin(
+                        test_results_df[tp['key']]
+                    ),
+                    unique_column_name,
+                ].tolist()
+                break
             if c in test_results_df_cols:
                 # If a list of ids, use those
                 if c == "uuid_list":
@@ -586,6 +599,7 @@ def get_test_rows(
 
         # Catch gaps in logic
         if unique_column_name is None:
+            logger.info("Unique column name: " + str(unique_column_name))
             logger.info(row)
             logger.info(test_results_df_cols)
             logger.error(
