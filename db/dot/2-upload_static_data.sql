@@ -51,11 +51,10 @@ INSERT INTO dot.test_parameters_interface VALUES('custom_sql', 'query', 'sql sta
 -- INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'name', 'function_argument', 'Name of the test');
 INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'condition', 'entity columns boolean logic', '(patient_age_in_months<24) and (malaria_give_act is not null)','Where clause of rows that are going to be checked');
 INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'expression', 'entity columns boolean logic', 'malaria_act_dosage is not null', 'If not true, the row fails the test');
-INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'key', 'entity id field', 'reported_by', 'The key to check means by, ie a person-specific id');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'key', 'entity id field', 'reported_by', 'The grouping field to check means by, ie a person-specific id');
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'quantity', 'entity numeric field', 'temperature', 'The name of the numeric field to analyze for variation');
-INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'form_name', 'entity id field', 'dot_model__iccmview_assessment', 'The name of entity view where data is');
-INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'id_column', 'entity any field', 'reported_by', 'The id column to group by for mean');  -- Seems like a duplicate of key?
-
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'data_table', 'view/table', 'dot_model__iccmview_assessment', 'The name of entity view where data is');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'id_column', 'entity id field', 'reported_by', 'The id column to use to get failed test records');
 
 -- dot.scenario_test_types
 INSERT INTO dot.scenario_test_types VALUES('MISSING-1', 'associated_columns_not_null');

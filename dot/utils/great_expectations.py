@@ -268,7 +268,7 @@ def extract_df_from_ge_test_results_csv(run_id, project_id, logger):
         columns={"expectation_config.expectation_type": "test_type"}, inplace=True
     )
     ge_tests_summary.rename(
-        columns={"expectation_config.kwargs.form_name": "entity"}, inplace=True
+        columns={"expectation_config.kwargs.data_table": "entity"}, inplace=True
     )
     ge_tests_summary.rename(
         columns={"exception_info.exception_message": "test_status_message"},

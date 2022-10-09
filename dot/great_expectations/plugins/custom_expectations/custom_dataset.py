@@ -17,7 +17,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         [
             "quantity",
             "key",
-            "form_name",
+            "data_table",
             "schema_core",
             "threshold",
             "samples",
@@ -28,7 +28,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         self,
         quantity,
         key,
-        form_name,
+        data_table,
         schema_core,
         target_table,  # The data being checked (eg prices for airlines) will be different to target table (eg airlines)
         # original schema for data, not needed for this expectation:
@@ -43,7 +43,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         See Notebooks/NS-8.0-Bootstrap-Anomaly-Test.ipynb"""
 
         rows = sa.select([sa.column(quantity), sa.column(key)]).select_from(
-            sa.Table(form_name, self._table.metadata, schema=schema_core)
+            sa.Table(data_table, self._table.metadata, schema=schema_core)
         )
 
         def get_bs_p_scores(
@@ -76,13 +76,14 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
 
         return {
             "success": len(outside) == 0,
+            # TODO We should add more information here, pass back mean, variance for example
             "result": {
                 "observed_value": len(outside) / len(temp),
                 "element_count": len(temp),
                 "unexpected_list": outside.index.to_list(),
                 "table": target_table,
                 "id_column": id_column,
-                "short_name": f"chv_different_{form_name}_{quantity}_distribution",
+                "short_name": f"chv_different_{data_table}_{quantity}_distribution",
             },
         }
 

@@ -13,7 +13,7 @@ from datetime import timedelta
 import random
 import uuid
 
-NUMBER_OF_FLIGHTS = 100
+NUMBER_OF_FLIGHTS = 1000
 
 np.random.seed(seed=12345)
 Faker.seed(0)
