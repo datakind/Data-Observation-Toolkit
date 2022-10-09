@@ -30,11 +30,12 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         key,
         form_name,
         schema_core,
+        target_table,  # The data being checked (eg prices for airlines) will be different to target table (eg airlines)
         # original schema for data, not needed for this expectation:
         schema_source,  # pylint: disable=unused-argument
         threshold=0.01,
         samples=10000,
-        id_column="chv_uuid",
+        id_column="uuid"
     ):
         """Compares distributions of measurements across CHWs to detect ouliers.
         This expectation produces warnings rather than pointing out errors due to its
@@ -79,9 +80,9 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
                 "observed_value": len(outside) / len(temp),
                 "element_count": len(temp),
                 "unexpected_list": outside.index.to_list(),
-                "table": "dot_model__chv",  # mjh added prefix
+                "table": target_table,
                 "id_column": id_column,
-                "short_name": f"chv_different_{quantity}_distribution",
+                "short_name": f"chv_different_{form_name}_{quantity}_distribution",
             },
         }
 
