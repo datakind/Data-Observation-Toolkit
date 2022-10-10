@@ -1,0 +1,14 @@
+# A Docker environment is provided with DOT, but below you can also find
+# a simple conda environment. To use this ...
+#
+# 1. Install [miniconda](https://docs.conda.io/en/latest/miniconda.html) by selecting the installer that fits your OS version. Once it is installed you may have to restart your terminal (closing your terminal and opening again)
+# 2. In this directory, open terminal
+# 3. `conda env create -f environment.yml`
+# 4. `conda activate dot_conda_env`
+#
+name: dot_conda_env
+dependencies:
+  - pip
+  - python=3.8.10
+  - pip:
+    - -r dot/requirements_dot.txt
