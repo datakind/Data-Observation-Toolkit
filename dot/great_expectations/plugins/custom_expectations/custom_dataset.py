@@ -77,6 +77,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         return {
             "success": len(outside) == 0,
             # TODO We should add more information here, pass back mean, variance for example
+            # TODO Sample size should be a test parameter
             "result": {
                 "observed_value": len(outside) / len(temp),
                 "element_count": len(temp),
