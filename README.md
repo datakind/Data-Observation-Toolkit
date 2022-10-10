@@ -18,13 +18,13 @@ When you run DOT, it does the following:
 3. DOT runs tests using Great expectations and DBT 
 3. Results are saved to `dot.run_results` and `dot.run_results_summary`, but also to test views which have the tested 
    data for any failed tests. These views start with `tr_`
-4. Some reports are created into `dot/generated_reports` (we will be using these in the next release)
+4. Some reports are created into `dot/generated_reports`, but it's better to use the DOT user interface (see below) 
 5. The run log is saved to `dot.run_log`
 
-## Running DOT using Docker 
+## The DOT Demo environment
 
-The fastest way to get started using DOT is to use the Docker environment provided with it. This will build a DOT Database,
-a container for running DOT as well as another container for running Superset dashboards.
+The fastest way to get started using DOT is to use the Docker environment and demo data provided. This will build (i) a DOT 
+Database; (ii) a container for running DOT and (iii) another for the Appsmith user interface.
 
 ### Prerequisites
 
@@ -36,68 +36,21 @@ First make sure you have checked the
 ### Building the DOT Docker environment
   
 1. Save a postgres password to your local environment `export POSTGRES_PASSWORD=<some password you decide>`
-2. Build the docker containers: `docker compose build`
-3. Start the environment: `docker compose up -d`
+2. Open a terminal and change directory into the `docker` sub-directory of DOT: `cd ./docker`
+3. Build the docker containers: `docker compose build`
+3. Start them: `docker compose up -d`
 
 Your environment is now running! 
 
-## Setting up a project and tests to scan with DOT
-### If using the static Medic 'Muso' database dump 
+### Running DOT
 
-For a really quick start we have configured entities and tests to work with a specific dump from the `datakind` schema in 
-the `musoapp` production database. This will allow you to get up-and-running with DOT before deploying to production.
-You will need to:
-
-1. Dowload [database dump](https://drive.google.com/file/d/1GNC4nql3OLbm-GKmaonYsobxZkXaVES_/view?usp=sharing) and save into `./docker`
-2. Restore the your db from the file downloaded in step 1. to the `dot-db` container 
-    - `docker exec -ti dot-db sh -c "pg_restore --dbname=dot_db -U postgres /db_dumps/IoP.tar"`
-
-The above database dump was made in Q4 2021 and is only for objects visble in the Muso `datakind` schema. For reference, 
-you can see how the DOT db has been configured in [3-upload_sample_data.sql](./db/dot/3-upload_sample_data.sql)
-
-### Deploying DOT to production
-
-If you are ready to set up DOT to scan production data, you will need to:
-
-1. Choose where to host the DOT database
-   - It can be a separate database to the data being scanned or even in the same 
-   database as the data (it will be separated from the data in dedicated schemas)
-2. In that database, create DOT DB objects: Run [./db/dot/1-schema.sql](./db/dot/1-schema.sql)
-3. Populate DOT static data: Run [./db/dot/2-upload_static_data.sql](./db/dot/2-upload_static_data.sql)
-4. Decide on a project name for your scan, eg 'Muso'
-5. Edit the [Main config file](#main-config-file) and add a section for your new project
-5. Also set the section `dot_db` in [Main config file](#main-config-file) to point at the DOT database 
-6. Create a project for your data in the DOT DB by inserting a row into table `dot.projects`:
-    - `INSERT INTO dot.projects SELECT 'Muso', 'Muso project', '2021-12-07 00:00:00+00', 'true', 'public';`
-4. Define some entities (views onto the data being tested ), see section [How to add new entities](#how-to-add-new-entities) below
-5. Configure tests to run, see section [How to configure tests](#how-to-configure-tests)
-6. Decide which host to run DOT on
-   - If **not** using the provided Docker build, you will need to deploy the version of Python 
-   and packages as defined in this [Dockerfile](./Dockerfile)
-
-**Note:** DOT can also be configured to scan multiple databases using Airflow to synchronize data into the DOT database. See [Deploying in Airflow](#deploying-in-airflow)
-below. 
-
-## Running DOT
-
-**Note:** If using Docker, you will first need to exec into the DOT container with: 
-
-`docker exec -it dot /bin/bash`
-
-Then to run DOT:
-
-```
-cd dot
-python3 ./run_everything.py --project_id '<project name>'
-```
-
-For example, if you used the provided Medic Muso database dump, you would run with ...
-
-`python3 ./run_everything.py --project_id 'Muso'`
+1. `docker exec -it dot /bin/bash`
+2. `cd dot`
+3. `python3 ./run_everything.py --project_id 'ScanProject1'`
 
 Now time for some real fun!
 
-# Viewing test results
+### Viewing test results
 
 Your test results will be in the `dot-db` container. You can view the results by opening a shell in the dot-db container:
 
@@ -114,14 +67,50 @@ host=localhost
 port=5433 
 database=dot_db
 user=postgres
-password=<the password from 3.>
+password=<the POSTGRES_PASSWORD you set above>
 ```
 
 Note: The host and port are set in the [docker-compose.yml](./docker/docker-compose.yml)
 
-To see some raw results you can run `SELECT * from dot.test_results LIMIT 100;`
+To see some raw results you can run `SELECT * from dot.test_results LIMIT 100;`. Some more advanced queries are provided below.
 
-## Some useful database queries 
+# The DOT User Interface
+
+The DOT user interface will allow you to manage DOT and see results. The default demo build above starts this for you,
+but you need to do a few steps the first time you use it ...
+
+1. Go to [http://localhost:82/](http://localhost:82)
+2. Click the button and register to create a login (keep note of the password)
+3. Once created, click 'Build my own' on the next popup
+4. Click app smith icon top-left to go back tom homepage
+5. Top-right next to the new button, click on the '...' and select *import*
+6. Select *Import from file* and navigate to file `./docker/appsmith/DOT App V2.json`
+7. You will be prompted to enter details for the database connection. You can set these as required, but if using the 
+   DOT dockerized Postgres database, the parameters are:
+    - Host address: dot-db
+    - Port: 5432
+    - Database name: dot_db
+    - Authentication > User name: postgres
+    - Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>
+
+You should now see the DOT user interface in developer mode. To run in end-user mode:
+
+1. Click button top-right click the 'Deploy' button. This should open a new tab with the user interface in all its glory!
+ 
+Note: If you want to remove appsmith information on the deployed app, add `?embed=True` at the end
+of the deployed app URL.
+
+## Using the UI
+
+Once you've set up the UI and logged log in appsmith using the URL above and have imported the DOT App, you can click on it 
+and select 'Launch' to use it. It supports maintaining configuration as well as monitoring DOT runs.
+
+You can also share the app with other people if registered on the same appsmith instance. This becomes more appropriate 
+in production deployments.
+
+< VIDEO HERE >
+
+# Some useful DOT database queries 
 
 The following queries might be useful for visualizing the DOT DB schema and data:
 
@@ -455,44 +444,7 @@ set `test_activated=False` in table `dot.configured_tests`. For example:
  
 ` update dot.configured_tests set test_activated=false where test_id not in ('7db8742b-c20b-3060-93e2-614e35da2d4b','0f26d515-a70f-3758-8266-8da326d90eb6'); `
 
-# The DOT User Interface
-
-The DOT user interface will allow you to manage DOT in a web application. To get started ...
-
-[ The following assumes you have already built the DOT docker environment, as described above ]
-
-1. `docker compose -f docker-compose-with-appsmith-ui.yml build`
-2. `docker compose -f docker-compose-with-appsmith-ui.yml up -d`
-3. Go to [http://localhost:82/](http://localhost:82)
-4. Click the button and register to create a login (keep note of the password)
-5. Once created, click 'Build my own' on the next popup
-6. Click app smith icon top-left to go back tom homepage
-7. Top-right next to the new button, click on the '...' and select *import*
-8. Select *Import from file* and navigate to file `./docker/appsmith/DOT App V2.json`
-9. You will be prompted to enter details for the database connection. You can set these as required, but if using the 
-   DOT dockerized Postgres database, the parameters are:
-    - Host address: dot-db
-    - Port: 5432
-    - Database name: dot_db
-    - Authentication > User name: postgres
-    - Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>
-
-You should now have the DOT webapp running in development mode. To run in end-user mode:
-
-1. Click button top-right click the 'Deploy' button. This should open a new tab
- 
-Note: If you want to remove appsmith information on the deployed app, add `?embed=True` at the end
-of the deployed app URL.
-
-## Using the UI
-
-Once you log into appsmith using the URL above and have imported the DOT App, you can click on it and select 'Launch'
-to use it. It supports maintaining configuration as well as monitoring DOT runs.
-
-You can also share the app with other people if registered on the same appsmith instance. This becomes more appropriate 
-in production deployments.
-
-## Developing the UI
+## Developing the Appsmith UI
 
 Clicking 'Edit' on the imported app gives you the ability to edit the app. See the [appsmith help site](https://docs.appsmith.com) for more information 
 on this.
@@ -505,7 +457,7 @@ Key things to note:
   values and validation functions, but for now we are adding new fields manually. Note that you might be able to 
   reinstate the logic en masse by looking at the raw appsmith app JSON file
 
-## Updating to latest version of appsmith
+## Updating to latest version of Appsmith
 
 Appsmith release bug fixes and enhancements. By default the DOT docker build will do this automatically. To do this manually:
 
@@ -557,10 +509,7 @@ The main config file must be called `dot_config.yml` and located at the top [con
 this file will be ignored for version control. You may use the [example dot_config yaml](dot/config/example/dot_config.yml)
 as a template.
 
-The DOT DB connection details are propagated through Jinja templates to other config files that belong to DBT and 
-Great Expectations. See the [config README](dot/config/README.md) for more details on this.
-
-Besides the connection details in this paragraph, see below for additional config options.
+Besides the DOT DB connection in the paragraph above, see below for additional config options.
 
 #### Connection parameters for each of the projects to run
 
@@ -594,6 +543,28 @@ Note that this mechanism uses a DBT feature, and that the same applies to the GE
 
 The key `save_passed_tests` accepts boolean values. If set to true, tha results of the passing tests will be also stored
 to the DOT DB. If not, only the results of failing tests will be stored.
+
+### Other config file locations
+Optional configuration for DBT and Great Expectations can be added, per project, in a structure as follows.
+
+```bash
+|____config
+| |____<project_name>
+| | |____dbt
+| | | |____profiles.yml
+| | | |____dbt_project.yml
+| | |____ge
+| | | |____great_expectations.yml
+| | | |____config_variables.yml
+| | | |____batch_config.json
+```
+In general these customizations will not be needed, but only in some scenarios with particular requirements; these 
+require a deeper knowledge of the DOT and of either DBT and/or Great Expectations.
+
+There are examples for all the files above under [this folder](dot/config/example/project_name). For each of the 
+files you want to customize, you may copy and adapt the examples provided following the directory structure above.
+
+More details in the [config README](dot/config/README.md).
 
 ## How to visualize the results using Superset
 
