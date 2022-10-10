@@ -61,7 +61,7 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-349
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '36d33837-bd92-370a-963a-264a4d5b2bac', 'DUPLICATE-1',
 6, 'Duplicate flight record', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'possible_duplicate_forms', '', '',
-$${"table_specific_reported_date": "departure_time", "table_specific_patient_uuid": "uuid", "table_specific_uuid":
+$${"table_specific_reported_date": "departure_time", "table_specific_patient_uuid": "airline", "table_specific_uuid":
 "uuid", "table_specific_period": "day"}$$, '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Matt');
 
 COMMIT;

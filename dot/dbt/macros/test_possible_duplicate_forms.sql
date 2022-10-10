@@ -3,7 +3,8 @@
 --  Some valid values for PostgreSQL include 'day', 'week', 'hour' 
 -- (See https://www.postgresql.org/docs/9.1/functions-datetime.html#FUNCTIONS-DATETIME-TRUNC)
 -- If so, flag as possible duplicate form.
-{% macro test_possible_duplicate_forms(model, table_specific_reported_date='reported', table_specific_patient_uuid='patient_uuid', table_specific_uuid='uuid', table_specific_period='hour', name='possible_duplicate_forms') %}
+-- TODO Convert these parameter names to generic. Be sure to update DB schema and samples
+{% macro test_possible_duplicate_forms(model, table_specific_reported_date='reported', table_specific_patient_uuid='patient_uuid', table_specific_uuid='uuid', table_specific_period='hour', name='possible_duplicate_records') %}
 
 with records_per_patient_period as (
 select
