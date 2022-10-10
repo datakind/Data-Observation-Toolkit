@@ -539,7 +539,8 @@ def get_test_rows(
                     entity_df[column_name].isin(
                         test_results_df['unique_field']
                     ),
-                    "uuid",  # TODO Add 'primary_table_id_field' as a column in entity defintion and use that here. It won't always be uuid
+                    # TODO Add 'primary_table_id_field' as a column in entity defintion and use that here
+                    column_name,
                 ].tolist()
                 unique_column_name = column_name
                 break
