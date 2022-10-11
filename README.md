@@ -1,4 +1,4 @@
-# The Data Observation Toolkit (DOT)
+# ![](./images/dot_logo.png)  The Data Observation Toolkit (DOT)
 
 The Data Observation Toolkit (DOT) can be used to monitor data in order to flag problems with data integrity and
 scenarios that might need attention. Typical tests include checks for missing/duplicate and inconsistent 
