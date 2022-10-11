@@ -27,7 +27,9 @@ have [Rosetta](https://support.apple.com/en-us/HT211861) installed.
 
 Once Docker is set up, to run the DOT demo ...
 
-1. Get a copy of DOT by using git of [this repo](), or downloading and unpacking the [repo zip file]() <<< WIll update links when public repo ready
+1. Get a copy of DOT by either [cloning](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
+   [this repository](https://github.com/datakind/Data-Observation-Toolkit), or clicking the green 'Code' button and
+   downloading the zip file
 2. Open a Terminal and `cd` into the `docker` sub-folder of where you installed DOT
 3. `./run_dot_demo.sh`
 4. Go to [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d), you should see the 
