@@ -1,0 +1,9 @@
+
+target/
+dbt_modules/
+dbt_packages/
+logs/
+.ipynb_checkpoints
+test_coverage.txt
+generated_reports/
+models/test/*.sql
