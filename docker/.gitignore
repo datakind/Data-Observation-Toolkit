@@ -1,0 +1,6 @@
+*.tar
+*.gz
+.env
+
+# Airflow stuff:
+airflow/logs

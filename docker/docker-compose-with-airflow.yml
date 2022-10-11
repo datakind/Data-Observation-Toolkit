@@ -1,0 +1,219 @@
+#version: '3.1'
+version: '2.1'
+
+#
+# https://airflow.apache.org/docs/apache-airflow/2.2.1/start/docker.html
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+# Basic Airflow cluster configuration for CeleryExecutor with Redis and PostgreSQL.
+#
+# WARNING: This configuration is for local development. Do not use it in a production deployment.
+#
+# This configuration supports basic configuration using environment variables or an .env file
+# The following variables are supported:
+#
+# AIRFLOW_IMAGE_NAME         - Docker image name used to run Airflow.
+#                              Default: apache/airflow:master-python3.8
+# AIRFLOW_UID                - User ID in Airflow containers
+#                              Default: 50000
+# AIRFLOW_GID                - Group ID in Airflow containers
+#                              Default: 50000
+# _AIRFLOW_WWW_USER_USERNAME - Username for the administrator account.
+#                              Default: airflow
+# _AIRFLOW_WWW_USER_PASSWORD - Password for the administrator account.
+#                              Default: airflow
+# _PIP_ADDITIONAL_REQUIREMENTS - Additional PIP requirements to add when starting all containers.
+#                                Default: ''
+#
+
+x-airflow-common:
+  &airflow-common
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.2.4}
+  environment:
+    &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
+    PYTHON_BASE_IMAGE: "python:3:8-slim-buster"
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    SSH_AUTH_SOCK: /ssh-agent
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - airflow-logs-volume:/opt/airflow/logs
+    - airflow-plugins-volume:/opt/airflow/plugins
+
+    - ../:/app
+    - ./dot/dot_config.yml:/app/dot/config/dot_config.yml
+    - ${SSH_AUTH_SOCK}:/ssh-agent # Forward local machine SSH key to docker so we can use ssh tunnel on host to access DB
+  #user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
+  user: "1000:0" # This will work but change mounts to root
+  depends_on:
+    redis:
+      condition: service_healthy
+    postgres:
+      condition: service_healthy
+
+services:
+
+  # =========================== DOT and DB ===============================
+  dot_db:
+      image: postgres:9.6.23-buster
+      container_name: dot-db
+      ports:
+          - "5433:5432"
+      environment:
+          POSTGRES_DB: dot_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      volumes:
+          - .:/db_dumps
+          - ../db/dot:/docker-entrypoint-initdb.d
+
+  # Not needed here, because we deploy DOT to airflow worker
+  #dot:
+  #  build:
+  #      context: ..
+  #      dockerfile: ./docker/dot/Dockerfile
+  #  image: dot
+  #  container_name: dot-dot-tool
+  #  environment:
+  #      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #  volumes:
+  #    - ../dot:/app
+  #    - ./dot/dot_config.yml:/app/dot_config.yml
+  #    - ./dot/dbt_profiles.yml:/root/.dbt/profiles.yml
+  #    - ./dot/ge_config_variables.yml:/app/great_expectations/uncommitted/config_variables.yml
+
+  #superset:
+  #  image: apache/superset
+  #  ports:
+  #      - "8080:8088"
+  #  container_name: superset
+
+  # ================================== Web App ===============================
+  #dot-webapp-server:
+  #  build:
+  #      context: ..
+  #      dockerfile: ./docker/webapp/server/Dockerfile
+  #  image: dot-tool-webapp-server
+  #  container_name: dot-dot-tool-web-app-server
+  #  environment:
+  #      DB_PASSWORD: ${POSTGRES_PASSWORD}
+  #  ports:
+  #        - "3002:3002"
+  #  volumes:
+  #    - ../webapp/server:/usr/src/app
+  #    - ./webapp/server/env:/usr/src/app/.env
+
+  #dot-webapp-frontend:
+  #  build:
+  #      context: ..
+  #      dockerfile: ./docker/webapp/frontend/Dockerfile
+  #  image: dot-tool-webapp-frontend
+  #  container_name: dot-dot-tool-web-app-frontend
+  #  ports:
+  #        - "3000:3000"
+  #  volumes:
+  #    - ../webapp/frontend:/usr/src/app
+  #    - ./webapp/frontend/env:/usr/src/app/.env
+
+  # ================================== AIRFLOW ===============================
+
+  # DB used for airflow
+  postgres:
+    image: postgres:13
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "airflow" ]
+      interval: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    restart: always
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - 8083:8080
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8083/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    restart: always
+
+  airflow-worker:
+    <<: *airflow-common
+    command: celery worker
+    restart: always
+
+  airflow-init:
+    <<: *airflow-common
+    command: version
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+
+  flower:
+    <<: *airflow-common
+    command: celery flower
+    ports:
+      - 5555:5555
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:5555/" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+volumes:
+  postgres-db-volume:
+  airflow-logs-volume: 
+  airflow-plugins-volume:

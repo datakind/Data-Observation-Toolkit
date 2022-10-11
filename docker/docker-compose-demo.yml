@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+
+  dot_db:
+        image: datakind/dot_db_demo:latest
+        container_name: dot-db
+        ports:
+            - "5433:5432"
+        volumes:
+          - ./db/data:/var/lib/postgresql/data
+
+  dot:
+    image: datakind/dot_demo:latest
+    container_name: dot_demo
+
+  appsmith:
+    image: datakind/dot_appsmith:latest
+    container_name: dot_appsmith_demo
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./demo/appsmith/stacks:/appsmith-stacks
