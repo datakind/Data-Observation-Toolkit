@@ -21,8 +21,8 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 ### Creating Issues
 
-If you spot a problem, [search if an issue already exists](<DOT REPO ISSUE Search>). If a related issue doesn't exist, 
-you can open a new issue using a relevant [issue form](<DOT REPO NEW ISSUE>). 
+If you spot a problem, [search if an issue already exists](https://github.com/datakind/Data-Observation-Toolkit/issues). If a related issue doesn't exist, 
+you can open a new issue using a relevant [issue form](https://github.com/datakind/Data-Observation-Toolkit/issues/new). 
 
 As a general rule, we don’t assign issues to anyone. If you find an issue to work on, you are welcome to open a PR with a fix.
 
