@@ -3,22 +3,12 @@
 Hi! Thanks for your interest in contributing to DOT, we're really excited to see you! In this document we'll try to 
 summarize everything that you need to know to do a good job.
 
-Read our [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our community approachable and respectable.
-
-In this guide you will get an overview of the contribution workflow from opening an issue, creating a PR, reviewing, and 
-merging the PR.
-
 ## New contributor guide
 
-To get an overview of the project, read the [README](README.md). Here are some resources to help you get started with open source contributions:
+To get an overview of the project, please read the [README](README.md) and our [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our community approachable and respectable.
 
-- [Finding ways to contribute to open source on GitHub](https://docs.github.com/en/get-started/exploring-projects-on-github/finding-ways-to-contribute-to-open-source-on-github)
-- [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git)
-- [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow)
-- [Collaborating with pull requests](https://docs.github.com/en/github/collaborating-with-pull-requests)
 
 ## Getting started
-
 ### Creating Issues
 
 If you spot a problem, [search if an issue already exists](https://github.com/datakind/Data-Observation-Toolkit/issues). If a related issue doesn't exist, 
@@ -64,35 +54,35 @@ git commit
 since you have added the `Code Quality` tools referenced in the main README as a pre-commit hook,
 together with the self-tests.
 
-### GitHub Pull requests
+### GitHub Workflow
 
 As many other open source projects, we use the famous
 [gitflow](https://nvie.com/posts/a-successful-git-branching-model/) to manage our
 branches.
 
 Summary of our git branching model:
-- Go to the `dev` branch (`git checkout dev`);
 - Get all the latest work from the upstream `datakind/Data-Observation-Toolkit` repository
-  (`git pull upstream dev`);
-- Create a new branch off of `dev` with a descriptive name (for example:
+  (`git checkout main`)
+- Create a new branch off with a descriptive name (for example:
   `feature/new-test-macro`, `bugfix/bug-when-uploading-results`). You can
-  do it by switching to the `dev` branch (`git checkout dev`) and then
-  creating a new branch (`git checkout -b name-of-the-new-branch`);
-- Do many small commits on that branch locally (`git add files-changed`,
-  `git commit -m "Add some change"`); whenever you commit, the self-tests 
+  do it with (`git checkout -b <branch name>`)
+- Make your changes and commit them locally  (`git add <changed files>>`,
+  `git commit -m "Add some change" <changed files>`). Whenever you commit, the self-tests 
   and code quality will kick in; fix anything that gets broken
-- Push to your fork on GitHub (with the name as your local branch:
-  `git push origin branch-name`);
-- Create a pull request using the GitHub Web interface (asking us to pull the
-  changes from your new branch and add to them our `dev` branch);
-- Wait for comments.
+- Push to your branch on GitHub (with the name as your local branch:
+  `git push origin <branch name>`). This will output a URL for creating a Pull Request (PR)
+- Create a pull request by opening the URL a browser. You can also create PRs in the GitHub
+  interface, choosing your branch to merge into main
+- Wait for comments and respond as-needed
+- Once PR review is complete, your code will be merged. Thanks!!
 
 
 ### Tips
 
 - Write [helpful commit
-  messages](https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message).
-- Anything in the `dev` branch has to be deployable (no failing tests).
+  messages](https://robots.thoughtbot.com/5-useful-tips-for-a-better-commit-message)
+- Anything in your branch must have no failing tests. You can check by looking at your PR
+  online in GitHub
 - Never use `git add .`: it can add unwanted files;
 - Avoid using `git commit -a` unless you know what you're doing;
 - Check every change with `git diff` before adding them to the index (stage
@@ -100,7 +90,7 @@ Summary of our git branching model:
 - If you have push access to the main repository, please do not commit directly
   to `dev`: your access should be used only to accept pull requests; if you
   want to make a new feature, you should use the same process as other
-  developers so you code will be reviewed.
+  developers so your code will be reviewed.
 
 
 ## Code Guidelines
