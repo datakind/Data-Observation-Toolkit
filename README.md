@@ -30,7 +30,7 @@ have [Rosetta](https://support.apple.com/en-us/HT211861) installed.
    downloading and unzipping the repository zip file
 2. Open a Terminal and `cd` into the `docker` sub-folder of where you installed DOT
 3. Then run this command: `./run_dot_demo.sh`
-4. Finally, open the DOT user interface by opening [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d), 
+4. Finally, open the DOT user interface by opening [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True), 
    in a web browser
 
 See below for more information for running dot, using the user interface and other goodies!
