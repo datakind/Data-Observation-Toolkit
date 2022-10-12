@@ -33,7 +33,7 @@ have [Rosetta](https://support.apple.com/en-us/HT211861) installed.
 4. Finally, open the DOT user interface by opening [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True), 
    in a web browser
 
-See below for more information for running dot, using the user interface and other goodies!
+See below for quick demo of DOT ...
 
 https://user-images.githubusercontent.com/8402586/195226567-fe035544-7075-4750-8bd8-ddfa7f57a811.mp4
 
