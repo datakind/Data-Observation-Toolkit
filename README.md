@@ -610,14 +610,6 @@ IMPORTANT! If superset dashboards and using Docker, be sure to export your dashb
 work if rebuilding your Docker environment.
 
 
-# How to develop a new test type [ Rahul / Lydia ]
-To develop a new test type, add a new row in the `dot.test_types` and `dot.test_parameters_interface` tables 
-
-You can also use a macro to define reusable SQL for your test type, in `dot/dbt/macros`.
-
-Add a test just as defined in the "How to add new tests from the existing test library" section
-
-
 # Deploying in Airflow 
 
 The following setup is a proof-of-concept to illustrate how Airflow might be configured to run the DOT on multiple
