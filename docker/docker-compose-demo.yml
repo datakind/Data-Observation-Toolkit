@@ -12,11 +12,11 @@ services:
 
   dot:
     image: datakind/dot_demo:latest
-    container_name: dot_demo
+    container_name: dot
 
   appsmith:
     image: datakind/dot_appsmith:latest
-    container_name: dot_appsmith_demo
+    container_name: appsmith
     ports:
       - "82:80"
       - "446:443"
