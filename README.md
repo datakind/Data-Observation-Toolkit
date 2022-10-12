@@ -17,11 +17,11 @@ The fastest way to get started using DOT is to use the Docker environment and de
 
 ## Prerequisites
 
-You will need to install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the
+1. You will need to install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the
 [Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend 
  using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data 
- being tested. If running on a Mac M1 chip, you might need to set `export DOCKER_DEFAULT_PLATFORM=linux/amd64` and 
-have [Rosetta](https://support.apple.com/en-us/HT211861) installed.
+ being tested
+2. If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set `export DOCKER_DEFAULT_PLATFORM=linux/amd64` in the terminal where you will run the instructions below
 
 ## Running the DOT demo environment
 
