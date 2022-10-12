@@ -73,11 +73,11 @@ do a few steps the first time you use it ...
 6. Select *Import from file* and navigate to file `./docker/appsmith/DOT App V2.json`
 7. You will be prompted to enter details for the database connection. You can set these as required, but if using the 
    DOT dockerized Postgres database, the parameters are:
-    - Host address: dot-db
-    - Port: 5432
-    - Database name: dot_db
-    - Authentication > User name: postgres
-    - Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>
+    - `Host address: dot-db`
+    - `Port: 5432`
+    - `Database name: dot_db`
+    - `Authentication > User name: postgres`
+    - `Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>`
 
 You should now see the DOT user interface in developer mode (ie you could edit it). To run in end-user mode:
 
