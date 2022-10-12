@@ -109,7 +109,6 @@ Summary of our git branching model:
 - You will know if any test breaks when you commit, and the tests will be run
   again in the continuous integration pipeline (see below);
 
-
 ## Tests
 
 You should write tests for every feature you add or bug you solve in the code.
