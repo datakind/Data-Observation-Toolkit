@@ -68,7 +68,8 @@ This will run the sample tests against the demo data and save results to the DOT
 
 ## Setting up the DOT User Interface
 
-The DOT user interface will allow you to manage DOT and see results. You need to do a few steps the first time you use it ...
+The above steps will start the DOT user interface, which will allow you to manage DOT and see results. You need to 
+do a few steps the first time you use it ...
 
 1. Go to [http://localhost:82/](http://localhost:82)
 2. Click the button and register to create a login (keep note of the password)
@@ -84,7 +85,7 @@ The DOT user interface will allow you to manage DOT and see results. You need to
     - Authentication > User name: postgres
     - Authentication > Password: <THE PASSWORD YOU USED WHEN BUILDING DOT>
 
-You should now see the DOT user interface in developer mode. To run in end-user mode:
+You should now see the DOT user interface in developer mode (ie you could edit it). To run in end-user mode:
 
 1. Click button top-right click the 'Deploy' button. This should open a new tab with the user interface in all its glory!
  
