@@ -22,6 +22,7 @@ echo "Starting DOT ..."
 export POSTGRES_PASSWORD=password125   # This is only to demo fake data
 docker compose -f docker-compose-demo.yml stop
 docker compose -f docker-compose-demo.yml build
+sleep 5
 docker compose -f docker-compose-demo.yml up -d
 
 echo "Waiting for DOT to start, time to make a nice cup of tea! ☕ 😃 ..."
