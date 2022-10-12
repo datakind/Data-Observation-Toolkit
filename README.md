@@ -35,6 +35,8 @@ have [Rosetta](https://support.apple.com/en-us/HT211861) installed.
 
 See below for more information for running dot, using the user interface and other goodies!
 
+https://user-images.githubusercontent.com/8402586/195226567-fe035544-7075-4750-8bd8-ddfa7f57a811.mp4
+
 ## Using the UI
 
 Once you've set up the UI and logged log in appsmith using the URL above and have imported the DOT App, you can click on it 
@@ -42,12 +44,6 @@ and select 'Launch' to use it. It supports maintaining configuration as well as 
 
 You can also share the app with other people if registered on the same appsmith instance. This becomes more appropriate 
 in production deployments.
-
-
-
-https://user-images.githubusercontent.com/8402586/195226567-fe035544-7075-4750-8bd8-ddfa7f57a811.mp4
-
-
 
 # The not-so-quick start, setting up DOT
 
