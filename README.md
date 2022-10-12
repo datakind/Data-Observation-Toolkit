@@ -43,10 +43,11 @@ and select 'Launch' to use it. It supports maintaining configuration as well as 
 You can also share the app with other people if registered on the same appsmith instance. This becomes more appropriate 
 in production deployments.
 
-<a href="https://www.loom.com/share/2deb6dc155ab4f97ae0890d916f75f55">
-    <p>A quick demo of DOT - Watch Video</p>
-    <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/2deb6dc155ab4f97ae0890d916f75f55-with-play.gif">
-</a>
+
+
+https://user-images.githubusercontent.com/8402586/195226567-fe035544-7075-4750-8bd8-ddfa7f57a811.mp4
+
+
 
 # The not-so-quick start, setting up DOT
 
