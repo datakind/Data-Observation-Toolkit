@@ -11,6 +11,21 @@ The ultimate aim of DOT is to provide easier access to data monitoring without t
 
 ![ER diagram](./images/dot.png) 
 
+In 2019, the United Nations Statistical Commission stated: “Every misclassified or unrecorded death is a lost opportunity to ensure other mothers and babies do not die in the same way. When it comes to health, better data can be a matter of life and death.” DataKind developed DOT in response to a demand for tool to increase trust in public health data which underpins the ability of a health system to provide equitable, data-driven, optimized health service delivery and improve policy response. 
+
+DOT was developed with our valuable and globally distributed frontline health partners working to strengthen frontline health systems, expertise from Ministries of Health, frontline health workers and funders.
+
+Read more here:
+
+[Pathways to Increasing Trust in Public Health Data](https://chance.amstat.org/2021/09/pathways/)
+
+[Empowering Health Worker and Community Health Systems: Data Integrity and the Future of Intelligent Community Health Systems in Uganda](https://www.datakind.org/blog/empowering-health-workers-and-community-health-systems)
+
+[Harnessing the power of data science in healthcare](https://anchor.fm/medxtekafrica/episodes/Ep19---Harnessing-the-power-of-data-science-in-healthcare-e1iijkm)
+
+[How Data Empowers Health Workers—and Powers Health Systems](https://chwi.jnj.com/news-insights/how-data-empowers-health-workers-and-powers-health-systems)
+
+
 # Quick start
 
 The fastest way to get started using DOT is to use the Docker environment and demo data provided. 
