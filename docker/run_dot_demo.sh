@@ -13,7 +13,7 @@ echo "Downloading demo data file ..."
 fileid="157Iad8mHnwbZ_dAeLQy5XfLihhcpD6yc"
 filename="./demo/dot_demo_data.tar.gz"
 curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}" > /dev/null
-curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" > ${filename}
+curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}
 
 echo "Unpacking demo data ..."
 cd demo && gunzip dot_demo_data.tar.gz && tar -xvf dot_demo_data.tar && cd ..
