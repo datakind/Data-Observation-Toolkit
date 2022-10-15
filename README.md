@@ -43,9 +43,10 @@ The fastest way to get started using DOT is to use the Docker environment and de
 1. Get a copy of DOT by either [cloning](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
    [this repository](https://github.com/datakind/Data-Observation-Toolkit), or by clicking the green 'Code' button then 
    downloading and unzipping the repository zip file
-2. Open a Terminal and `cd` into the `docker` sub-folder of where you installed DOT
-3. Then run this command: `./run_dot_demo.sh`
-4. Finally, open the DOT user interface by opening [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True), 
+2. Start Docker
+3. Open a Terminal and `cd` into the `docker` sub-folder of where you installed DOT
+4. Then run this command: `./run_dot_demo.sh`
+5. Finally, open the DOT user interface by opening [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True), 
    in a web browser
 
 See below for quick demo of DOT. 
