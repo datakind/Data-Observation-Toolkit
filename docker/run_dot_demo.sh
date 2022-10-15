@@ -7,7 +7,7 @@
 cd demo && rm -rf ./db || true && rm -rf ./appsmith && rm *.tar* && cd ..
 
 # Install gdown
-pip install gdown
+pip install gdown > /dev/null
 
 echo "Downloading demo data file ..."
 # See scrip upload_demo_to_dockerhub.sh to see how this URL file was created
@@ -21,7 +21,7 @@ gdown "${fileid}" --output "${filename}" && gunzip dot_demo_data.tar.gz && tar -
 
 echo "Starting DOT ..."
 export POSTGRES_PASSWORD=password125   # This is only to demo fake data
-docker compose -f docker-compose-demo.yml stop
+docker compose -f docker-compose-demo.yml down -v
 docker compose -f docker-compose-demo.yml build
 sleep 5
 docker compose -f docker-compose-demo.yml up -d
