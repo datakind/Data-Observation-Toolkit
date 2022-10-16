@@ -920,7 +920,7 @@ need to do is ..
 Assuming you would like to run the tests locally, as preparation steps, you will need to:
 - Create a local env for python via either venv or conda
 - Make sure your Python version aligns with that in `.github/workflows/lint.yml`
-- Run `pip install -r dot/requirements_dot.txt`
+- Create a conda environment using the `environment.yml` file at the root directory
 - Prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
 only, or you could use a local instance of a Postgres DB)
 - Prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory 

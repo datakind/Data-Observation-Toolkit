@@ -116,6 +116,7 @@ def write_config_from_template(
         f.write(content)
         logger.info(f"   Wrote {output_file}")
 
+
 def generate_master_config_files(project_id, logger=logging.Logger):
 
     """Function to generate master configuration files using the entries in

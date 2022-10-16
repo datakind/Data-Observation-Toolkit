@@ -27,7 +27,7 @@ class UtilsTest(BaseSelfTestClass):
             "self_tests/data/queries/configured_tests_sample.sql", "r"
         ) as f1:  # pylint: disable=invalid-name
             with open(
-                    "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
+                "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
             ) as f2:  # pylint: disable=invalid-name
                 self.create_self_tests_db_schema(
                     "\n".join(
