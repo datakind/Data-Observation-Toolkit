@@ -74,6 +74,27 @@ def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in
     cursor.execute(sql_stmt)
     columns = cursor.fetchall()
 
+    # Fail back to views
+    if len(columns) == 0:
+        sql_stmt = (
+                "SELECT a.attname as \"column_name\"," +
+                + " pg_catalog.format_type(a.atttypid, a.atttypmod) as \"data_type\", "
+                + " FROM pg_attribute a "
+                + "  JOIN pg_class t on a.attrelid = t.oid "
+                + "  JOIN pg_namespace s on t.relnamespace = s.oid "
+                + " WHERE a.attnum > 0 "
+                + "  AND NOT a.attisdropped "
+                + " AND t.relname = '" + object_name_in + "' "
+                + " AND s.nspname = '" + connection.schema + "' "
+                + " ORDER BY a.attnum; "
+        )
+        print(sql_stmt)
+        pg_hook = PostgresHook(postgres_conn_id=source_conn_in, schema=source_conn_in)
+        pg_conn = pg_hook.get_conn()
+        cursor = pg_conn.cursor()
+        cursor.execute(sql_stmt)
+        columns = cursor.fetchall()
+
     # Convert to a clean list (Tuples are duplicated)
     column_list = []
     cols = [a[0] for a in columns]
