@@ -1,4 +1,3 @@
-
 ---
 name: Security issue
 about: Report a security issue
