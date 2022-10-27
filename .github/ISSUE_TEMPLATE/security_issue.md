@@ -5,10 +5,19 @@ about: Report a security issue
 title: ''
 labels: ''
 assignees: ''
+
 ---
 
-# Security issue description
+**Describe the bug**
 
-# Impact
+**Security issue description**
 
-# Mitigation
+*Describe the security issue here*
+
+**Impact**
+
+*What impact does this security issue have?*
+
+**Mitigation**
+
+*If you have suggestions to mitigate the issue, please provide them here*
