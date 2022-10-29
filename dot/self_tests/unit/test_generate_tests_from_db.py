@@ -13,8 +13,7 @@ class GenerateTestsFromDbTest(BaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        with open("self_tests/data/queries/core_entities_creation.sql", "r") as f:
-            self.create_self_tests_db_schema(f.read())
+        self.create_self_tests_db_schema(f.read())
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()

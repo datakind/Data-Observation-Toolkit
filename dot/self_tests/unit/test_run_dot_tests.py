@@ -24,7 +24,9 @@ class RunDotTestsTest(BaseSelfTestClass):
         """run all dot tests"""
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
-        logger = setup_custom_logger("self_tests/output/logs/run_everything.log", logging.INFO)
+        logger = setup_custom_logger(
+            "self_tests/output/logs/run_everything.log", logging.INFO
+        )
 
         run_id = uuid.uuid4()
 

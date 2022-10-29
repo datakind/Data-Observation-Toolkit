@@ -95,14 +95,18 @@ def load_credentials(project_id: str, connection_params: DbParamsConnection) -> 
               connection_params : DbParamsConnection
                   enum type
     """
-    with open(_get_filename_safely(dot_config_FILENAME)) as f:
-        db_config = yaml.load(f, Loader=yaml.FullLoader)
+    db_config = load_config_file()
 
     db_credentials = _get_credentials(db_config, project_id, connection_params)
 
     # Support dbt environment variable format
     db_credentials["pass"] = extract_dbt_config_env_variable(db_credentials["pass"])
     return db_credentials
+
+
+def load_config_file():
+    with open(_get_filename_safely(dot_config_FILENAME)) as f:
+        return yaml.load(f, Loader=yaml.FullLoader)
 
 
 def extract_dbt_config_env_variable(dbt_setting: dict) -> str:

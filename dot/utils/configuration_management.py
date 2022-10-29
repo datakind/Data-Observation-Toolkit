@@ -17,10 +17,10 @@ from utils.configuration_utils import (
     get_dbt_config_test_paths,
     DBT_PROJECT_FINAL_FILENAME,
     GE_BATCH_CONFIG_FINAL_FILENAME,
-    dot_config_FILENAME,
     DBT_PROFILES_FINAL_FILENAME,
     GE_GREAT_EXPECTATIONS_FINAL_FILENAME,
     GE_CONFIG_VARIABLES_FINAL_FILENAME,
+    load_config_file,
 )
 from utils.dbt import create_core_entities
 from utils.utils import get_entity_name_from_id
@@ -144,14 +144,10 @@ def generate_master_config_files(project_id, logger=logging.Logger):
           | | | |____config_variables.yml
           | | | |____batch_config.json
     """
+    dot_config = load_config_file()
+    output_schema_suffix = dot_config.get("dot", {}).get("output_schema_suffix")
 
-    with open(dot_config_FILENAME) as f:
-        dot_config = yaml.load(f, Loader=yaml.FullLoader)
-        output_schema_suffix = dot_config.get("dot", {}).get("output_schema_suffix")
-
-    with open(dot_config_FILENAME) as f:
-        project_db_config = yaml.load(f, Loader=yaml.FullLoader)
-        project_db_config = project_db_config[f"{project_id}_db"]
+    project_db_config = dot_config[f"{project_id}_db"]
 
     # Load Jinja configuration file templates
     environment = Environment(loader=FileSystemLoader("./config/templates/"))

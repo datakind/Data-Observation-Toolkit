@@ -19,9 +19,7 @@ class DbtUtilsTest(BaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        with open(
-                "self_tests/data/queries/dbt_core_generated_objects.sql", "r"
-        ) as f:
+        with open("self_tests/data/queries/dbt_core_generated_objects.sql", "r") as f:
             self.create_self_tests_db_schema(f.read())
 
     def tearDown(self) -> None:
@@ -67,7 +65,10 @@ class DbtUtilsTest(BaseSelfTestClass):
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         self.assertEqual(
-            get_view_definition("ScanProject1", "chv_tr_different_dot_model__all_flight_data_price_distribution"),
+            get_view_definition(
+                "ScanProject1",
+                "chv_tr_different_dot_model__all_flight_data_price_distribution",
+            ),
             " SELECT dot_model__airlines_data.airline,\n"
             "    failed.failed\n"
             "   FROM self_tests_public_tests.dot_model__airlines_data\n"
