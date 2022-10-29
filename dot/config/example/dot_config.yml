@@ -10,7 +10,7 @@ dot_db:
   dbname: dot_db
   schema: dot
   threads: 4
-ScanProjec1_db:
+ScanProject1_db:
   type: postgres
   host: dot_db
   user: postgres
