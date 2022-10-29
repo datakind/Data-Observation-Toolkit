@@ -37,7 +37,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         run_dot_tests("ScanProject1", logger, run_id)
         # TODO debugging GH remove
         with open("dbt/dbt_project.yml") as f:
-            logger.error(f.read())
+            logger.info(f.read())
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()

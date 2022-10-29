@@ -114,7 +114,10 @@ def write_config_from_template(
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     with open(output_file, mode="w", encoding="utf-8") as f:
         f.write(content)
-        logger.info(f"   Wrote {output_file}")
+        # logger.info(f"   Wrote {output_file}")
+        logger.info(
+            f"   Wrote {output_file} with content:\n{content}"
+        )  # TODO debugging GH, remove and uncomment above
 
 
 def generate_master_config_files(project_id, logger=logging.Logger):
