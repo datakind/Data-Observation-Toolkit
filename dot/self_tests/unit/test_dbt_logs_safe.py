@@ -7,12 +7,6 @@ import logging
 from mock import patch
 from .base_self_test_class import BaseSelfTestClass
 
-from utils.dbt import (  # pylint: disable=wrong-import-order
-    run_dbt_core,
-    archive_previous_dbt_results,
-    create_failed_dbt_test_models,
-    run_dbt_test,
-)
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
 
 # functions under test
@@ -41,6 +35,9 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         )
         run_id = uuid.uuid4()
         run_dot_tests("ScanProject1", logger, run_id)
+        # TODO debugging GH remove
+        with open("dbt/dbt_project.yml") as f:
+            print(f.read())
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
