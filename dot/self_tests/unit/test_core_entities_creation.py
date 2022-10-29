@@ -11,8 +11,7 @@ class CoreEntitiesCreationTest(BaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        with open("self_tests/data/queries/core_entities_creation.sql", "r") as f:
-            self.create_self_tests_db_schema(f.read())
+        self.create_self_tests_db_schema()
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
@@ -26,9 +25,8 @@ class CoreEntitiesCreationTest(BaseSelfTestClass):
 
         schema, _, conn = self.get_self_tests_db_conn()
         output_dir = "self_tests/output/test_yaml_creation"
-        filename = "dot_model__ancview_danger_sign.sql"
-        schema_project = "data_muso"
-        project_id = "Muso"
+        schema_project = "schema_project"
+        project_id = "ScanProject1"
         create_core_entities(
             schema,
             conn,
@@ -39,6 +37,7 @@ class CoreEntitiesCreationTest(BaseSelfTestClass):
         )
         conn.close()
 
+        filename = "dot_model__all_flight_data.sql"
         assert os.path.isfile(os.path.join(output_dir, filename))
         with open(f"self_tests/data/expected/{filename}", "r") as expected:
             expected_lines = expected.readlines()

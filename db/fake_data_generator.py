@@ -76,7 +76,7 @@ flight_data = flight_data.reset_index()
 airport_data = airport_data.reset_index()
 
 flights_sql = """
-CREATE TABLE IF NOT EXISTS flight_data(
+CREATE TABLE IF NOT EXISTS public.flight_data(
     uuid UUID PRIMARY KEY,
     departure_time TIMESTAMP WITH TIME ZONE NULL,
     airline VARCHAR(200) NULL,
@@ -95,13 +95,13 @@ for index, r in flight_data.iterrows():
         str(r["origin_airport"]) + str(r["departure_time"]) + str(index),
     )
     flights_sql += (
-        f"INSERT INTO flight_data VALUES('{uuid_str}', '{r['departure_time']}', '{r['airline']}', "
+        f"INSERT INTO public.flight_data VALUES('{uuid_str}', '{r['departure_time']}', '{r['airline']}', "
         f"'{r['origin_airport']}','{r['origin_iata']}', '{r['destination_airport']}', "
         f"'{r['destination_iata']}', '{r['stops']}', {r['price']} );\n"
     )
 
 airports_sql = """
-CREATE TABLE IF NOT EXISTS airport_data(
+CREATE TABLE IF NOT EXISTS public.airport_data(
     uuid UUID PRIMARY KEY,
     airport  VARCHAR(200) NULL,
     airport_iata  VARCHAR(200) NULL
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS airport_data(
 for index, r in airport_data.iterrows():
     uuid_str = uuid.uuid3(uuid.NAMESPACE_OID, r["origin_airport"] + str(index))
     airports_sql += (
-        f"INSERT INTO airport_data VALUES('{uuid_str}', '{r['origin_airport']}',"
+        f"INSERT INTO public.airport_data VALUES('{uuid_str}', '{r['origin_airport']}',"
         f"'{r['origin_iata']}');\n"
     )
 

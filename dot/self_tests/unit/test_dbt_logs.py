@@ -19,9 +19,7 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
     """Test Class for dbt log processing"""
 
     def setUp(self) -> None:
-        # "../db/dot/2-upload_static_data.sql"
-        with open("self_tests/data/queries/configured_tests_dbt_core.sql", "r") as f:
-            self.create_self_tests_db_schema(f.read())
+        self.create_self_tests_db_schema()
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
@@ -78,15 +76,13 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             expected_lines = ast.literal_eval(f.read())
             res = process_dbt_logs_row(expected_lines[0])
             expected = DbtOutputProcessedRow(
-                unique_id="test.dbt_model_1."
-                "not_negative_string_column_dot_model__fpview_registration_value__value."
-                "e15d766b3b",
-                test_type="not_negative_string_column",
+                unique_id="test.dbt_model_1.not_null_dot_model__all_flight_data_origin_airport.2196b664b6",
+                test_type="not_null",
                 test_status="fail",
-                test_message="got 1 result, configured to fail if != 0",
-                column_name="value",
-                entity_name="dot_model__fpview_registration",
-                test_parameters="{'name': 'value'}",
-                short_test_name="tr_dot_model__fpview_registration_value",
+                test_message="got 53 results, configured to fail if != 0",
+                column_name="origin_airport",
+                entity_name="dot_model__all_flight_data",
+                test_parameters="{}",
+                short_test_name="tr_dot_model__all_flight_data_not_null_origin_a",
             )
             self.assertEqual(res, expected)

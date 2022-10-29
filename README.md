@@ -939,7 +939,7 @@ dot_db:
   dbname: dot_db
   schema: self_tests_dot
   threads: 4
-<project>_db:
+test_db:
   type: postgres
   host: localhost
   user: postgres

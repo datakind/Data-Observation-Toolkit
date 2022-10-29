@@ -19,14 +19,10 @@ class DbtUtilsTest(BaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        # "../db/dot/2-upload_static_data.sql"
-        with open("self_tests/data/queries/configured_tests_dbt_core.sql", "r") as f1:
-            queries = f1.read()
-            with open(
+        with open(
                 "self_tests/data/queries/dbt_core_generated_objects.sql", "r"
-            ) as f2:
-                queries = "\n".join([queries, f2.read()])
-                self.create_self_tests_db_schema(queries)
+        ) as f:
+            self.create_self_tests_db_schema(f.read())
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
@@ -44,12 +40,10 @@ class DbtUtilsTest(BaseSelfTestClass):
         run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
         output = extract_df_from_dbt_test_results_json(
             run_id=run_id,
-            project_id="Muso",
+            project_id="ScanProject1",
             logger=setup_custom_logger("self_tests/output/test.log", logging.INFO),
             target_path="self_tests/data/dot_output_files/dbt/target",
         )
-
-        output.to_csv("self_tests/data/op.csv")
 
         expected = pd.read_csv(
             "self_tests/data/expected/extract_df_from_dbt_test_results_json.csv",
@@ -73,10 +67,10 @@ class DbtUtilsTest(BaseSelfTestClass):
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         self.assertEqual(
-            get_view_definition("Muso", "tr_dot_model__fpview_registration_value"),
-            " SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list\n"
-            "   FROM self_tests_public_tests.dot_model__fpview_registration\n"
-            "  WHERE dot_model__fpview_registration.value::character varying::text "
-            "~~ '-%'::text\n"
-            " HAVING count(*) > 0;",
+            get_view_definition("ScanProject1", "chv_tr_different_dot_model__all_flight_data_price_distribution"),
+            " SELECT dot_model__airlines_data.airline,\n"
+            "    failed.failed\n"
+            "   FROM self_tests_public_tests.dot_model__airlines_data\n"
+            "     JOIN unnest(ARRAY['British Airways'::text]) failed(failed)"
+            " ON failed.failed = dot_model__airlines_data.airline::text;",
         )
