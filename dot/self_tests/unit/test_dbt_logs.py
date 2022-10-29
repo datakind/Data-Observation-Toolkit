@@ -13,6 +13,10 @@ from utils.dbt_logs import (  # pylint: disable=wrong-import-order
     _get_test_type,
     process_dbt_logs_row,
 )
+from utils.configuration_utils import (  # pylint: disable=wrong-import-position
+    dot_config_FILENAME,
+    DBT_PROJECT_FINAL_FILENAME,
+)
 
 
 class DbtLogsUtilsTest(BaseSelfTestClass):
@@ -23,6 +27,25 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
+
+    @staticmethod
+    def mock_get_filename_safely(path: str) -> str:
+        """
+        Mock paths of config files
+
+        Parameters
+        ----------
+        path
+
+        Returns
+        -------
+
+        """
+        if path == dot_config_FILENAME:
+            return "self_tests/data/base_self_test/dot_config.yml"
+        if path == DBT_PROJECT_FINAL_FILENAME:
+            return "./config/example/project_name/dbt/dbt_project.yml"
+        raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     def test_read_dbt_logs(self):
         """

@@ -59,7 +59,8 @@ class BaseSelfTestClass(unittest.TestCase):
         if path == "./config/example/project_name/dbt/dbt_project.yml":
             return path
         if path == DBT_PROJECT_FINAL_FILENAME:
-            return "./config/example/project_name/dbt/dbt_project.yml"
+            return DBT_PROJECT_FINAL_FILENAME
+            # return "./config/example/project_name/dbt/dbt_project.yml"
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     @patch("utils.configuration_utils._get_filename_safely")
