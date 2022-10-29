@@ -10,7 +10,7 @@ dot_db:
   dbname: dot_db
   schema: self_tests_dot
   threads: 4
-Muso_db:
+ScanProjec1_db:
   type: postgres
   host: localhost
   user: postgres
