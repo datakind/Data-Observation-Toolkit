@@ -1,4 +1,4 @@
-""" tests for self_tests_utils/dbt.py """
+""" tests for utils/dbt.py """
 
 import uuid
 import logging

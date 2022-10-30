@@ -1,4 +1,4 @@
-""" Tests of configuration self_tests_utils module """
+""" Tests of configuration utils module """
 
 from mock import patch
 from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
