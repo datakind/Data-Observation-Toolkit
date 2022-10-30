@@ -1,8 +1,0 @@
-version: 2
-models:
--   name: dot_model__ancview_pregnancy
-    columns:
-    -   name: patient_id
-        description: Patient ID is not null
-        tests:
-        - not_null

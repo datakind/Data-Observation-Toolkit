@@ -1,13 +1,22 @@
 """ tests for utils/dbt.py """
 
+import os
 import ast
-import uuid
 import logging
+import shutil
 
 from mock import patch
 from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
+
+from utils.dbt import (  # pylint: disable=wrong-import-order
+    run_dbt_core,
+    archive_previous_dbt_results,
+    create_failed_dbt_test_models,
+    run_dbt_test,
+)
+from utils.configuration_utils import DBT_PROJECT_FINAL_FILENAME
 
 # functions under test
 from utils.dbt_logs import (  # pylint: disable=wrong-import-order
@@ -15,26 +24,62 @@ from utils.dbt_logs import (  # pylint: disable=wrong-import-order
     read_dbt_logs,
     process_dbt_logs_row,
 )
-from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
 
 
 class DbtLogsUtilsTest(BaseSelfTestClass):
-    """Test Class for dbt log processing"""
+    """Test Class for dbt log processing
+
+    safe test -meaning it will detect if a change of version in DBT
+    changes the output logs in a way that will make DOT fail
+
+    (i.e. because DOT relies on DBT logs, and that's not really safe)
+    """
 
     @patch("utils.configuration_utils._get_filename_safely")
     def setUp(
         self, mock_get_filename_safely
     ) -> None:  # pylint: disable=no-value-for-parameter
+        super().setUp()
+
+        # for safety: remove any previous dbt target directory and model files
+        if os.path.isdir("dbt/target"):
+            shutil.rmtree("dbt/target")
+        for path in os.listdir("dbt/"):
+            if path.startswith("models") or path.startswith("tests"):
+                shutil.rmtree(f"dbt/{path}")
+
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
-        self.create_self_tests_db_schema()
+        # 0. Test setup
+        self.dbt_test_setup()
 
-        # TODO should insert the results into the db instead
-        logger = setup_custom_logger(
-            "self_tests/output/logs/run_everything.log", logging.INFO
+        # 1. Run all the dbt actions
+        self.run_dbt_steps()
+
+    def dbt_test_setup(self):
+        """
+        setup for dbt tests
+        """
+        shutil.copy(
+            "./config/example/self_tests/dbt/dbt_project.yml", "./dbt/dbt_project.yml"
         )
-        run_id = uuid.uuid4()
-        run_dot_tests("ScanProject1", logger, run_id)
+
+        shutil.rmtree("dbt/models", ignore_errors=True)
+        shutil.copytree(
+            "self_tests/data/dot_input_files/dbt", "dbt/models/ScanProject1"
+        )
+
+    @staticmethod
+    def run_dbt_steps():
+        """
+        Runs all the actions for dbt
+        """
+        project_id = "ScanProject1"
+        logger = setup_custom_logger("self_tests/output/test.log", logging.INFO)
+        run_dbt_core(project_id, logger)
+        archive_previous_dbt_results(logger)
+        create_failed_dbt_test_models(project_id, logger, "view")
+        run_dbt_test(project_id, logger)
 
     @staticmethod
     def _cleanup_schema_name(value):
