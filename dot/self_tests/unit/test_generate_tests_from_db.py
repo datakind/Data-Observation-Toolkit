@@ -1,7 +1,7 @@
 import logging
 import pytest
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from ..utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.configuration_management import (
@@ -11,12 +11,6 @@ from utils.configuration_management import (
 
 class GenerateTestsFromDbTest(BaseSelfTestClass):
     """Test Class"""
-
-    def setUp(self) -> None:
-        self.create_self_tests_db_schema(f.read())
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @patch("utils.configuration_utils._get_filename_safely")
     @pytest.mark.skip("intermediate commit - WIP for this test")

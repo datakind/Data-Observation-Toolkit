@@ -3,7 +3,7 @@
 import ast
 
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from ..utils.base_self_test_class import BaseSelfTestClass
 
 # functions under test
 from utils.dbt_logs import (  # pylint: disable=wrong-import-order
@@ -21,12 +21,6 @@ from utils.configuration_utils import (  # pylint: disable=wrong-import-position
 
 class DbtLogsUtilsTest(BaseSelfTestClass):
     """Test Class for dbt log processing"""
-
-    def setUp(self) -> None:
-        self.create_self_tests_db_schema()
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @staticmethod
     def mock_get_filename_safely(path: str) -> str:

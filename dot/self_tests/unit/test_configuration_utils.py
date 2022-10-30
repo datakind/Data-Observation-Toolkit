@@ -1,7 +1,7 @@
 """ Tests of configuration utils module """
 
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from ..utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.configuration_utils import (  # pylint: disable=wrong-import-order

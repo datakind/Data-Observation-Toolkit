@@ -5,7 +5,7 @@ import uuid
 import logging
 
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from ..utils.base_self_test_class import BaseSelfTestClass
 
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
 
@@ -35,9 +35,6 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
         )
         run_id = uuid.uuid4()
         run_dot_tests("ScanProject1", logger, run_id)
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @staticmethod
     def _cleanup_schema_name(value):

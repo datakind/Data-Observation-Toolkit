@@ -5,7 +5,7 @@ import pytest
 
 from mock import patch
 from typing import Tuple
-from .base_self_test_class import BaseSelfTestClass
+from ..utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order
@@ -22,12 +22,6 @@ from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-o
 
 class UtilsTest(BaseSelfTestClass):
     """Test Class"""
-
-    def setUp(self) -> None:
-        self.create_self_tests_db_schema()
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @staticmethod
     def get_test_summary(run_id: uuid.UUID) -> Tuple[pd.DataFrame, uuid.UUID]:
