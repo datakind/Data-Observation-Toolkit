@@ -1,11 +1,11 @@
 """
-Replicates tests in test_utils.py adding the column id_column_name to the schema
+Replicates tests in test_dot_utils.py adding the column id_column_name to the schema
 """
 import uuid
 import logging
 
 from mock import patch
-from .test_utils import UtilsTest
+from .test_dot_utils import UtilsTest
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order

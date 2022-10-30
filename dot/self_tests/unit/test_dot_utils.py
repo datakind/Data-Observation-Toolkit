@@ -5,7 +5,7 @@ import pytest
 
 from mock import patch
 from typing import Tuple
-from ..utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order

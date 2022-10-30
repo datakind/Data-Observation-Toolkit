@@ -1,11 +1,11 @@
-""" tests for utils/dbt.py """
+""" tests for self_tests_utils/dbt.py """
 
 import uuid
 import logging
 import pandas as pd
 from mock import patch
 
-from ..utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.dbt import (  # pylint: disable=wrong-import-order

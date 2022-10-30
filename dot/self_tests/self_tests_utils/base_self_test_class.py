@@ -63,11 +63,11 @@ class BaseSelfTestClass(unittest.TestCase):
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     def setUp(self) -> None:
-        """ creates DB schema for the demo dataset by default """
+        """creates DB schema for the demo dataset by default"""
         self.create_self_tests_db_schema()
 
     def tearDown(self) -> None:
-        """ drops the DB schema for the demo dataset by default """
+        """drops the DB schema for the demo dataset by default"""
         self.drop_self_tests_db_schema()
 
     @patch("utils.configuration_utils._get_filename_safely")

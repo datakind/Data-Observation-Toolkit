@@ -1,11 +1,11 @@
-""" tests for utils/dbt.py """
+""" tests for self_tests_utils/dbt.py """
 
 import ast
 import uuid
 import logging
 
 from mock import patch
-from ..utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
 

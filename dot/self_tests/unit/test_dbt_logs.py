@@ -1,9 +1,9 @@
-""" tests for utils/dbt.py """
+""" tests for self_tests_utils/dbt.py """
 
 import ast
 
 from mock import patch
-from ..utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # functions under test
 from utils.dbt_logs import (  # pylint: disable=wrong-import-order

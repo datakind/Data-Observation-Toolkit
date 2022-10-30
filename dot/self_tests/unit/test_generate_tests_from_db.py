@@ -1,7 +1,7 @@
 import logging
 import pytest
 from mock import patch
-from ..utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.configuration_management import (
