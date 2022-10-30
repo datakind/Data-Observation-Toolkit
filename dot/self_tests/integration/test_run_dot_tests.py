@@ -1,21 +1,36 @@
+""" Integration test: runs DOT for the demo dataset and checks the results """
+import os
 import uuid
 import logging
+import shutil
+import pandas as pd
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
+from utils.connection_utils import (
+    get_db_params_from_config,
+)  # pylint: disable=wrong-import-order
+from utils.configuration_utils import (
+    DbParamsConfigFile,
+    DbParamsConnection,
+)  # pylint: disable=wrong-import-order
 
 
 class RunDotTestsTest(BaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        self.create_self_tests_db_schema()
+        super().setUp()
 
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
+        # for safety: remove any previous dbt target directory and model files
+        if os.path.isdir("dbt/target"):
+            shutil.rmtree("dbt/target")
+        for path in os.listdir("dbt/"):
+            if path.startswith("models") or path.startswith("tests"):
+                shutil.rmtree(f"dbt/{path}")
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_run_dot_tests(
@@ -32,4 +47,35 @@ class RunDotTestsTest(BaseSelfTestClass):
 
         run_dot_tests("ScanProject1", logger, run_id)
 
-        # TODO
+        # check results
+        schema_dot, _, conn_dot = get_db_params_from_config(
+            DbParamsConfigFile["dot_config.yml"],
+            DbParamsConnection["dot"],
+            "ScanProject1",
+        )
+
+        test_results_summary = pd.read_sql(
+            f"SELECT * FROM {schema_dot}.test_results_summary", conn_dot
+        )
+        expected_test_results_summary = pd.read_csv(
+            "self_tests/data/expected/integration/test_results_summary.csv", index_col=0
+        )
+        pd.testing.assert_frame_equal(
+            test_results_summary.drop(columns=["run_id"]),
+            expected_test_results_summary.drop(columns=["run_id"]),
+        )
+
+        test_results = pd.read_sql(f"SELECT * FROM {schema_dot}.test_results", conn_dot)
+        expected_test_results = pd.read_csv(
+            "self_tests/data/expected/integration/test_results.csv", index_col=0
+        )
+        pd.testing.assert_frame_equal(
+            expected_test_results.drop(
+                columns=["run_id", "test_result_id", "id_column_value"]
+            ),
+            test_results.drop(columns=["run_id", "test_result_id", "id_column_value"]),
+        )
+        self.assertListEqual(
+            sorted(expected_test_results["id_column_value"].to_list()),
+            sorted(test_results["id_column_value"].to_list()),
+        )
