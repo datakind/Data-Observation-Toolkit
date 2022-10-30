@@ -5,7 +5,7 @@ import logging
 import shutil
 import pandas as pd
 from mock import patch
-from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.dbt_base_safe_test_class import DbtBaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
@@ -19,18 +19,14 @@ from utils.configuration_utils import (
 )  # pylint: disable=wrong-import-order
 
 
-class RunDotTestsTest(BaseSelfTestClass):
+class RunDotTestsTest(DbtBaseSelfTestClass):
     """Test Class"""
 
     def setUp(self) -> None:
-        super().setUp()
+        # load the DOT demo dataset
+        self.create_self_tests_db_schema()
 
-        # for safety: remove any previous dbt target directory and model files
-        if os.path.isdir("dbt/target"):
-            shutil.rmtree("dbt/target")
-        for path in os.listdir("dbt/"):
-            if path.startswith("models") or path.startswith("tests"):
-                shutil.rmtree(f"dbt/{path}")
+        self.cleanup_dbt_output_dir()
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_run_dot_tests(

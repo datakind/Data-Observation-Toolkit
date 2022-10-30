@@ -3,7 +3,7 @@
 import ast
 
 from mock import patch
-from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.dbt_base_safe_test_class import DbtBaseSelfTestClass
 
 # functions under test
 from utils.dbt_logs import (  # pylint: disable=wrong-import-order
@@ -13,33 +13,10 @@ from utils.dbt_logs import (  # pylint: disable=wrong-import-order
     _get_test_type,
     process_dbt_logs_row,
 )
-from utils.configuration_utils import (  # pylint: disable=wrong-import-position
-    dot_config_FILENAME,
-    DBT_PROJECT_FINAL_FILENAME,
-)
 
 
-class DbtLogsUtilsTest(BaseSelfTestClass):
+class DbtLogsUtilsTest(DbtBaseSelfTestClass):
     """Test Class for dbt log processing"""
-
-    @staticmethod
-    def mock_get_filename_safely(path: str) -> str:
-        """
-        Mock paths of config files
-
-        Parameters
-        ----------
-        path
-
-        Returns
-        -------
-
-        """
-        if path == dot_config_FILENAME:
-            return "self_tests/data/base_self_test/dot_config.yml"
-        if path == DBT_PROJECT_FINAL_FILENAME:
-            return "./config/example/project_name/dbt/dbt_project.yml"
-        raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     def test_read_dbt_logs(self):
         """
@@ -67,18 +44,16 @@ class DbtLogsUtilsTest(BaseSelfTestClass):
             output = _get_test_parameters(node, "not_negative_string_column")
             self.assertEqual(output, "{'name': 'value'}")
 
-    @patch("utils.configuration_utils._get_filename_safely")
-    def test_get_test_type(
-        self, mock_get_filename_safely
-    ):  # pylint: disable=no-value-for-parameter
+    def test_get_test_type(self):  # pylint: disable=no-value-for-parameter
         """
         Gets test type from dbt manifest metadata
         """
-        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
-
         node = {"test_metadata": {"name": "test_type_x"}}
         self.assertEqual(_get_test_type(node), "test_type_x")
-        node = {"test_metadata": {}, "original_file_path": "tests/Muso/test_x.sql"}
+        node = {
+            "test_metadata": {},
+            "original_file_path": "tests/ScanProject1/test_x.sql",
+        }
         self.assertEqual(_get_test_type(node), "custom_sql")
         node = {"test_metadata": {}}
         self.assertEqual(_get_test_type(node), None)
