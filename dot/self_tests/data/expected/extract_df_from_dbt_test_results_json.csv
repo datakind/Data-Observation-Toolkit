@@ -1,10 +1,40 @@
 ,run_id,test_id,entity_id,test_type,column_name,id_column_name,test_parameters,test_status,test_status_message,failed_tests_view,failed_tests_view_sql
-test.dbt_model_1.not_negative_string_column_dot_model__fpview_registration_value__value.e15d766b3b,4541476c-814e-43fe-ab38-786f36beecbc,85106e71-378d-3f8e-a9d6-2f056becf09b,b22a0dd5-f26a-3f7a-a413-867b4c5b1882,not_negative_string_column,value,,{'name': 'value'},fail,"got 1 result, configured to fail if != 0",tr_dot_model__fpview_registration_value," SELECT array_agg(dot_model__fpview_registration.uuid) AS uuid_list
-   FROM self_tests_public_tests.dot_model__fpview_registration
-  WHERE dot_model__fpview_registration.value::character varying::text ~~ '-%'::text
+test.dbt_model_1.accepted_values_dot_model__all_flight_data_stops__1__2__3__Non_stop.b734743116,4541476c-814e-43fe-ab38-786f36beecbc,dac4c545-f610-3dae-ad82-1ddf27dae144,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,accepted_values,stops,,"{'values': ['1', '2', '3', 'Non-stop']}",fail,"got 2 results, configured to fail if != 0",tr_dot_model__all_flight_data_accepted_values_stops," WITH all_values AS (
+         SELECT dot_model__all_flight_data.stops AS value_field,
+            count(*) AS n_records
+           FROM self_tests_public_tests.dot_model__all_flight_data
+          GROUP BY dot_model__all_flight_data.stops
+        )
+ SELECT all_values.value_field,
+    all_values.n_records
+   FROM all_values
+  WHERE all_values.value_field::text <> ALL (ARRAY['1'::character varying::text, '2'::character varying::text, '3'::character varying::text, 'Non-stop'::character varying::text]);"
+test.dbt_model_1.not_negative_string_column_dot_model__all_flight_data_price__price.322389c2ba,4541476c-814e-43fe-ab38-786f36beecbc,49aa2fd3-511c-3d84-a782-a5daf57f98da,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,not_negative_string_column,price,,{'name': 'price'},fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_price," SELECT array_agg(dot_model__all_flight_data.uuid) AS uuid_list
+   FROM self_tests_public_tests.dot_model__all_flight_data
+  WHERE dot_model__all_flight_data.price::character varying::text ~~ '-%'::text
  HAVING count(*) > 0;"
-test.dbt_model_1.not_null_dot_model__ancview_pregnancy_patient_id.af4157ba8c,4541476c-814e-43fe-ab38-786f36beecbc,97f6844e-ec43-3a55-b8ba-0a5c27671ff6,3ed4d6ed-74b1-32cb-b74f-b51ebaa13294,not_null,patient_id,,{},fail,"got 1 result, configured to fail if != 0",tr_dot_model__ancview_pregnancy_not_null_patient_id," SELECT dot_model__ancview_pregnancy.patient_id,
-    dot_model__ancview_pregnancy.value
-   FROM self_tests_public_tests.dot_model__ancview_pregnancy
-  WHERE dot_model__ancview_pregnancy.patient_id IS NULL;"
-test.dbt_model_1.not_null_dot_model__fpview_registration_uuid.d2f7403403,4541476c-814e-43fe-ab38-786f36beecbc,38df794b-8f95-3404-8a83-e777a085a53b,b22a0dd5-f26a-3f7a-a413-867b4c5b1882,not_null,uuid,,{},pass,,,
+test.dbt_model_1.not_null_dot_model__all_flight_data_origin_airport.2196b664b6,4541476c-814e-43fe-ab38-786f36beecbc,983a5746-bea7-3072-9a80-2c1c6706ceed,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,not_null,origin_airport,,{},fail,"got 53 results, configured to fail if != 0",tr_dot_model__all_flight_data_not_null_origin_a," SELECT dot_model__all_flight_data.uuid,
+    dot_model__all_flight_data.departure_time,
+    dot_model__all_flight_data.airline,
+    dot_model__all_flight_data.origin_airport,
+    dot_model__all_flight_data.origin_iata,
+    dot_model__all_flight_data.destination_airport,
+    dot_model__all_flight_data.destination_iata,
+    dot_model__all_flight_data.stops,
+    dot_model__all_flight_data.price
+   FROM self_tests_public_tests.dot_model__all_flight_data
+  WHERE dot_model__all_flight_data.origin_airport IS NULL;"
+test.dbt_model_1.relationships_dot_model__all_flight_data_origin_airport__airport__flight_with_no_airport__ref_dot_model__all_airports_data_.3a9f7e32d9,4541476c-814e-43fe-ab38-786f36beecbc,7aa26bda-57e1-39b8-a3e9-979a3d882577,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,relationships,origin_airport,,"{'to': ""ref('dot_model__all_airports_data')"", 'name': 'flight_with_no_airport', 'field': 'airport'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_flight_with_no_a," SELECT array_agg(from_model.from_uuid) AS uuid_list
+   FROM ( SELECT dot_model__all_flight_data.uuid AS from_uuid,
+            dot_model__all_flight_data.origin_airport AS from_column_id
+           FROM self_tests_public_tests.dot_model__all_flight_data) from_model
+     LEFT JOIN ( SELECT dot_model__all_airports_data.airport AS to_id
+           FROM self_tests_public_tests.dot_model__all_airports_data) to_model ON to_model.to_id::text = from_model.from_column_id::text
+  WHERE from_model.from_column_id IS NOT NULL AND to_model.to_id IS NULL
+ HAVING count(*) > 0;"
+test.dbt_model_1.unique_dot_model__all_airports_data_airport.912f240fa1,4541476c-814e-43fe-ab38-786f36beecbc,aa1c361c-a9ba-350e-9959-e92a5654f7dc,7b689796-afde-3930-87be-ed8b7c7a0474,unique,airport,,{},fail,"got 2 results, configured to fail if != 0",tr_dot_model__all_airports_data_unique_airport," SELECT dot_model__all_airports_data.airport AS unique_field,
+    count(*) AS n_records
+   FROM self_tests_public_tests.dot_model__all_airports_data
+  WHERE dot_model__all_airports_data.airport IS NOT NULL
+  GROUP BY dot_model__all_airports_data.airport
+ HAVING count(*) > 1;"

@@ -138,3 +138,6 @@ pytest==7.1.2
 mock==4.0.3
 pylint==2.14.1
 pytest-timeout==2.1.0
+faker==15.1.1
+faker-airtravel==0.4
+flatten_json==0.1.13

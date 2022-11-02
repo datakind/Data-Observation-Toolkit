@@ -3,10 +3,9 @@ Replicates tests in test_utils.py adding the column id_column_name to the schema
 """
 import uuid
 import logging
-import pandas as pd
 
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from .test_utils import UtilsTest
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order
@@ -14,31 +13,23 @@ from utils.utils import (  # pylint: disable=wrong-import-order
     get_test_rows,
     setup_custom_logger,
 )
-from utils.connection_utils import (  # pylint: disable=wrong-import-position, wrong-import-order
-    DbParamsConnection,
-)
+from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
 
 
-class UtilsTest(BaseSelfTestClass):
+class UtilsTestImproved(UtilsTest):
     """Test Class"""
 
     def setUp(self) -> None:
-        with open(
-            "self_tests/data/queries/configured_tests_sample.sql", "r"
-        ) as f1:  # pylint: disable=invalid-name
-            with open(
-                    "self_tests/data/queries/configured_tests_sample-improved.sql", "r"
-            ) as f2:  # pylint: disable=invalid-name
-                self.create_self_tests_db_schema(
-                    "\n".join(
-                        [
-                            "ALTER TABLE self_tests_dot.configured_tests "
-                            "ADD COLUMN id_column_name VARCHAR(300) NULL;",
-                            f1.read(),
-                            f2.read(),
-                        ]
-                    )
-                )
+        self.create_self_tests_db_schema(
+            "\n".join(
+                [
+                    "ALTER TABLE self_tests_dot.configured_tests "
+                    "ADD COLUMN id_column_name VARCHAR(300) NULL;",
+                    "UPDATE self_tests_dot.configured_tests "
+                    "SET id_column_name = 'uuid';",
+                ]
+            )
+        )
 
     def tearDown(self) -> None:
         self.drop_self_tests_db_schema()
@@ -51,13 +42,13 @@ class UtilsTest(BaseSelfTestClass):
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         configured_tests_row = get_configured_tests_row(
-            test_type="possible_duplicate_forms",
-            entity_id="adc007dd-2407-3dc2-95a7-002067e741f9",
-            column="",
-            project_id="Muso",
-            test_parameters="{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
+            test_type="accepted_values",
+            entity_id="ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            column="stops",
+            project_id="ScanProject1",
+            test_parameters='{"values": ["1", "2", "3", "Non-stop"]}',
         )
-        expected_test_id = "5501f109-a017-3594-96ea-eb8438187509"
+        expected_test_id = "dac4c545-f610-3dae-ad82-1ddf27dae144"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -66,20 +57,20 @@ class UtilsTest(BaseSelfTestClass):
         )
         expected_row = {
             "test_activated": True,
-            "project_id": "Muso",
+            "project_id": "ScanProject1",
             "test_id": expected_test_id,
-            "scenario_id": "DUPLICATE-1",
+            "scenario_id": "INCONSISTENT-1",
             "priority": 3,
-            "description": "",
+            "description": "Disallowed FP methods entered in form",
             "impact": "",
             "proposed_remediation": "",
-            "entity_id": "adc007dd-2407-3dc2-95a7-002067e741f9",
-            "test_type": "possible_duplicate_forms",
-            "column_name": "",
+            "entity_id": "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            "test_type": "accepted_values",
+            "column_name": "stops",
             "column_description": "",
-            "id_column_name": "id_column",
-            "test_parameters": "{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'patient_id', 'table_specific_reported_date': 'delivery_date'}",
-            "last_updated_by": "Lorenzo",
+            "id_column_name": "uuid",
+            "test_parameters": "{'values': ['1', '2', '3', 'Non-stop']}",
+            "last_updated_by": "Matt",
         }
         for k, v in expected_row.items():  # pylint: disable=invalid-name
             self.assertEqual(
@@ -96,82 +87,26 @@ class UtilsTest(BaseSelfTestClass):
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
         # create data for the core entity
-        # TODO add an utility function to do this  # pylint: disable=fixme
-        schema_core, _, conn_core = self.get_self_tests_db_conn(
-            connection=DbParamsConnection["project_core"]
+        # TODO should insert the necessary results instead
+        logger = setup_custom_logger(
+            "self_tests/output/logs/run_everything.log", logging.INFO
         )
-        cursor = conn_core.cursor()
-        cursor.execute(
-            f"""
-            DROP SCHEMA IF EXISTS {schema_core} CASCADE;
-            CREATE SCHEMA IF NOT EXISTS {schema_core};
-            CREATE TABLE IF NOT EXISTS {schema_core}.dot_model__fpview_registration(
-                patient_id VARCHAR(300),
-                value VARCHAR(1000) NOT NULL
-            );
-            INSERT INTO {schema_core}.dot_model__fpview_registration
-            select * from
-                (values ('patient_id1', '1'), ('patient_id2', '2'), ('patient_id3', '3'))
-                x(patient_id, value)
-            """
-        )
-        conn_core.commit()
-
-        # create data for the failing test rows entity
-        # TODO add an utility function to do this from the test definition  # pylint: disable=fixme
-        schema_test, _, conn_test = self.get_self_tests_db_conn(
-            connection=DbParamsConnection["project_test"]
-        )
-        cursor = conn_test.cursor()
-        if schema_test != schema_core:
-            cursor.execute(
-                f"""
-                DROP SCHEMA IF EXISTS {schema_test} CASCADE;
-                CREATE SCHEMA IF NOT EXISTS {schema_test};
-            """
-            )
-            conn_test.commit()
-
-        cursor.execute(
-            f"""
-            CREATE SCHEMA IF NOT EXISTS {schema_test};
-            CREATE TABLE IF NOT EXISTS {schema_test}.tr_dot_model__fpview_registration_id10(
-                patient_id VARCHAR(300) PRIMARY KEY,
-                value VARCHAR(1000) NOT NULL,
-                primary_table_id_field VARCHAR(300)
-            );
-            INSERT INTO {schema_test}.tr_dot_model__fpview_registration_id10
-            select * from
-                (values ('patient_id1', '1', 'patient_id'), ('patient_id2', '2', 'patient_id'))
-                x(patiend_id, value)
-        """
-        )
-        conn_test.commit()
+        run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
+        run_dot_tests("ScanProject1", logger, run_id)
 
         # create data for the test view of failing rows
-
-        run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
-        test_summary_row = {
-            "run_id": run_id,
-            "test_id": "ef6bb39d-7a89-3972-b5b6-719d4435e7f9",
-            "entity_id": "52aa8e99-5221-3aac-bca5-b52b80b90929",
-            "test_type": "custom_sql",
-            "column_name": "",
-            "id_column_name": "patient_id",
-            "test_parameters": '$${"query"="SQL for the test definition; irrelevant for self_tests"}$$',
-            "test_status": "fail",
-            "test_status_message": "got 49 results, configured to fail if != 0",
-            "failed_tests_view": "tr_dot_model__fpview_registration_id10",
-            "failed_tests_view_sql": "SQL for the view of the failing rows; irrelevant",
-        }
-        test_summary = pd.DataFrame(test_summary_row, index=[0])
+        test_summary, run_id = self.get_test_summary(run_id)
         test_rows = get_test_rows(
             test_summary,
             run_id,
-            project_id="Muso",
+            project_id="ScanProject1",
             logger=setup_custom_logger("self_tests/output/test.log", logging.INFO),
         )
-        self.assertListEqual(
-            sorted(test_rows.id_column_value.to_list()),
-            ["patient_id1", "patient_id2"],
+        self.assertEqual(
+            len(test_rows.id_column_value.to_list()),
+            253,
+        )
+        self.assertEqual(
+            sorted(test_rows.id_column_value.to_list())[0],
+            "000ea267-ffb3-3a58-8e71-eaa3c6a0a81f",
         )

@@ -9,16 +9,22 @@ import json
 from os import system
 from datetime import datetime
 import pandas as pd
-from airflow.models import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.bash_operator import BashOperator
-from airflow.hooks.postgres_hook import PostgresHook
-from airflow.hooks.base import BaseHook
-from airflow.models import Variable
+from airflow.models import DAG  # pylint: disable=import-error
+from airflow.operators.python import PythonOperator  # pylint: disable=import-error
+from airflow.operators.bash_operator import BashOperator  # pylint: disable=import-error
+from airflow.hooks.postgres_hook import PostgresHook  # pylint: disable=import-error
+from airflow.hooks.base import BaseHook  # pylint: disable=import-error
+from airflow.models import Variable  # pylint: disable=import-error
 from sqlalchemy import create_engine
 
 
-def get_object(object_name_in, earliest_date_to_sync, date_field, source_conn_in, columns_to_exclude):
+def get_object(
+    object_name_in,
+    earliest_date_to_sync,
+    date_field,
+    source_conn_in,
+    columns_to_exclude,
+):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -185,9 +191,7 @@ def save_object(
             postgres_conn_id=target_conn_in, schema=target_conn_in
         ).get_conn() as conn:
             cur = conn.cursor()
-            query = "DROP TABLE IF EXISTS {} CASCADE;".format(
-                schema + "." + object_name_in
-            )
+            query = f"DROP TABLE IF EXISTS {schema}.{object_name_in} CASCADE;"
             print(query)
             cur.execute(query)
 
@@ -199,12 +203,14 @@ def save_object(
         postgres_conn_id=target_conn_in, schema=target_conn_in
     ).get_conn() as conn:
         cur = conn.cursor()
-        query = "CREATE SCHEMA IF NOT EXISTS {};".format(schema)
+        query = f"CREATE SCHEMA IF NOT EXISTS {schema};"
         print(query)
         cur.execute(query)
 
     print("Saving data to: " + schema + "." + object_name_in)
-    data_in.to_sql(object_name_in, engine, index=False, if_exists="replace", schema=schema)
+    data_in.to_sql(
+        object_name_in, engine, index=False, if_exists="replace", schema=schema
+    )
 
     for i in range(len(column_list_in)):
         col = column_list_in[i]
@@ -220,7 +226,12 @@ def save_object(
 
 
 def sync_object(
-    object_name_in, earliest_date_to_sync, date_field, source_conn_in, target_conn_in, columns_to_exclude
+    object_name_in,
+    earliest_date_to_sync,
+    date_field,
+    source_conn_in,
+    target_conn_in,
+    columns_to_exclude,
 ):
     """
 
@@ -244,7 +255,11 @@ def sync_object(
 
     # Get the data
     data, column_list, type_list = get_object(
-        object_name_in, earliest_date_to_sync, date_field, source_conn_in, columns_to_exclude
+        object_name_in,
+        earliest_date_to_sync,
+        date_field,
+        source_conn_in,
+        columns_to_exclude,
     )
 
     # Save the data
@@ -366,8 +381,12 @@ with DAG(
             object_name = objects_to_sync[i]["object"]
             date_field = objects_to_sync[i]["date_field"]
             id_field = objects_to_sync[i]["id_field"]
-            columns_to_exclude = objects_to_sync[i]["columns_to_exclude"] if "columns_to_exclude" in objects_to_sync[i] else []
-            
+            columns_to_exclude = (
+                objects_to_sync[i]["columns_to_exclude"]
+                if "columns_to_exclude" in objects_to_sync[i]
+                else []
+            )
+
             # Get the data from a object in Postgres and copy to target DB
             af_tasks.append(
                 PythonOperator(
@@ -379,7 +398,7 @@ with DAG(
                         "date_field": date_field,
                         "source_conn_in": source_conn,
                         "target_conn_in": target_conn,
-                        "columns_to_exclude": columns_to_exclude
+                        "columns_to_exclude": columns_to_exclude,
                     },
                     dag=dag,
                 )

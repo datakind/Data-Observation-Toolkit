@@ -1,4 +1,4 @@
-name: Lint
+name: Lint & self tests
 
 
 on: [push, pull_request]

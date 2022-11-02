@@ -1,3 +1,6 @@
+""" contains extension for custom expectations
+"""
+
 import sqlalchemy as sa
 from great_expectations.data_asset import DataAsset
 from great_expectations.dataset import SqlAlchemyDataset
@@ -30,12 +33,13 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         key,
         data_table,
         schema_core,
-        target_table,  # The data being checked (eg prices for airlines) will be different to target table (eg airlines)
+        target_table,  # The data being checked (eg prices for airlines)
+        # will be different to target table (eg airlines)
         # original schema for data, not needed for this expectation:
         schema_source,  # pylint: disable=unused-argument
         threshold=0.01,
         samples=10000,
-        id_column="uuid"
+        id_column="uuid",
     ):
         """Compares distributions of measurements across CHWs to detect ouliers.
         This expectation produces warnings rather than pointing out errors due to its
@@ -97,8 +101,8 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         time_key,
         first_form_name,
         second_form_name,
-        maximum_days=-1,
-        minimum_days=-80,
+        maximum_days=-1,  # pylint: disable=unused-argument
+        minimum_days=-80,  # pylint: disable=unused-argument
     ):
         """custom expectation"""
         first_rows = sa.select(

@@ -59,7 +59,8 @@ class BaseSelfTestClass(unittest.TestCase):
         if path == "./config/example/project_name/dbt/dbt_project.yml":
             return path
         if path == DBT_PROJECT_FINAL_FILENAME:
-            return "./config/example/project_name/dbt/dbt_project.yml"
+            return DBT_PROJECT_FINAL_FILENAME
+            # return "./config/example/project_name/dbt/dbt_project.yml"
         raise FileNotFoundError(f"file path {path} needs to be mocked")
 
     @patch("utils.configuration_utils._get_filename_safely")
@@ -89,7 +90,7 @@ class BaseSelfTestClass(unittest.TestCase):
         schema, engine, conn = get_db_params_from_config(
             DbParamsConfigFile["dot_config.yml"],
             connection,
-            "Muso",
+            "ScanProject1",  # TODO maybe should be a parameter; at least configurable somehow
         )
 
         return schema, engine, conn
@@ -134,7 +135,7 @@ class BaseSelfTestClass(unittest.TestCase):
         conn.commit()
 
     @staticmethod
-    def get_queries_from_file(f, schema):
+    def get_queries_from_file(f, dot_schema, public_schema):
         """
         Gets queries from file
 
@@ -149,25 +150,14 @@ class BaseSelfTestClass(unittest.TestCase):
         -------
             transformed query lines
         """
-        # queries = []
-        # query_lines = []
         all_query_lines = []
         lines = f.readlines()
         for line in lines:
             if "create schema" in line.lower():
                 continue
-            line = line.replace("dot.", f"{schema}.")
-            # query_lines.append(line)
+            line = line.replace("dot.", f"{dot_schema}.")
+            line = line.replace("public.", f"{public_schema}.")
             all_query_lines.append(line)
-            # if ";" in line:
-            #    queries.append("".join(query_lines))
-            #    query_lines = []
-
-        # for query in queries:
-        #     if "create table if not exists" in query.lower():
-        #         # execute only table creation queries TODO reconsider
-        #         cursor.execute(query)
-        #         conn.commit()
         return all_query_lines
 
     def create_self_tests_db_schema(
@@ -176,7 +166,8 @@ class BaseSelfTestClass(unittest.TestCase):
         schema_filepath: str = "../db/dot/1-schema.sql",
         additional_filepaths: Iterable[str] = [
             "../db/dot/2-upload_static_data.sql",
-            "./self_tests/data/queries/common_to_all_tests.sql",
+            "../db/dot/3-demo_data.sql",
+            "../db/dot/4-upload_sample_dot_data.sql",
         ],
         do_recreate_schema: bool = True,
     ):
@@ -207,10 +198,16 @@ class BaseSelfTestClass(unittest.TestCase):
             schema_list.append(schema)
 
         (
-            schema,
+            schema_dot,
             _,
             conn,
         ) = self.get_self_tests_db_conn()  # pylint: disable=no-value-for-parameter
+
+        (
+            schema_project,
+            _,
+            conn,
+        ) = self.get_self_tests_db_conn(connection=DbParamsConnection.project)
 
         cursor = conn.cursor()
 
@@ -229,7 +226,9 @@ class BaseSelfTestClass(unittest.TestCase):
 
             if schema_filepath is not None:
                 with open(schema_filepath, "r") as f:
-                    all_query_lines = self.get_queries_from_file(f, schema)
+                    all_query_lines = self.get_queries_from_file(
+                        f, schema_dot, schema_project
+                    )
 
                     # execute all queries
                     cursor.execute("".join(all_query_lines))
@@ -238,7 +237,9 @@ class BaseSelfTestClass(unittest.TestCase):
             if additional_filepaths is not None:
                 for additional_filepath in additional_filepaths:
                     with open(additional_filepath, "r") as f:
-                        all_query_lines = self.get_queries_from_file(f, schema)
+                        all_query_lines = self.get_queries_from_file(
+                            f, schema_dot, schema_project
+                        )
 
                         # execute all queries
                         cursor.execute("".join(all_query_lines))

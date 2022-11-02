@@ -475,7 +475,6 @@ def get_test_rows(
     entity_data = {}
     failing_rows = None
     passing_rows = None
-    unique_column_name = None
 
     # ID columns in order of preference (don't change order). If these appear in test
     # result df, they determine ids
@@ -534,23 +533,18 @@ def get_test_rows(
         for c in id_col_names:
             # Special handling for unique test type
             if test_type == "unique":
-                unique_column_name = "unique_field"
                 failing_ids = entity_df.loc[
-                    entity_df[column_name].isin(
-                        test_results_df['unique_field']
-                    ),
+                    entity_df[column_name].isin(test_results_df["unique_field"]),
                     # TODO Add 'primary_table_id_field' as a column in entity defintion and use that here
                     column_name,
                 ].tolist()
                 unique_column_name = column_name
                 break
             if test_type == "expect_similar_means_across_reporters":
-                tp = json.loads(test_parameters.replace("'",'"'))
-                unique_column_name = tp['id_column']
+                tp = json.loads(test_parameters.replace("'", '"'))
+                unique_column_name = tp["id_column"]
                 failing_ids = entity_df.loc[
-                    entity_df[unique_column_name].isin(
-                        test_results_df[tp['key']]
-                    ),
+                    entity_df[unique_column_name].isin(test_results_df[tp["key"]]),
                     unique_column_name,
                 ].tolist()
                 break
@@ -627,7 +621,7 @@ def get_test_rows(
         # Using our list of failing IDs, generate dataframe for failed_test_rows
         try:
             if not isinstance(failing_ids, list):
-                failing_ids = [ failing_ids ]
+                failing_ids = [failing_ids]
             passing_ids = entity_df.loc[
                 ~entity_df[unique_column_name].isin(failing_ids), unique_column_name
             ].to_list()
@@ -788,7 +782,7 @@ def set_summary_stats(
     entity_count_map = {}
     entity_count = []
     failed_count = []
-    for i, row in tests_summary.iterrows():
+    for _, row in tests_summary.iterrows():
         failed_tests_view = row["failed_tests_view"]
         entity_or_primary_table = get_entity_name_from_id(project_id, row["entity_id"])
         test_type = row["test_type"]
