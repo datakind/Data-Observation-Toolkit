@@ -51,7 +51,7 @@ if final_score < threshold:
     )
 
     logging.error(MESSAGE)
-    raise Exception(MESSAGE)
+    sys.exit(1)
 
 MESSAGE = (
     "PyLint Passed | " "Score: {} | " "Threshold: {} ".format(final_score, threshold)
