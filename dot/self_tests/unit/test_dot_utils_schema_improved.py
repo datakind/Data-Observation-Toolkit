@@ -1,11 +1,11 @@
 """
-Replicates tests in test_utils.py adding the column id_column_name to the schema
+Replicates tests in test_dot_utils.py adding the column id_column_name to the schema
 """
 import uuid
 import logging
 
 from mock import patch
-from .test_utils import UtilsTest
+from .test_dot_utils import UtilsTest
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order
@@ -13,7 +13,6 @@ from utils.utils import (  # pylint: disable=wrong-import-order
     get_test_rows,
     setup_custom_logger,
 )
-from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
 
 
 class UtilsTestImproved(UtilsTest):
@@ -86,13 +85,9 @@ class UtilsTestImproved(UtilsTest):
         """test get failing rows for custom test"""
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
-        # create data for the core entity
-        # TODO should insert the necessary results instead
-        logger = setup_custom_logger(
-            "self_tests/output/logs/run_everything.log", logging.INFO
-        )
+        # create data for the test view that has failing rows
         run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
-        run_dot_tests("ScanProject1", logger, run_id)
+        self.prepare_failing_test_view()
 
         # create data for the test view of failing rows
         test_summary, run_id = self.get_test_summary(run_id)

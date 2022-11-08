@@ -1,11 +1,13 @@
+""" Tests for some of the functions in utils.utils """
+from typing import Tuple
+
 import uuid
 import logging
-import pandas as pd
 import pytest
+import pandas as pd
 
 from mock import patch
-from typing import Tuple
-from .base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.utils import (  # pylint: disable=wrong-import-order
@@ -17,17 +19,15 @@ from utils.utils import (  # pylint: disable=wrong-import-order
     setup_custom_logger,
     save_tests_to_db,
 )
-from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
+from utils.connection_utils import (  # pylint: disable=wrong-import-order
+    get_db_params_from_config,
+    DbParamsConnection,
+    DbParamsConfigFile,
+)
 
 
 class UtilsTest(BaseSelfTestClass):
     """Test Class"""
-
-    def setUp(self) -> None:
-        self.create_self_tests_db_schema()
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @staticmethod
     def get_test_summary(run_id: uuid.UUID) -> Tuple[pd.DataFrame, uuid.UUID]:
@@ -50,19 +50,58 @@ class UtilsTest(BaseSelfTestClass):
             "test_status": "fail",
             "test_status_message": "got 2 results, configured to fail if != 0",
             "failed_tests_view": "tr_dot_model__all_flight_data_accepted_values_stops",
-            "failed_tests_view_sql": " WITH all_values AS (\n"
-            "         SELECT dot_model__all_flight_data.stops AS value_field,\n"
-            "            count(*) AS n_records\n"
-            "           FROM self_tests_public_tests.dot_model__all_flight_data\n"
-            "          GROUP BY dot_model__all_flight_data.stops\n        )\n"
-            " SELECT all_values.value_field,\n    all_values.n_records\n"
-            "   FROM all_values\n"
-            "  WHERE all_values.value_field::text <> ALL "
-            "(ARRAY['1'::character varying, '2'::character varying, "
-            "'3'::character varying, 'Non-stop'::character varying]::text[]);",
+            "failed_tests_view_sql": "Definition not needed for the self test",
         }
         test_summary = pd.DataFrame(test_summary_row, index=[0])
         return test_summary, run_id
+
+    @staticmethod
+    def prepare_failing_test_view():
+        dot_model_view = (
+            "-- self_tests_public_tests.dot_model__all_flight_data source\n\n"
+            "CREATE OR REPLACE VIEW self_tests_public_tests.dot_model__all_flight_data\n"
+            "AS SELECT flight_data.uuid,\n"
+            "    flight_data.departure_time,\n"
+            "    flight_data.airline,\n"
+            "    flight_data.origin_airport,\n"
+            "    flight_data.origin_iata,\n"
+            "    flight_data.destination_airport,\n"
+            "    flight_data.destination_iata,\n"
+            "    flight_data.stops,\n"
+            "    flight_data.price\n"
+            "   FROM self_tests_public.flight_data;"
+        )
+
+        failing_test_view = (
+            "-- self_tests_public_tests"
+            ".tr_dot_model__all_flight_data_accepted_values_stops source\n\n"
+            "CREATE OR REPLACE VIEW"
+            " self_tests_public_tests.tr_dot_model__all_flight_data_accepted_values_stops\n"
+            "AS WITH all_values AS (\n"
+            "         SELECT dot_model__all_flight_data.stops AS value_field,\n"
+            "            count(*) AS n_records\n"
+            "           FROM self_tests_public_tests.dot_model__all_flight_data\n"
+            "          GROUP BY dot_model__all_flight_data.stops\n"
+            "        )\n"
+            " SELECT all_values.value_field,\n"
+            "    all_values.n_records\n"
+            "   FROM all_values\n"
+            "  WHERE all_values.value_field::text <> ALL (ARRAY["
+            "'1'::character varying, "
+            "'2'::character varying, "
+            "'3'::character varying, "
+            "'Non-stop'::character varying]::text[]"
+            ");\n"
+        )
+
+        _, _, conn_test = get_db_params_from_config(
+            DbParamsConfigFile["dot_config.yml"],
+            DbParamsConnection["project_test"],
+            "ScanProject1",
+        )
+        cursor = conn_test.cursor()
+        cursor.execute(dot_model_view)
+        cursor.execute(failing_test_view)
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_get_test_id(
@@ -248,15 +287,11 @@ class UtilsTest(BaseSelfTestClass):
         """test for get_test_rows"""
         mock_get_filename_safely.side_effect = self.mock_get_filename_safely
 
-        # create data for the core entity
-        # TODO should insert the necessary results instead
-        logger = setup_custom_logger(
-            "self_tests/output/logs/run_everything.log", logging.INFO
-        )
+        # create data for the test view that has failing rows
         run_id = uuid.UUID("4541476c-814e-43fe-ab38-786f36beecbc")
-        run_dot_tests("ScanProject1", logger, run_id)
+        self.prepare_failing_test_view()
 
-        # create data for the test view of failing rows
+        # function under test is `get_test_rows`
         test_summary, run_id = self.get_test_summary(run_id)
         test_rows = get_test_rows(
             test_summary,

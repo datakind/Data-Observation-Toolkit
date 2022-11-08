@@ -1,7 +1,7 @@
 import logging
 import os
 from mock import patch
-from .base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.dbt import create_core_entities  # pylint: disable=wrong-import-order
@@ -9,12 +9,6 @@ from utils.dbt import create_core_entities  # pylint: disable=wrong-import-order
 
 class CoreEntitiesCreationTest(BaseSelfTestClass):
     """Test Class"""
-
-    def setUp(self) -> None:
-        self.create_self_tests_db_schema()
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_yaml_creation(

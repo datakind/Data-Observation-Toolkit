@@ -5,7 +5,7 @@ import logging
 import pandas as pd
 from mock import patch
 
-from .base_self_test_class import BaseSelfTestClass
+from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 # UT after base_self_test_class imports
 from utils.dbt import (  # pylint: disable=wrong-import-order
@@ -21,9 +21,6 @@ class DbtUtilsTest(BaseSelfTestClass):
     def setUp(self) -> None:
         with open("self_tests/data/queries/dbt_core_generated_objects.sql", "r") as f:
             self.create_self_tests_db_schema(f.read())
-
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_extract_df_from_dbt_test_results_json(

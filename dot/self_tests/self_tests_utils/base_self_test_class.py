@@ -60,8 +60,15 @@ class BaseSelfTestClass(unittest.TestCase):
             return path
         if path == DBT_PROJECT_FINAL_FILENAME:
             return DBT_PROJECT_FINAL_FILENAME
-            # return "./config/example/project_name/dbt/dbt_project.yml"
         raise FileNotFoundError(f"file path {path} needs to be mocked")
+
+    def setUp(self) -> None:
+        """creates DB schema for the demo dataset by default"""
+        self.create_self_tests_db_schema()
+
+    def tearDown(self) -> None:
+        """drops the DB schema for the demo dataset by default"""
+        self.drop_self_tests_db_schema()
 
     @patch("utils.configuration_utils._get_filename_safely")
     def get_self_tests_db_conn(

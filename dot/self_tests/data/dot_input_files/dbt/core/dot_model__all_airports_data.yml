@@ -1,0 +1,8 @@
+version: 2
+models:
+-   name: dot_model__all_airports_data
+    columns:
+    -   name: airport
+        description: Airport not unique
+        tests:
+        - unique

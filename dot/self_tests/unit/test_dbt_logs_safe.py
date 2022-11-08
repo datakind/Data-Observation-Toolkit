@@ -1,13 +1,8 @@
 """ tests for utils/dbt.py """
 
 import ast
-import uuid
-import logging
 
-from mock import patch
-from .base_self_test_class import BaseSelfTestClass
-
-from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
+from ..self_tests_utils.dbt_base_safe_test_class import DbtBaseSelfTestClass
 
 # functions under test
 from utils.dbt_logs import (  # pylint: disable=wrong-import-order
@@ -15,29 +10,22 @@ from utils.dbt_logs import (  # pylint: disable=wrong-import-order
     read_dbt_logs,
     process_dbt_logs_row,
 )
-from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
 
 
-class DbtLogsUtilsTest(BaseSelfTestClass):
-    """Test Class for dbt log processing"""
+class DbtLogsUtilsTest(DbtBaseSelfTestClass):
+    """Test Class for dbt log processing
 
-    @patch("utils.configuration_utils._get_filename_safely")
-    def setUp(
-        self, mock_get_filename_safely
-    ) -> None:  # pylint: disable=no-value-for-parameter
-        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
+    safe test -meaning it will detect if a change of version in DBT
+    changes the output logs in a way that will make DOT fail
 
-        self.create_self_tests_db_schema()
+    (i.e. because DOT relies on DBT logs, and that's not really safe)
+    """
 
-        # TODO should insert the results into the db instead
-        logger = setup_custom_logger(
-            "self_tests/output/logs/run_everything.log", logging.INFO
-        )
-        run_id = uuid.uuid4()
-        run_dot_tests("ScanProject1", logger, run_id)
+    def setUp(self) -> None:  # pylint: disable=arguments-differ
+        super().setUp()  # pylint: disable=no-value-for-parameter
 
-    def tearDown(self) -> None:
-        self.drop_self_tests_db_schema()
+        # i.e. DBT is run for each of the tests on this class
+        self.run_dbt_steps()
 
     @staticmethod
     def _cleanup_schema_name(value):
