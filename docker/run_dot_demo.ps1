@@ -4,10 +4,10 @@ if (test-path './db') {
     remove-item './db' -Recurse
   }
 if (test-path './appsmith') {
-remove-item './appsmith' -Recurse
+    remove-item './appsmith' -Recurse
 }
 if (test-path '*.tar*') {
-remove-item '*.tar*' 
+    remove-item '*.tar*' 
 }
 
 
