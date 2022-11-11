@@ -4,7 +4,7 @@
 #!/bin/bash
 
 # First clean up any previous demos
-cd demo && rm -rf ./db || true && rm -rf ./appsmith && rm *.tar* && cd ..
+cd demo && sudo rm -rf ./db || true && sudo rm -rf ./appsmith && sudo rm *.tar* && cd ..
 
 # Install gdown
 pip install gdown > /dev/null
