@@ -66,6 +66,10 @@ def _get_credentials(
         DbParamsConnection["project_core"],
     ]:
         key = project_id
+    if (db_config is None) or (f"{key}_db" not in db_config.keys()):
+        raise Exception(
+            f"review malformed config at dot_config.yml; content of file as follows '{db_config}'"
+        )
     creds = db_config[f"{key}_db"]
 
     if connection_params in [
@@ -105,6 +109,14 @@ def load_credentials(project_id: str, connection_params: DbParamsConnection) -> 
 
 
 def load_config_file():
+    """
+    Reads config file safely
+
+    Returns
+    -------
+    config: str
+        content of config file
+    """
     with open(_get_filename_safely(dot_config_FILENAME)) as f:
         return yaml.load(f, Loader=yaml.FullLoader)
 
@@ -297,7 +309,9 @@ def adapt_core_entities(schema_project: str, entity_definition: str) -> Iterable
     output_lines = []
     for line in entity_definition.split("\n"):
         line = re.sub(
-            "%\s*set\s*schema\s*=\s*(.+%)", f"% set schema = '{schema_project}' %", line
+            "%\s*set\s*schema\s*=\s*(.+%)",  # pylint: disable=anomalous-backslash-in-string
+            f"% set schema = '{schema_project}' %",
+            line,
         )
         output_lines.append(line + "\n")
     return output_lines
