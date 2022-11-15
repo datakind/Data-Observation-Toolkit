@@ -1,21 +1,17 @@
-'''This script will run the demo regardless of the users OS.Therefore,only this one file has to be maintained
+"""This script will run the demo regardless of the users OS.Therefore,only this one file has to be maintained
 
 Steps the script will have to do:
-1)Download zipped tarfile from google drive (Hint:this should be done directly through python)
+1)Download zipped tarfile from Google Drive (Hint:this should be done directly through python)
 2)Unzip and untar it
 3)Compose and run docker Containers
 4)Access DOT-demo under http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True
-'''
+"""
 
 import os
 import shutil
 import gdown
 import tarfile
-import time  # imported only to wait until server is up...
 from python_on_whales import DockerClient  # had to be pip installed
-
-# Set environment variable for later use
-os.environ['POSTGRES_PASSWORD'] = 'password125'
 
 # Check if db, appsmith and tar file are there and if so, delete them.
 os.chdir("demo/")
@@ -39,11 +35,9 @@ my_tar.extractall('')  # specify which folder to extract to
 my_tar.close()
 
 # Composing and running container(s)
-print("Starting DOT ...")
+print("Starting DOT...")
 os.chdir("../")
 docker = DockerClient(compose_files=[os.getcwd() + os.sep + "docker-compose-demo.yml"])
 docker.compose.down()
 docker.compose.build(quiet=True)
-time.sleep(20)
-docker.compose.up(quiet=True)
-
+docker.compose.up(quiet=False, )
