@@ -11,13 +11,13 @@ import shutil
 import time
 import tarfile
 import webbrowser
-import base64
+import pybase64
 import gdown
 from python_on_whales import DockerClient
 
 url_demo_data = "https://drive.google.com/uc?id=157Iad8mHnwbZ_dAeLQy5XfLihhcpD6yc"
 filename_demo_data = "dot_demo_data.tar.gz"
-password = str(base64.b64decode(b'cGFzc3dvcmQxMjU='), "UTF-8")
+password = str(pybase64.b64decode(b'cGFzc3dvcmQxMjU='), "UTF-8")
 url_dot_ui = "http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True"
 
 # Set environment variable for later use
