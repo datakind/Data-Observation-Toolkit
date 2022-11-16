@@ -1,10 +1,4 @@
-"""This script will run the demo regardless of the users OS.Therefore,only this one file has to be maintained
-Steps the script will have to do:
-1)Download zipped tarfile from Google Drive (Hint:this should be done directly through python)
-2)Unzip and untar it
-3)Compose and run docker Containers
-4)Access DOT-demo under http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True
-"""
+"""This script will run the DOT demo"""
 
 import os
 import shutil
@@ -36,9 +30,9 @@ if os.path.exists("dot_demo_data.tar"):
 gdown.download(url_demo_data, filename_demo_data, quiet=False)
 
 # Open/Extract tarfile
-my_tar = tarfile.open(filename_demo_data)
-my_tar.extractall('')
-my_tar.close()
+with tarfile.open(filename_demo_data) as my_tar:
+    my_tar.extractall('')
+    my_tar.close()
 
 # Composing and running container(s)
 print("Starting DOT...")
