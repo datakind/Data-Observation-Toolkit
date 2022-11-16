@@ -40,14 +40,16 @@ The fastest way to get started using DOT is to use the Docker environment and de
 
 ## Running the DOT demo environment
 
-1. Get a copy of DOT by either [cloning](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
+1. Install Python 3.10.6, as well as the following packages on your machine: gdown (4.5.3), base64 (8.32), python-on-whales (0.53.0)
+
+    **Note:** Alternatively, you can create a virtual environment, using the [environment.yml](./environment.yml) file
+2. Get a copy of DOT by either [cloning](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
    [this repository](https://github.com/datakind/Data-Observation-Toolkit), or by clicking the green 'Code' button then 
    downloading and unzipping the repository zip file
-2. Start Docker
-3. Open a Terminal and `cd` into the `docker` sub-folder of where you installed DOT
-4. Then run this command if on Mac or Linux, `./run_dot_demo.sh`. If on Windows run `run_dot_demo.ps1`
-6. Finally, open the DOT user interface by opening [this url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True), 
-   in a web browser
+3. Start Docker
+4. Run the python script [run_demo.py](./docker/run_demo.py)
+5. After the webserver has started, the DOT ui opens in your browser. 
+6. To stop the container, press any key in your IDE/ Terminal
 
 See below for quick demo of DOT. 
 
