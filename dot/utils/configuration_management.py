@@ -406,7 +406,6 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
     for entity_id in dbt_non_schema_tests["entity_id"].unique():
         df = dbt_non_schema_tests.loc[dot_tests["entity_id"] == entity_id]
         for index, row in df.iterrows():
-            test_type = row["test_type"]
             custom_sql = row["test_parameters"]["query"]
             entity_name = get_entity_name_from_id(project_id, entity_id)
             output_file = tests_dir + "/" + entity_name + "_id" + str(index) + ".sql"

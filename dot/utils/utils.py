@@ -244,8 +244,10 @@ def get_configured_tests_row(
     # temporary.
     test_params_clause = ""
     if test_parameters != "":
-        test_params_clause = f""" AND regexp_replace(LOWER(CAST(test_parameters AS VARCHAR)), '\W+', '', 'g') =
-                             '{prefix}{test_parameters.lower()}';"""
+        test_params_clause = (
+            f" AND regexp_replace(LOWER(CAST(test_parameters AS VARCHAR)), '\W+', '', 'g') = "
+            f"'{prefix}{test_parameters.lower()}';"
+        )
 
     # Generate a query that will match our test details and return test_id
     query = f"""
@@ -583,6 +585,11 @@ def get_test_rows(
 
         # Special handling for SQL, we'll use mandatory field 'primary_table_id_field' from query
         if test_type == "custom_sql":
+            if "primary_table_id_field" not in test_results_df_cols:
+                raise Exception(
+                    f"custom test misses a column called `primary_table_id_field`; "
+                    f"current columns: {test_results_df_cols}"
+                )
             unique_column_name = str(test_results_df["primary_table_id_field"].iloc[0])
             failing_ids = test_results_df[unique_column_name].tolist()
 
@@ -785,7 +792,6 @@ def set_summary_stats(
     for _, row in tests_summary.iterrows():
         failed_tests_view = row["failed_tests_view"]
         entity_or_primary_table = get_entity_name_from_id(project_id, row["entity_id"])
-        test_type = row["test_type"]
         test_status = row["test_status"]
 
         # Get entity row count
