@@ -5,7 +5,6 @@ import shutil
 import time
 import tarfile
 import webbrowser
-import pybase64
 import gdown
 from python_on_whales import DockerClient
 

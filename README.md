@@ -46,7 +46,6 @@ You will need Python and some modules installed to run the DOT quick-start demo:
 2. Install the necessary python packages by running the following commands in your terminal ([Additional information Mac/Linux terminal](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac#:~:text=On%20your%20Mac%2C%20do%20one,%2C%20then%20double%2Dclick%20Terminal.), [additional information Windows terminal](https://learn.microsoft.com/en-us/windows/terminal/)):
 
    - `pip install gdown`
-   - `pip install pybase64`
    - `pip install python-on-whales`
 
 Alternatively, you can use the provided [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html) installed.
