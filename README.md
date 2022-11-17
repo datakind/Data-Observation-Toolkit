@@ -56,7 +56,7 @@ The fastest way to get started using DOT is to use the Docker environment and de
       `cd C:\Data-Observation-Toolkit\docker` 
     - Example Mac/Linux: If you have installed DOT under your home directory, your command would look like this:
       `cd home/Data-Observation-Toolkit/docker/`
-5. Run `python3 run_demo.py` to start the python script that creates the containers and ultimately starts the webserver
+5. When on Mac/ Linux, run `python3 run_demo.py` or when on Windows, run `python3 .\run_demo.py` to start the python script that creates the containers and ultimately starts the webserver
 5. After the webserver has started, the DOT UI opens in your browser. In case this step fails, you can access the DOT UI under this [url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True)
 6. Once you are done with the demo, press any key in your Terminal, to stop the docker containers
 
