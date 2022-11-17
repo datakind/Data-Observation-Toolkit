@@ -40,16 +40,25 @@ The fastest way to get started using DOT is to use the Docker environment and de
 
 ## Running the DOT demo environment
 
-1. Install Python 3.10.6, as well as the following packages on your machine: gdown (4.5.3), base64 (8.32), python-on-whales (0.53.0)
+1. Install Python 3 by following these [installation instructions](https://realpython.com/installing-python/)
+2. Install the necessary python packages gdown (4.5.3), base64 (8.32), python-on-whales (0.53.0) by running the following commands in your terminal ([Additional information Mac/Linux terminal](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac#:~:text=On%20your%20Mac%2C%20do%20one,%2C%20then%20double%2Dclick%20Terminal.), [additional information Windows terminal](https://learn.microsoft.com/en-us/windows/terminal/)):
+   - pip install gdown
+   - pip install pybase64
+   - pip install python-on-whales
 
-    **Note:** Alternatively, you can create a virtual environment, using the [environment.yml](./environment.yml) file
-2. Get a copy of DOT by either [cloning](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
-   [this repository](https://github.com/datakind/Data-Observation-Toolkit), or by clicking the green 'Code' button then 
+   **Note:** Alternatively, you can create a virtual environment, using the [environment.yml](./environment.yml) file
+2. Get a copy of DOT from GitHub by either [cloning](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) 
+   this [repository](https://github.com/datakind/Data-Observation-Toolkit), or by clicking the green 'Code' button then 
    downloading and unzipping the repository zip file
 3. Start Docker
-4. Run the python script [run_demo.py](./docker/run_demo.py)
-5. After the webserver has started, the DOT ui opens in your browser. 
-6. To stop the container, press any key in your IDE/ Terminal
+4. Open a Terminal and cd into the `docker` sub-folder of where you installed DOT
+    - Example Windows: If you have installed DOT under you C: drive, your command would look like this:
+      `cd C:\Data-Observation-Toolkit\docker` 
+    - Example Mac/Linux: If you have installed DOT under your home directory, your command would look like this:
+      `cd home/Data-Observation-Toolkit/docker/`
+5. Run `python3 run_demo.py` to start the python script that creates the containers and ultimately starts the webserver
+5. After the webserver has started, the DOT UI opens in your browser. In case this step fails, you can access the DOT UI under this [url](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True)
+6. Once you are done with the demo, press any key in your Terminal, to stop the docker containers
 
 See below for quick demo of DOT. 
 
@@ -115,7 +124,7 @@ Then running the psql client locally in that container:
 `psql -U postgres -d dot_db`
 
 
-Or if you prefer a database client (like [DBeaver](https://dbeaver.io)), you can use there settings:
+Or if you prefer a database client (like [DBeaver](https://dbeaver.io)), you can use their settings:
 ```
 host=localhost
 port=5433 
