@@ -30,7 +30,7 @@ Write-Output "Waiting for DOT to start, time to make a nice cup of tea! ☕ 😃
 
 $Dotupcheck= $false
 While ($Dotupcheck= $false){
-$Dotdemostatus=docker ps --filter "ancestor=datakindorg/dot_appsmith"
+$Dotdemostatus=docker ps --filter "ancestor=datakind/dot_appsmith"
 if ($Dotdemostatus[1] -contains "healthy") { 
     $Dotupcheck= $true
   }
