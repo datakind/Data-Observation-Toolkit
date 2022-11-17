@@ -70,9 +70,12 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9
 format('{%s: %s}',
     to_json('query'::text),
     to_json($query$
-        select distinct uuid
+        select
+            distinct uuid,
+            'dot_model__all_flight_data' as primary_table,
+            'uuid' as primary_table_id_field
           from {{ ref('dot_model__all_flight_data') }}
-         where CAST(REGEXP_REPLACE(COALESCE(stops,'0'), '[^0-9]+', '0', 'g') as INTEGER) > 5;
+         where CAST(REGEXP_REPLACE(COALESCE(stops,'0'), '[^0-9]+', '0', 'g') as INTEGER) > 5
     $query$::text)
 )::json,
 '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
