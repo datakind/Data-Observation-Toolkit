@@ -52,6 +52,6 @@ webbrowser.open(url_dot_ui)
 
 print("In case DOT was not opened in your browser, please go to this URL: "
       "http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True\n")
-input("Press any key to stop DOT container\n")
+input("Press return to stop DOT container\n")
 print("Container is being stopped - we hope you enjoyed this demo :)")
 docker.compose.stop()
