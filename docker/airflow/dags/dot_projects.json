@@ -2,134 +2,18 @@
     "target_connid": "dot_db",
     "dot_projects":[
         {
-            "project_id":"Muso",
-            "source_connid": "musoapp",
+            "project_id":"ScanProject1",
+            "source_connid": "dot_data",
             "earliest_date_to_sync":"2021-10-02",
             "objects":[
                 {
-                    "object":"ancview_danger_sign",
-                    "id_field":"uuid",
-                    "date_field":"reported"
+                    "object":"airport_data",
+                    "id_field":"uuid"
                 },
                 {
-                    "object":"ancview_delivery",
+                    "object":"flight_data",
                     "id_field":"uuid",
-                    "date_field":"reported",
-                    "columns_to_exclude": [
-                        "delivery_date"
-                    ]
-                },
-                {
-                    "object":"ancview_pregnancy",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"ancview_pregnancy_visit",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"fpview_follow_up",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"fpview_registration",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"hhview_visits",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"iccmview_assessment",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"iccmview_assessment_follow_up",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"mnview_follow_up",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"mnview_registration",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"pncview_visits",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"contactview_metadata",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"useview_assessment",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"formview_assessment",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                }
-            ]
-        },
-        {
-            "project_id":"Brac",
-            "source_connid": "brac-ug",
-            "earliest_date_to_sync":"2022-01-01",
-            "objects":[
-                {
-                    "object":"ancview_danger_sign",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"ancview_delivery",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"ancview_pregnancy",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"ancview_pregnancy_visit",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"hhview_visits",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"iccmview_assessment",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"iccmview_assessment_follow_up",
-                    "id_field":"uuid",
-                    "date_field":"reported"
-                },
-                {
-                    "object":"pncview_visits",
-                    "id_field":"uuid",
-                    "date_field":"reported"
+                    "date_field":"departure_time"
                 }
             ]
         }

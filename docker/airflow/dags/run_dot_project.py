@@ -36,7 +36,7 @@ def get_object(
     earliest_date_to_sync: String
         Only sync data after this date
     date_field: String
-        Date field on each record for this object
+        Date field on each record for this object. Set None if one wasn't provided for DB object
     source_conn_in: String
        Airflow connection ID where data lives.
        Note, the connection name must exactly equal the db name.
@@ -51,12 +51,13 @@ def get_object(
         + connection.schema
         + "."
         + object_name_in
-        + " WHERE "
+    )
+    if date_field != None:
+        sql_stmt += (" WHERE "
         + date_field
         + " >= '"
         + earliest_date_to_sync
-        + "'"
-    )
+        + "'")
     print(sql_stmt)
     pg_hook = PostgresHook(postgres_conn_id=source_conn_in, schema=source_conn_in)
     pg_conn = pg_hook.get_conn()
@@ -379,7 +380,10 @@ with DAG(
         for i in range(len(objects_to_sync)):
 
             object_name = objects_to_sync[i]["object"]
-            date_field = objects_to_sync[i]["date_field"]
+            if "date_field" in objects_to_sync[i] and objects_to_sync[i]["date_field"] != "":
+                date_field = objects_to_sync[i]["date_field"]
+            else:
+                date_field = None
             id_field = objects_to_sync[i]["id_field"]
             columns_to_exclude = (
                 objects_to_sync[i]["columns_to_exclude"]

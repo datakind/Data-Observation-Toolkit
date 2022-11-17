@@ -264,7 +264,7 @@ Where the function parameters are:
 - Test results schema name
 
 This returns a json record for the data that was tested. **Note:** If using the airflow environment, change `public_tests`
-to the schema where the data is, for example `data_musoapp`.
+to the schema where the data is, for example `data_flights_db`.
 
 # Configuring DOT
 
@@ -333,7 +333,7 @@ Here are the columns included in a test:
 | Column | Description |
 | :----------- | :----------- |
 test_activated | Whether the test is activated or not
-project_id | ID of the project, for example "`Muso`"
+project_id | ID of the project, for example "`ScanProject1`"
 test_id | UUID of the test
 scenario_id | ID of the scenario
 priority | Priority level
@@ -367,7 +367,7 @@ generated one.
 1. `relationship`
     <br><br>
     ```
-    'INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', 
+    'INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', 
     '', 'dot_model__ancview_pregnancy', 'relationships', 'uuid', '', 
     $${"name": "danger_signs_with_no_pregnancy", "to": "ref('dot_model__ancview_danger_sign')", "field": "pregnancy_uuid"}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
@@ -375,27 +375,27 @@ generated one.
 2. `unique`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '52d7352e-56ee-3084-9c67-e5ab24afc3a3', 'DUPLICATE-1', 3, '', 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '52d7352e-56ee-3084-9c67-e5ab24afc3a3', 'DUPLICATE-1', 3, '', 
     '', '', '6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'unique', 'uuid', 'alternative index?', '', 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 3. `not_negative_string_column`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 3, 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 3, 
     '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 
     $${"name": "patient_age_in_years"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 4. `not_null`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, '', 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, '', 
     '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 5. `accepted_values`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, 
     '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 
     $${"values": ['oral mini-pill (progestogen)', 'male condom', 'female sterilization', 'iud', 'oral combination pill', 'implants', 'injectible']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
@@ -403,14 +403,14 @@ generated one.
 6. `possible_duplicate_forms`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
     '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 
     $${"table_specific_reported_date": "delivery_date", "table_specific_patient_uuid": "patient_id", "table_specific_uuid": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 7. `associated_columns_not_null`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, '', 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, '', 
     '', '', 'dot_model__iccmview_assessment', 'associated_columns_not_null', 'diarrhea_dx', 'diarrhea diagnosis', 
     $${"name": "diarrhea_dx_has_duration", "col_value": True, "associated_columns": ['max_symptom_duration']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
@@ -418,7 +418,7 @@ generated one.
 8. `expect_similar_means_across_reporters`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 3, 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 3, 
     'Test for miscalibrated thermometer', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 
     'child_temperature_pre_chw', '', '{"key": "reported_by","quantity": "child_temperature_pre_chw",
     "form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', 
@@ -427,7 +427,7 @@ generated one.
 9. `expression_is_true`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 3, 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 3, 
     'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 
     'expression_is_true', '', '', 
     $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$, 
@@ -437,7 +437,7 @@ generated one.
 <br><br>
 Custom SQL queries require special case because they must have `primary_table` and `primary_table_id_field` specified within the SQL query as shown below:
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'Muso', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '',
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '',
 format('{%s: %s}',
     to_json('query'::text),
     to_json($query$
@@ -649,21 +649,26 @@ be to copy data from the source production db into the DOT DB data_<project> sch
 ### Configuring/Building Airflow Docker environment
 
 1. `cd ./docker`
-2. `echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_UID=50000" > .env`
-3. `export POSTGRES_PASSWORD=<**Some password you will use to access DOT DB**>`
-4. `docker compose -f docker-compose-with-airflow.yml build`
-5. `docker compose -f docker-compose-with-airflow.yml up airflow-init`
-6. `docker compose -f docker-compose-with-airflow.yml up -d`
-7. `docker exec -it docker-airflow-worker-1 /bin/bash`
-8. `cd /app/dot && ./install_dot.sh` 
-9. Load a source data dump (see 'Getting started' above, steps 3/4)
+2`export POSTGRES_PASSWORD=<**Some password you will use to access DOT DB**>`
+3`docker compose -f docker-compose-with-airflow.yml build`
+4`docker compose -f docker-compose-with-airflow.yml up airflow-init`
+5`docker compose -f docker-compose-with-airflow.yml up -d`
+6`docker exec -it docker-airflow-worker-1 /bin/bash`
+7`cd /app/dot && ./install_dot.sh` 
 
 **Note:** If using Docker on AWS, you might need to use `docker-compose` instead of `docker compose`.
 
 Now, to set up DB connection for the DOT  ...
 
-9. Connect to the DOT DB as mentioned above in section 'Testing your database connection'
-10. Go to: [http://localhost:8083/](http://localhost:8083/) and log in with airflow/airflow
+8. To test: Connect to the DOT DB as mentioned above in section 'Testing your database connection' 
+9. Go to: [http://localhost:8083/](http://localhost:8083/) and log in with airflow/airflow
+10. Next, create a copy of the DOT DB to be used as the source database. Open a SQL session and run ...
+
+`SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity 
+WHERE pg_stat_activity.datname = 'dot_db' AND pid <> pg_backend_pid();`
+
+`CREATE DATABASE dot_data WITH TEMPLATE dot_db OWNER postgres;`
+
 11. In top menu select **Admin** > **Connections**, click **+**
 12. Enter the Docker DOT DB details as follows:
 
@@ -675,12 +680,12 @@ Now, to set up DB connection for the DOT  ...
 - Password: *Whatever you used when building the DOT docker environment*
 - Port: 5432
 
-14. Set up new connection in Airflow as follows:
+13. Set up new connection in Airflow as follows:
 
-- Conn Id: data_muso
+- Conn Id: dot_data
 - Conn Type: Postgres
 - Host: dot_db
-- Schema: data_muso
+- Schema: public
 - Login: postgres
 - Password: *Whatever you used when building the DOT docker environment*
 - Port: 5432
@@ -703,7 +708,7 @@ NOTE: You might need to use docker-compose on some hosts.
 
 ### Running the DOT in Airflow
 
-A DAG has been included which copies data from the uploaded DB dump into the DOT DB 'data_muso' schema, and then runs 
+A DAG has been included which copies data from the uploaded DB dump into the DOT DB 'data_ScanProject1' schema, and then runs 
 the toolkit against this data. To do this ...
 
 1. Go to [http://localhost:8083](http://localhost:8083/home)
@@ -722,7 +727,7 @@ To see progress, and/or logs ...
 To use Airflow CLI for debugging a task (assuming you are getting object ancview_danger_sign):
  
  1. `docker exec -it docker-airflow-worker-1 /bin/bash`
- 2. `airflow tasks test run_dot_project sync_object_ancview_danger_sign  2022-03-01`
+ 2. `airflow tasks test run_dot_project sync_object_flight_data  2022-03-01`
 
 Or to run just DOT stage ...
 
