@@ -47,6 +47,7 @@ You will need Python and some modules installed to run the DOT quick-start demo:
 
    - `pip install gdown`
    - `pip install python-on-whales`
+   - `pip install requests`
 
 Alternatively, you can use the provided [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html) installed.
     
