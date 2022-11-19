@@ -6,7 +6,7 @@ import uuid
 import json
 import time
 from subprocess import Popen, PIPE, STDOUT
-from typing import Tuple
+from typing import Tuple, Iterable
 from itertools import chain
 import psycopg2 as pg
 
@@ -537,7 +537,8 @@ def get_test_rows(
             if test_type == "unique":
                 failing_ids = entity_df.loc[
                     entity_df[column_name].isin(test_results_df["unique_field"]),
-                    # TODO Add 'primary_table_id_field' as a column in entity defintion and use that here
+                    # TODO Add 'primary_table_id_field' as a column in entity
+                    #  definition and use that here
                     column_name,
                 ].tolist()
                 unique_column_name = column_name
@@ -562,7 +563,7 @@ def get_test_rows(
                             if c2 in entity_df.columns:
                                 unique_column_name = c2
                                 break
-                    failing_ids = test_results_df["uuid_list"][0]
+                    failing_ids = format_uuid_list(test_results_df["uuid_list"][0])
                     break
                 # Map disallowed values back onto entity rows
                 if test_type == "accepted_values":
@@ -756,6 +757,12 @@ def generate_dbt_test_coverage_report(project_id: str, logger: logging.Logger):
         logger.info(f.read())
 
 
+def format_uuid_list(
+    uuid_list: str,
+) -> Iterable:
+    return re.sub("{|}", "", uuid_list).split(",")
+
+
 def set_summary_stats(
     tests_summary: pd.DataFrame, project_id: str, logger: logging.Logger
 ):
@@ -812,7 +819,7 @@ def set_summary_stats(
             )
             # Some test views have one row, where they provide a list of failing uuids
             if "uuid_list" in df.columns.values and df.shape[0] == 1:
-                c = len(list(df.iloc[0, 0]))
+                c = len(format_uuid_list(df.iloc[0]["uuid_list"]))
             else:
                 c = df.shape[0]
         else:
