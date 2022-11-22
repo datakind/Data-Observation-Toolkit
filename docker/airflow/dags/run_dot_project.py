@@ -1,5 +1,6 @@
 """
-This is a DAG for running the DOT. It will:
+This is a DAG for running the DOT!
+It will:
 
     1. Loop through a list of Postgres objects (tables/views) in the data source
        database and copy them to the DOT database
@@ -19,11 +20,11 @@ from sqlalchemy import create_engine
 
 
 def get_object(
-    object_name_in,
-    earliest_date_to_sync,
-    date_field,
-    source_conn_in,
-    columns_to_exclude,
+        object_name_in,
+        earliest_date_to_sync,
+        date_field,
+        source_conn_in,
+        columns_to_exclude,
 ):
     """
 
@@ -47,17 +48,17 @@ def get_object(
     connection = BaseHook.get_connection(source_conn_in)
 
     sql_stmt = (
-        "SELECT * FROM "
-        + connection.schema
-        + "."
-        + object_name_in
+            "SELECT * FROM "
+            + connection.schema
+            + "."
+            + object_name_in
     )
     if date_field != None:
         sql_stmt += (" WHERE "
-        + date_field
-        + " >= '"
-        + earliest_date_to_sync
-        + "'")
+                     + date_field
+                     + " >= '"
+                     + earliest_date_to_sync
+                     + "'")
     print(sql_stmt)
     pg_hook = PostgresHook(postgres_conn_id=source_conn_in, schema=source_conn_in)
     pg_conn = pg_hook.get_conn()
@@ -66,13 +67,13 @@ def get_object(
     data = cursor.fetchall()
 
     sql_stmt = (
-        "SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"
-        + object_name_in
-        + "'"
-        + "AND table_schema = '"
-        + connection.schema
-        + "' "
-        + " ORDER BY ordinal_position "
+            "SELECT column_name, data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"
+            + object_name_in
+            + "'"
+            + "AND table_schema = '"
+            + connection.schema
+            + "' "
+            + " ORDER BY ordinal_position "
     )
     print(sql_stmt)
     pg_hook = PostgresHook(postgres_conn_id=source_conn_in, schema=source_conn_in)
@@ -135,7 +136,7 @@ def get_object(
 
 
 def save_object(
-    object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
+        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
 ):
     """
 
@@ -163,16 +164,16 @@ def save_object(
 
     connection = BaseHook.get_connection(target_conn_in)
     connection_string = (
-        "postgresql://"
-        + str(connection.login)
-        + ":"
-        + str(connection.password)
-        + "@"
-        + str(connection.host)
-        + ":"
-        + str(connection.port)
-        + "/"
-        + target_conn_in
+            "postgresql://"
+            + str(connection.login)
+            + ":"
+            + str(connection.password)
+            + "@"
+            + str(connection.host)
+            + ":"
+            + str(connection.port)
+            + "/"
+            + target_conn_in
     )
 
     engine = create_engine(
@@ -189,7 +190,7 @@ def save_object(
     # This will also drop any DOT model views onto this data
     if MODE == "replace":
         with PostgresHook(
-            postgres_conn_id=target_conn_in, schema=target_conn_in
+                postgres_conn_id=target_conn_in, schema=target_conn_in
         ).get_conn() as conn:
             cur = conn.cursor()
             query = f"DROP TABLE IF EXISTS {schema}.{object_name_in} CASCADE;"
@@ -201,7 +202,7 @@ def save_object(
 
     # Test to see if schema exists, if not, create
     with PostgresHook(
-        postgres_conn_id=target_conn_in, schema=target_conn_in
+            postgres_conn_id=target_conn_in, schema=target_conn_in
     ).get_conn() as conn:
         cur = conn.cursor()
         query = f"CREATE SCHEMA IF NOT EXISTS {schema};"
@@ -219,7 +220,7 @@ def save_object(
         using = f"USING {col}::{type}"
         query = f"ALTER TABLE {schema}.{object_name_in} ALTER COLUMN {col} TYPE {type} {using};"
         with PostgresHook(
-            postgres_conn_id=target_conn_in, schema=target_conn_in
+                postgres_conn_id=target_conn_in, schema=target_conn_in
         ).get_conn() as conn:
             cur = conn.cursor()
             print(query)
@@ -227,12 +228,12 @@ def save_object(
 
 
 def sync_object(
-    object_name_in,
-    earliest_date_to_sync,
-    date_field,
-    source_conn_in,
-    target_conn_in,
-    columns_to_exclude,
+        object_name_in,
+        earliest_date_to_sync,
+        date_field,
+        source_conn_in,
+        target_conn_in,
+        columns_to_exclude,
 ):
     """
 
@@ -268,36 +269,39 @@ def sync_object(
         object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
     )
 
-
-def drop_dot_tests_schema(target_conn_in, schema_to_drop):
+def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
     """
-
     We are syncing new data where new columns and columns types might change.
-    Postgres will prevent ALTER TABLE if any views exist, so we will drop the dot test schema
-    which contains these. These will be recreated in the dot run.
-    This assumes the dot tests schema is <data schema>_tests.
+    Postgres will prevent ALTER TABLE if any views exist, so we will drop all tables in the dot test schema.
+    These will be recreated in the dot run.
+    This assumes the dot tests schema is dot_data_tests (defined as variable "schema_to_drop_from").
 
     Input
     -----
     target_conn_in: Target database
-    schema_to_drop: Schema to, err, drop
+    schema_to_drop_from: Schema to, err, drop
 
     Action
     ------
-
-    dot tests schema is dropped from the database.
-
+    1) Select schema that holds the tables which will be dropped
+    2) All tables of the selected schema are dropped from the dot_db database.
     """
 
-    # Test to see if schema exists, if not, create
     with PostgresHook(
-        postgres_conn_id=target_conn_in, schema=target_conn_in
+            postgres_conn_id=target_conn_in, schema=target_conn_in
     ).get_conn() as conn:
         cur = conn.cursor()
-        query = f"DROP SCHEMA IF EXISTS {schema_to_drop} CASCADE;"
-        print(query)
-        cur.execute(query)
-
+        query1 = f"SET search_path TO {schema_to_drop_from}"
+        query2 = f"DO $$ DECLARE " \
+                 f"r RECORD; " \
+                 f"BEGIN " \
+                 f"FOR r IN (SELECT table_name FROM information_schema.tables WHERE table_schema = current_schema()) " \
+                 f"LOOP	" \
+                 f"EXECUTE 'DROP TABLE IF EXISTS ' || QUOTE_IDENT(r.table_name) || ' CASCADE'; " \
+                 f"END LOOP; " \
+                 f"END $$; "
+        cur.execute(query1)
+        cur.execute(query2)
 
 def run_dot_app(project_id_in):
     """
@@ -331,12 +335,11 @@ def default_config():
 
 
 with DAG(
-    dag_id="run_dot_project",
-    schedule_interval="@weekly",
-    start_date=datetime(year=2022, month=3, day=1),
-    catchup=False,
+        dag_id="run_dot_project",
+        schedule_interval="@weekly",
+        start_date=datetime(year=2022, month=3, day=1),
+        catchup=False,
 ) as dag:
-
     config = json.loads(Variable.get("dot_config", default_var=default_config().read()))
 
     """
@@ -362,15 +365,16 @@ with DAG(
         earliest_date_to_sync = project["earliest_date_to_sync"]
         source_conn = project["source_connid"]
 
-        # Drop the DOT tests schema so we can import new data, columns and types
-        schema_to_drop = "data_" + source_conn.replace("-", "_") + "_tests"
+        # Drop the tables in the DOT tests schema, so we can import new data, columns and types
+        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_tests"
+        print(schema_to_drop_from)
         af_tasks.append(
             PythonOperator(
-                task_id=f"drop_schema__{schema_to_drop}",
-                python_callable=drop_dot_tests_schema,
+                task_id=f"drop_tables_from_schema__{schema_to_drop_from}",
+                python_callable=drop_tables_in_dot_tests_schema,
                 op_kwargs={
                     "target_conn_in": target_conn,
-                    "schema_to_drop": schema_to_drop,
+                    "schema_to_drop_from": schema_to_drop_from
                 },
                 dag=dag,
             )
