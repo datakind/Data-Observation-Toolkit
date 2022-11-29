@@ -28,7 +28,8 @@ Read more here:
 
 # Quick start
 
-The fastest way to get started using DOT is to use the Docker environment and demo data provided. 
+The fastest way to get started using DOT is to use the Docker environment and demo data provided. The two demo datasets contain fabricated data of airline flights 
+(DOT project 'ScanProject1') and community health workers (DOT project 'Project_CHW') 
 
 ## Prerequisites
 

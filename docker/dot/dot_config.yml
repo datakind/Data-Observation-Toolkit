@@ -18,3 +18,12 @@ ScanProject1_db:
   dbname: dot_db
   schema: public
   threads: 4
+Project_CHW_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
