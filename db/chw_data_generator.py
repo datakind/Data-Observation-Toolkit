@@ -31,7 +31,7 @@ random.seed(10)
 chw_sql = """
 CREATE TABLE IF NOT EXISTS public.chw(
     chw_uuid UUID PRIMARY KEY,
-    region VARCHAR(200) NULL,
+    region VARCHAR(200) NULL
 );
 """
 
@@ -64,7 +64,7 @@ for index, r in chw_data.iterrows():
 # Create a table for patients
 patient_sql = """
 CREATE TABLE IF NOT EXISTS public.patient(
-    patient_uuid UUID PRIMARY KEY,
+    patient_uuid UUID PRIMARY KEY
 );
 """
 
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS public.patient_assessment(
     patient_temperature DOUBLE PRECISION NULL,
     danger_signs BOOLEAN NULL,
     malaria_test_result BOOLEAN NULL,
-    malaria_treatment_given BOOLEAN NULL,
+    malaria_treatment_given BOOLEAN NULL
 );
 """
 
