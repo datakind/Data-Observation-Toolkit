@@ -30,7 +30,7 @@ random.seed(10)
 # Create a table for community health workers (chw) incl. location
 chw_sql = """
 CREATE TABLE IF NOT EXISTS public.chw_chw(
-    chw_uuid UUID PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     region VARCHAR(200) NULL
 );
 """
@@ -69,7 +69,7 @@ for index, r in chw_data.iterrows():
 # Create a table for patients
 patient_sql = """
 CREATE TABLE IF NOT EXISTS public.chw_patient(
-    record_id UUID PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     patient_uuid UUID NULL
 );
 """
@@ -101,7 +101,7 @@ for index, r in patient_data.iterrows():
 # result and any treatments administered
 assessment_sql = """
 CREATE TABLE IF NOT EXISTS public.chw_patient_assessment(
-    assessment_id UUID PRIMARY KEY, 
+    uuid UUID PRIMARY KEY, 
     date DATE NULL,
     chw_id VARCHAR(200) NULL,
     patient_uuid VARCHAR(200) NULL,

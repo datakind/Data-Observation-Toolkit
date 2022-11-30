@@ -87,9 +87,11 @@ Your environment is now running!
 
 1. `docker exec -it dot /bin/bash`
 2. `cd dot`
-3. `python3 ./run_everything.py --project_id 'ScanProject1'`
+3. To run the demo with fabricated airline flight data, run `python3 ./run_everything.py --project_id 'ScanProject1'`
 
-This will run the sample tests against the demo data and save results to the DOT database. 
+   To run the demo with fabricated community health worker data, run `python3 ./run_everything.py --project_id 'Project_CHW'`
+
+    This will run the sample tests against the demo data and save results to the DOT database. 
 
 ## Setting up the DOT User Interface
 

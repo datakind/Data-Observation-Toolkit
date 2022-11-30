@@ -1,6 +1,6 @@
 
 CREATE TABLE IF NOT EXISTS public.chw_chw(
-    chw_uuid UUID PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     region VARCHAR(200) NULL
 );
 INSERT INTO public.chw_chw VALUES('7377ca1d9af5fafd1c2809abf6a71421', 'Region G');
@@ -15,7 +15,7 @@ INSERT INTO public.chw_chw VALUES('a24ac177a1477c354bac37ee2f9beddd', NULL);
 INSERT INTO public.chw_chw VALUES('dad86815340e862417ef348f3236e918', NULL);
 
 CREATE TABLE IF NOT EXISTS public.chw_patient(
-    record_id UUID PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     patient_uuid UUID NULL
 );
 INSERT INTO public.chw_patient VALUES('c6bedf149da20a29b491e8e658b1734a','bd83c0b08f2258d286f63b2f54e6e114');
@@ -70,7 +70,7 @@ INSERT INTO public.chw_patient VALUES('e0a692e5550f2e5c87b2440f9a8c799f','491f17
 INSERT INTO public.chw_patient VALUES('f11b67f7665b168bfd66dad9e263d600','1f4c125fb95ec912fca0ef20b29e32db');
 
 CREATE TABLE IF NOT EXISTS public.chw_patient_assessment(
-    assessment_id UUID PRIMARY KEY, 
+    uuid UUID PRIMARY KEY, 
     date DATE NULL,
     chw_id VARCHAR(200) NULL,
     patient_uuid VARCHAR(200) NULL,
