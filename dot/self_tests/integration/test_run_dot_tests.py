@@ -85,7 +85,9 @@ class RunDotTestsTest(DbtBaseSelfTestClass):
             sorted(
                 [
                     ""
-                    if v is None or (isinstance(v, float) and math.isnan(v))
+                    if v is None
+                    or (isinstance(v, float) and math.isnan(v))
+                    or (v == "NULL")
                     else str(v)
                     for v in expected_test_results["id_column_value"]
                 ]
@@ -93,7 +95,9 @@ class RunDotTestsTest(DbtBaseSelfTestClass):
             sorted(
                 [
                     ""
-                    if v is None or (isinstance(v, float) and math.isnan(v))
+                    if v is None
+                    or (isinstance(v, float) and math.isnan(v))
+                    or (v == "NULL")
                     else str(v)
                     for v in test_results["id_column_value"]
                 ]

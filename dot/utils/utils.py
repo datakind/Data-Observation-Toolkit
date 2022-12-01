@@ -760,6 +760,20 @@ def generate_dbt_test_coverage_report(project_id: str, logger: logging.Logger):
 def format_uuid_list(
     uuid_list: str,
 ) -> Iterable:
+    """
+    formats the list of uuids
+    if equals to a string of {'id1', 'id2'} gives back a list of ['id1', 'id2']
+
+    Parameters
+    ----------
+    uuid_list
+
+    Returns
+    -------
+    a list of uuids
+    """
+    if isinstance(uuid_list, list):
+        return uuid_list
     return re.sub("{|}", "", uuid_list).split(",")
 
 
