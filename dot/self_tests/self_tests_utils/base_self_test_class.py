@@ -66,9 +66,9 @@ class BaseSelfTestClass(unittest.TestCase):
         """creates DB schema for the demo dataset by default"""
         self.create_self_tests_db_schema()
 
-    def tearDown(self) -> None:
+    def tearDown(self, debug=False) -> None:
         """drops the DB schema for the demo dataset by default"""
-        self.drop_self_tests_db_schema()
+        self.drop_self_tests_db_schema(debug=debug)
 
     @patch("utils.configuration_utils._get_filename_safely")
     def get_self_tests_db_conn(
@@ -107,6 +107,7 @@ class BaseSelfTestClass(unittest.TestCase):
         schema: str = None,
         conn: Optional[pg.extensions.connection] = None,
         cursor: Optional[pg.extensions.cursor] = None,
+        debug: bool = False,
     ) -> None:
         """
         Drops the self tests' schema
@@ -120,11 +121,17 @@ class BaseSelfTestClass(unittest.TestCase):
             figure out
         cursor: Optional[pg.extensions.cursor]
             cursor within `conn`, if not provided will figure out
+        debug:
+            if True, it does not drop the schemas
 
         Returns
         -------
 
         """
+        # TODO drop self_tests_public and self_test_public_tests
+        if debug:
+            return
+
         if schema is None or conn is None:
             (
                 schema,

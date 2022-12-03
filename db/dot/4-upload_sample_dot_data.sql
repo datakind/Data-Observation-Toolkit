@@ -65,6 +65,21 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-349
 -- $${"table_specific_reported_date": "departure_time", "table_specific_patient_uuid": "airline", "table_specific_uuid":
 -- "uuid", "table_specific_period": "day"}$$, '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Matt');
 
+INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1',
+5, 'Number of stops has a reasonible value', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'custom_sql', '', '',
+format('{%s: %s}',
+    to_json('query'::text),
+    to_json($query$
+        select
+            distinct uuid,
+            'dot_model__all_flight_data' as primary_table,
+            'uuid' as primary_table_id_field
+          from {{ ref('dot_model__all_flight_data') }}
+         where CAST(REGEXP_REPLACE(COALESCE(stops,'0'), '[^0-9]+', '0', 'g') as INTEGER) > 5
+    $query$::text)
+)::json,
+'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
+
 COMMIT;
 
 

@@ -1,8 +1,6 @@
 """ Integration test: runs DOT for the demo dataset and checks the results """
-import os
 import uuid
 import logging
-import shutil
 import pandas as pd
 from mock import patch
 from ..self_tests_utils.dbt_base_safe_test_class import DbtBaseSelfTestClass
@@ -10,23 +8,34 @@ from ..self_tests_utils.dbt_base_safe_test_class import DbtBaseSelfTestClass
 # UT after base_self_test_class imports
 from utils.run_management import run_dot_tests  # pylint: disable=wrong-import-order
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
-from utils.connection_utils import (
+from utils.connection_utils import (  # pylint: disable=wrong-import-order
     get_db_params_from_config,
-)  # pylint: disable=wrong-import-order
-from utils.configuration_utils import (
+)
+from utils.configuration_utils import (  # pylint: disable=wrong-import-order
     DbParamsConfigFile,
     DbParamsConnection,
-)  # pylint: disable=wrong-import-order
+)
 
 
 class RunDotTestsTest(DbtBaseSelfTestClass):
     """Test Class"""
 
-    def setUp(self) -> None:
+    def setUp(
+        self,
+        dummy=None,  # pylint: disable=unused-argument
+    ) -> None:
         # load the DOT demo dataset
         self.create_self_tests_db_schema()
 
         self.cleanup_dbt_output_dir()
+
+    def tearDown(
+        self,
+        debug=False,  # pylint: disable=unused-argument
+    ) -> None:
+        super().tearDown(
+            debug=False
+        )  # if debug=True, do not remove results in the database
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_run_dot_tests(
