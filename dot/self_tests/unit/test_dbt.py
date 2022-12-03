@@ -12,7 +12,10 @@ from utils.dbt import (  # pylint: disable=wrong-import-order
     extract_df_from_dbt_test_results_json,
     get_view_definition,
 )
-from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
+from utils.utils import (  # pylint: disable=wrong-import-order
+    setup_custom_logger,
+    format_uuid_list,
+)
 
 
 class DbtUtilsTest(BaseSelfTestClass):
@@ -72,3 +75,25 @@ class DbtUtilsTest(BaseSelfTestClass):
             "     JOIN unnest(ARRAY['British Airways'::text]) failed(failed)"
             " ON failed.failed = dot_model__airlines_data.airline::text;",
         )
+
+    @staticmethod
+    def test_format_uuid_list():
+        """
+        Formats `uuid_list` from postgres as actually a list
+
+        Returns
+        -------
+
+        """
+        assert format_uuid_list("{fc9f60d4-3cbf-3493-918e-a01478aa91db}") == [
+            "fc9f60d4-3cbf-3493-918e-a01478aa91db",
+        ]
+        assert format_uuid_list(
+            "{f542d6ed-7fa7-3d86-b054-8dacf1a73406,"
+            "04c739e0-13ea-3c8f-9e65-38eeafcca330,"
+            "fa8a11a6-79ab-307b-bede-81cbff179e46}"
+        ) == [
+            "f542d6ed-7fa7-3d86-b054-8dacf1a73406",
+            "04c739e0-13ea-3c8f-9e65-38eeafcca330",
+            "fa8a11a6-79ab-307b-bede-81cbff179e46",
+        ]

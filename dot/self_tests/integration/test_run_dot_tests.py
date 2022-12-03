@@ -1,6 +1,7 @@
 """ Integration test: runs DOT for the demo dataset and checks the results """
 import uuid
 import logging
+import math
 import pandas as pd
 from mock import patch
 from ..self_tests_utils.dbt_base_safe_test_class import DbtBaseSelfTestClass
@@ -81,6 +82,24 @@ class RunDotTestsTest(DbtBaseSelfTestClass):
             test_results.drop(columns=["run_id", "test_result_id", "id_column_value"]),
         )
         self.assertListEqual(
-            sorted(expected_test_results["id_column_value"].to_list()),
-            sorted(test_results["id_column_value"].to_list()),
+            sorted(
+                [
+                    ""
+                    if v is None
+                    or (isinstance(v, float) and math.isnan(v))
+                    or (v == "NULL")
+                    else str(v)
+                    for v in expected_test_results["id_column_value"]
+                ]
+            ),
+            sorted(
+                [
+                    ""
+                    if v is None
+                    or (isinstance(v, float) and math.isnan(v))
+                    or (v == "NULL")
+                    else str(v)
+                    for v in test_results["id_column_value"]
+                ]
+            ),
         )
