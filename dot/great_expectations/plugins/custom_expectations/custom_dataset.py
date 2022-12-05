@@ -7,6 +7,9 @@ from great_expectations.dataset import SqlAlchemyDataset
 
 import pandas as pd
 import numpy as np
+import sys
+
+from utils.utils import get_entity_name_from_id
 
 
 class CustomSqlAlchemyDataset(SqlAlchemyDataset):
@@ -20,7 +23,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         [
             "quantity",
             "key",
-            "data_table",
+            "entity_id",
             "schema_core",
             "threshold",
             "samples",
@@ -31,9 +34,10 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         self,
         quantity,
         key,
-        data_table,
+        entity_id,
         schema_core,
         target_table,  # The data being checked (eg prices for airlines)
+        project_id,
         # will be different to target table (eg airlines)
         # original schema for data, not needed for this expectation:
         schema_source,  # pylint: disable=unused-argument
@@ -46,8 +50,10 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
         statistical nature.
         See Notebooks/NS-8.0-Bootstrap-Anomaly-Test.ipynb"""
 
+        entity_name = get_entity_name_from_id(project_id, entity_id)
+
         rows = sa.select([sa.column(quantity), sa.column(key)]).select_from(
-            sa.Table(data_table, self._table.metadata, schema=schema_core)
+            sa.Table(entity_name, self._table.metadata, schema=schema_core)
         )
 
         def get_bs_p_scores(
@@ -88,7 +94,7 @@ class CustomSqlAlchemyDataset(SqlAlchemyDataset):
                 "unexpected_list": outside.index.to_list(),
                 "table": target_table,
                 "id_column": id_column,
-                "short_name": f"chv_different_{data_table}_{quantity}_distribution",
+                "short_name": f"chv_different_{entity_name}_{quantity}_distribution",
             },
         }
 

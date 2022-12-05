@@ -264,20 +264,27 @@ def extract_df_from_ge_test_results_csv(run_id, project_id, logger):
     ge_tests_summary.rename(
         columns={"expectation_config.kwargs.quantity": "column_name"}, inplace=True
     )
+    #ge_tests_summary.rename(
+    #    columns={"expectation_config.expectation_type": "test_type"}, inplace=True
+    #)
+    # TODO Column name is part of the test parameters for GE tests currently. We could add in to the form but
+    # will remove for now. GE needs a bit of a refactor as a whole
+    ge_tests_summary['column_name'] = ''
     ge_tests_summary.rename(
-        columns={"expectation_config.expectation_type": "test_type"}, inplace=True
-    )
-    ge_tests_summary.rename(
-        columns={"expectation_config.kwargs.data_table": "entity"}, inplace=True
+        columns={"expectation_config.kwargs.entity_id": "entity_id"}, inplace=True
     )
     ge_tests_summary.rename(
         columns={"exception_info.exception_message": "test_status_message"},
         inplace=True,
     )
-    ge_tests_summary["entity_id"] = ge_tests_summary.apply(
-        lambda x: get_entity_id_from_name(project_id, x["entity"]),
-        axis=1,
+    ge_tests_summary.rename(
+        columns={"expectation_config.expectation_type": "test_type"},
+        inplace=True,
     )
+    #ge_tests_summary["entity_id"] = ge_tests_summary.apply(
+    #    lambda x: get_entity_id_from_name(project_id, x["entity"]),
+    #    axis=1,
+    #)
     ge_tests_summary["test_id"] = ge_tests_summary.apply(
         lambda x: get_test_id(
             x["test_type"],
