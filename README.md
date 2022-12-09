@@ -707,7 +707,7 @@ NOTE: You might need to use docker-compose on some hosts.
 
 `docker compose -f docker-compose-with-airflow.yml down -v` 
 
-### Running the DOT in Airflow
+### Running the DOT in Airflow (Demo)
 
 A DAG has been included which copies data from the uploaded DB dump into the DOT DB 'data_ScanProject1' schema, and then runs 
 the toolkit against this data. To do this ...
@@ -733,6 +733,23 @@ To use Airflow CLI for debugging a task (assuming you are getting object ancview
 Or to run just DOT stage ...
 
 `airflow tasks test run_dot_project run_dot  2022-03-01`
+
+
+### Running the DOT in Airflow (Connecting to external databases)
+
+The following instructions illustrate how to use a local airflow environment, connecting with external databases for the data and DOT.
+
+**NOTE:** These are for illustrative purposes only. If using Airflow in production it's important that it is set up correctly
+and does not expose a http connection to the internet, and also has adequate network security (firewal, strong password, etc)
+
+1. Edit [./dot/dot_config.yml] and set the correct parameters for your external dot_db
+2. Create a section for your data databases and set connection parameters
+3. If you have a DAG json file `dot_projects.json` already, deploy it into `./airflow/dags`
+4. Run steps 1-11 in [Configuring/Building Airflow Docker environment](#Configuring/Building Airflow Docker environment)
+5. Run steps 12 and 13, but use the values for your external databases you configured in `dot_config.yml`
+
+You will need to configure DOT tests and the DAG json file appropriately for your installation.
+
 
 #### Adding more projects
 
