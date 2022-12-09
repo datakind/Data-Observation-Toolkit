@@ -504,7 +504,6 @@ def get_test_rows(
 
         # Get failed tests view data from the DB
         if test_status == "fail":
-            print(f"\n\n\nSELECT * FROM {schema_test}.{failed_tests_view}\n\n\n")
             test_results_df = pd.read_sql(
                 f"SELECT * FROM {schema_test}.{failed_tests_view}", conn_test
             )
@@ -534,10 +533,8 @@ def get_test_rows(
         # DB somehow. What's here if not generic for all deployments
         unique_column_name = None
         for c in id_col_names:
-            print(f"\n\n\n\n\ {c}\n\n\n\n\n")
             # Special handling for unique test type
             if test_type == "unique":
-                print(f"\n \n \n TESTTYPE UNIQUE!!! \n\n\n")
                 failing_ids = entity_df.loc[
                     entity_df[column_name].isin(test_results_df["unique_field"]),
                     # TODO Add 'primary_table_id_field' as a column in entity
@@ -547,14 +544,12 @@ def get_test_rows(
                 unique_column_name = column_name
                 break
             if test_type == "expect_similar_means_across_reporters":
-                print(f"\n \n \n TESTTYPE EXPECT...!!! \n\n\n")
                 tp = json.loads(test_parameters.replace("'", '"'))
                 unique_column_name = tp["id_column"]
                 failing_ids = entity_df.loc[
                     entity_df[unique_column_name].isin(test_results_df[tp["key"]]),
                     unique_column_name,
                 ].tolist()
-                print(f"\n \n \n Exception catch with: tp: {tp}, unique_column_name:{unique_column_name} and failing ids:{failing_ids} \n\n\n")
                 break
             if c in test_results_df_cols:
                 # If a list of ids, use those
@@ -911,7 +906,7 @@ def get_entity_name_from_id(project_id: str, entity_id: str) -> str:
         FROM
             {schema_dot}.configured_entities
         WHERE
-            entity_id = '{entity_id}'
+            entity_id::text = '{entity_id}'
     """
     return f"{dot_model_PREFIX}{_get_entity(conn_dot, query)}"
 

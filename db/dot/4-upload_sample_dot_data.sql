@@ -56,7 +56,7 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-349
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f18', 'BIAS-1', 6,
 'Price outlier airlines', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'expect_similar_means_across_reporters',
-'price', '', $${"key": "airline","quantity": "price","entity_id": "dot_model__all_flight_data","id_column": "airline",
+'price', '', $${"key": "airline","quantity": "price","entity_id": "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a","id_column": "airline",
 "target_table":"dot_model__airlines_data"}$$, '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Matt');
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '36d33837-bd92-370a-963a-264a4d5b2bac', 'DUPLICATE-1',
