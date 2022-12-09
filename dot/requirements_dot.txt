@@ -14,7 +14,7 @@ black==21.12b0
 bleach==4.1.0
 boto3==1.20.20
 cachetools==4.2.4
-certifi==2021.10.8
+certifi==2022.12.7
 cffi==1.15.0
 chardet==3.0.4
 click==8.0.3
