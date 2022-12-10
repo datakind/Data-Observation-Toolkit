@@ -1,5 +1,4 @@
 agate==1.6.1
-
 appnope==0.1.2
 argon2-cffi==21.1.0
 asn1crypto==1.4.0
@@ -144,3 +143,4 @@ pytest-timeout==2.1.0
 faker==15.1.1
 faker-airtravel==0.4
 flatten_json==0.1.13
+python-on-whales==0.53.0
