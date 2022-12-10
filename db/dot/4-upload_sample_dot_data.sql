@@ -65,8 +65,9 @@ $${"table_specific_reported_date": "departure_time", "table_specific_patient_uui
 "uuid", "table_specific_period": "day"}$$, '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Matt');
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1',
-5, 'Number of stops has a reasonible value', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'custom_sql', '', '',
-format('{%s: %s}',
+5, 'Number of stops has a reasonible value (as custom_sql)', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a',
+'custom_sql', '', '', format(
+    '{%s: %s}',
     to_json('query'::text),
     to_json($query$
         select
@@ -78,6 +79,11 @@ format('{%s: %s}',
     $query$::text)
 )::json,
 '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Lorenzo');
+
+INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1',
+8, 'Price is a positive number for direct flights', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'expression_is_true',
+'', '', $${"name": "t_direct_flights_positive_price", "expression": "price is not null and price > 0",
+"condition": "stops = 'non-stop'"}$$, '2022-12-10 19:00:00.000 -0500', '2022-12-10 19:00:00.000 -0500', 'Lorenzo');
 
 COMMIT;
 
