@@ -410,9 +410,9 @@ generated one.
 7. `associated_columns_not_null`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, '', 
-    '', '', 'dot_model__iccmview_assessment', 'associated_columns_not_null', 'diarrhea_dx', 'diarrhea diagnosis', 
-    $${"name": "diarrhea_dx_has_duration", "col_value": True, "associated_columns": ['max_symptom_duration']}$$, 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, 
+    'diarrhea diagnosis', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'associated_columns_not_null', '', '', 
+    $${"name": "diarrhea_dx_has_duration", "condition": "diarrhea_dx = True", "associated_columns": ['max_symptom_duration']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 8. `expect_similar_means_across_reporters`
