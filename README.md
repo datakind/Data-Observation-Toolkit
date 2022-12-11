@@ -933,6 +933,7 @@ need to do is ..
 
 1. `exec -it dot /bin/bash`
 2. `pytest dot/self_tests/unit`
+3. `pytest dot/self_tests/integration`
 
 ##### On your local machine
 
@@ -972,11 +973,17 @@ ScanProjec1_db:
 And finally you can run the tests from a terminal as follows:
 ```
 pytest dot/self_tests/unit
+pytest dot/self_tests/integration
 ```
 
 #### Guidelines for adding new tests
-- Existing tests are at [the self-tests folder](dot/self_tests/unit)
-- All tests extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
+- Existing unit tests are at [the self-tests folder](dot/self_tests/unit)
+- When a function needs to be modified, ideally it will hava a passing test beforehand; if not, please consider adding it
+- One integration test at [the integration self-tests folder](dot/self_tests/unit) that
+  - instead of running unit test for functions, it runs the full dot pipeline for the fake data and checks results
+  - it runs all the tests configured in [sample_dot_data.sql](db/dot/4-upload_sample_dot_data.sql)
+  - whenever a new test type is designed for dot, consider adding a line to the SQL above so that it gets tested 
+- All tests (both unit & integration) extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
   - facilitates the import of modules under test
   - recreates a directory in the file system for the test outputs
   - provides a number of function for supporting tests that access the database, mocking the config files to point to the
