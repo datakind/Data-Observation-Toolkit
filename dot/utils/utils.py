@@ -906,7 +906,7 @@ def get_entity_name_from_id(project_id: str, entity_id: str) -> str:
         FROM
             {schema_dot}.configured_entities
         WHERE
-            entity_id = '{entity_id}'
+            entity_id::text = '{entity_id}'
     """
     return f"{dot_model_PREFIX}{_get_entity(conn_dot, query)}"
 
