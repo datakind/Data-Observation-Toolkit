@@ -575,7 +575,7 @@ def get_test_rows(
                         entity_df[column_name].isin(
                             test_results_df.value_field.unique()
                         ),
-                        "uuid",
+                        unique_column_name,
                     ].tolist()
                     break
                 # Rest are basic id fields
