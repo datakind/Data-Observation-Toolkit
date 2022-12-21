@@ -1,6 +1,6 @@
 INSERT INTO dot.projects SELECT 'ScanProject1', 'Scan 1 project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
-INSERT INTO dot.projects SELECT 'Project_CHW', 'Running DOT on chw data', true , 'public', null, '2022-11-29 20:13:34.957 -0500', '2022-11-29 20:13:34.957 -0500', 'Jan';
-            |
+INSERT INTO dot.projects SELECT 'Project_CHW', 'Running DOT on chw data', true, 'public', null, '2022-11-29 00:00:00+00','2022-11-29 00:00:00+00','Jan';
+
 -- entity categories
 INSERT INTO dot.entity_categories VALUES('ALL', 'All flights');
 INSERT INTO dot.entity_categories VALUES('ZAG', 'Zagreb airport flights');
