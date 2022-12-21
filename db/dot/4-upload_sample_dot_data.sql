@@ -43,10 +43,9 @@ INSERT INTO dot.configured_entities VALUES('Project_CHW',	'c2dc1e9a-d0f4-3356-ae
 {% set schema = <schema> %}
 select * from {{ schema }}.chw_chw	', '2022-11-29 20:45:50.587 -0500',	'2022-11-29 20:45:50.587 -0500', 'Jan');
 
-INSERT INTO dot.configured_entities VALUES('Project_CHW',	'f68b6a5a-f343-3ada-a894-4fa426d2e46e',	'all_assessments,'	'chw_assessments',	'{{ config(materialized=''view'') }}
+INSERT INTO dot.configured_entities VALUES('Project_CHW',	'f68b6a5a-f343-3ada-a894-4fa426d2e46e',	'all_assessments',	'chw_assessments',	'{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 select * from {{ schema }}.chw_patient_assessment',	'2022-11-29 21:50:11.278 -0500', '2022-11-29 21:50:11.278 -0500','Jan');
-
 
 -- Note these UUIDs get reset by the trigger
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3,
