@@ -75,11 +75,11 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-349
 "target_table":"dot_model__airlines_data"}$$, '2022-01-19 20:00:00.000 -0500', '2022-01-19 20:00:00.000 -0500', 'Matt');
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Project_CHW', '0e4f42c1-ad63-3c7f-be1d-7aa93481407b', 'DUPLICATE-1', 3,
-'Testing for duplicates in patient data', '', '', '7337e190-02a0-3811-a84b-3913a0e2c7bd', 'unique',
+'Testing for duplicates in patient data', '', '', '92bdfb9c-b55a-3cde-809e-ca9539eea6b1', 'unique',
 'patient_uuid',	'', NULL, '2022-11-29 20:34:13.456 -0500',	'2022-11-29 20:37:56.500 -0500', 'Jan');
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'Project_CHW', '4cd2b924-c9dd-3820-995b-0c3515a5bb26', 'MISSING-1', 3,
-'Test for missing values in region of chw', '', '', 'c2dc1e9a-d0f4-3356-aec1-6c7ce433c2b2',	'not_null',
+'Test for missing values in region of chw', '', '', 'e2093ce1-5cdf-348c-9c67-bb4eecdee246',	'not_null',
 'region', '', NULL, '2022-11-30 09:47:11.833 -0500', '2022-11-30 09:51:45.253 -0500', 'Jan');
 
 
