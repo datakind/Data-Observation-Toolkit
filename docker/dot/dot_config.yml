@@ -18,3 +18,75 @@ ScanProject1_db:
   dbname: dot_db
   schema: public
   threads: 4
+IccmRaw_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+GretelCtgan40_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+Gretel_Lstm20_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+sdv_gaussian_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+sdv_copulagan_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+sdv_ctgan_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+sdv_tvae_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4
+ydata_gan_split_db:
+  type: postgres
+  host: dot_db
+  user: postgres
+  pass: "password125"
+  port: 5432
+  dbname: dot_db
+  schema: public
+  threads: 4

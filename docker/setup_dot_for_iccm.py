@@ -8,22 +8,19 @@ import re
 from pathlib import Path
 
 path_to_raw_file = str(
-    Path(__file__).parents[2]) + "\\ICCM\\raw_data\\drive-download-20221222T112811Z-001\\iccmview_assessment.pkl"
+    Path(__file__).parents[2]) + "\\raw_data\\drive-download-20221222T112811Z-001\\iccmview_assessment.pkl"
 path_to_synch_files = str(
-    Path(__file__).parents[2]) + "\\ICCM\\synthetic_data\\drive-download-20221222T135942Z-001"
-path_to_dot_setup = str(
-    Path(__file__).parents[1]) + "\\db\\dot_iccm_environment.sql"
+    Path(__file__).parents[2]) + "\\synthetic_data\\drive-download-20221222T135942Z-001"
+path_to_dot_setup = "\\db\\dot_iccm_environment.sql"
 
 def read_excel_file(file_path):
     print(f"Reading excel {file_path} pip3 install  ...")
     df = pd.read_excel(file_path)
     return df
 
-
 def get_postgres_engine(server, port, user, password, database):
     engine = sqlalchemy.create_engine(f"postgresql://{user}:{password}@{server}:{port}/{database}")
     return engine
-
 
 def strip_non_aphanumeric(text):
     return re.sub(r'\W+', '_', text).lower()
@@ -35,7 +32,7 @@ def add_to_dict(file):
     return key, value
 
 
-password = ""
+password = "secret"
 user = "secret"
 server = "secret"
 port = "secret"
