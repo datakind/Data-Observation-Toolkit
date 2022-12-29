@@ -51,13 +51,13 @@ class RunDotTestsTest(DbtBaseSelfTestClass):
 
         run_id = uuid.uuid4()
 
-        run_dot_tests("ydata_gan_split", logger, run_id)
+        run_dot_tests("ScanProject1", logger, run_id)
 
         # check results
         schema_dot, _, conn_dot = get_db_params_from_config(
             DbParamsConfigFile["dot_config.yml"],
             DbParamsConnection["dot"],
-            "ydata_gan_split",
+            "ScanProject1",
         )
 
         test_results_summary = pd.read_sql(
