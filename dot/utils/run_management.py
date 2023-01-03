@@ -175,6 +175,9 @@ def run_dot_tests(project_id, logger, run_id):
         logger.info("Running tests for project_id: %s", project_id)
 
         # Run the dot_pipeline
+        print('\n\n\n')
+        print(project_id, logger, run_id)
+        print('\n\n\n')
         run_dot_stages(project_id, logger, run_id)
 
         # If no errors occur updates SQL table to say completed

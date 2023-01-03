@@ -13,8 +13,6 @@ from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 from utils.utils import (  # pylint: disable=wrong-import-order
     get_test_id,
     get_configured_tests_row,
-    get_entity_id_from_name,
-    get_entity_name_from_id,
     get_test_rows,
     setup_custom_logger,
     save_tests_to_db,
@@ -253,32 +251,6 @@ class UtilsTest(BaseSelfTestClass):
                 str(configured_tests_row.get(k)),
                 f"difference in {k}; {v} vs {configured_tests_row[k]}",
             )
-
-    @patch("utils.configuration_utils._get_filename_safely")
-    def test_get_entity_id_from_name(
-        self, mock_get_filename_safely
-    ):  # pylint: disable=no-value-for-parameter
-        """test for get_entity_id_from_name"""
-        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
-
-        self.assertEqual(
-            "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
-            get_entity_id_from_name("ScanProject1", "dot_model__all_flight_data"),
-        )
-
-    @patch("utils.configuration_utils._get_filename_safely")
-    def test_get_entity_name_from_id(
-        self, mock_get_filename_safely
-    ):  # pylint: disable=no-value-for-parameter
-        """test for get_entity_name_from_id"""
-        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
-
-        self.assertEqual(
-            "dot_model__all_flight_data",
-            get_entity_name_from_id(
-                "ScanProject1", "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a"
-            ),
-        )
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_get_test_rows(

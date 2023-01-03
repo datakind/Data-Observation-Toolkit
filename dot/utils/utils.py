@@ -152,7 +152,7 @@ def get_short_test_name(node: dict) -> Tuple[str, str]:
         )
         if word_to_shorten > 1:
             short_test_name = "_".join(
-                [short_test_name] + test_name_pieces[-word_to_shorten + 1 :]
+                [short_test_name] + test_name_pieces[-word_to_shorten + 1:]
             )
 
     return test_name, short_test_name
@@ -316,7 +316,6 @@ def generate_row_results_df(
     id_column_values: list,
     run_id: str,
     test_id: str,
-    entity_name: str,
     entity_id: str,
     status: str,
     view_name: str,
@@ -333,9 +332,6 @@ def generate_row_results_df(
         ID of the current run, as found in dot.run_status
     test_id: str
         ID of the tests, as found in dot.configured_tests
-    entity_name: str
-        Entity view of data tested, or the name of the primary table for custom
-        sql tests
     entity_id: str
         Entity id
     status: str
@@ -355,7 +351,7 @@ def generate_row_results_df(
     # Generate a new uuid base on the unique field. Note that the set is because some
     # tests, eg duplicate forms, will duplicate the 'unique' field.
     uuid_str = (
-        str(run_id) + entity_name + view_name + id_column_name + str(time.time_ns())
+        str(run_id) + entity_id + view_name + id_column_name + str(time.time_ns())
     )
     id_column_values = list(set(id_column_values))
     uuid_list_uid = [
@@ -379,7 +375,6 @@ def generate_failing_passing_dfs(
     passing_ids: list,
     run_id: str,
     test_id: str,
-    entity_name: str,
     entity_id: str,
     view_name: str,
     id_column_name: str,
@@ -396,9 +391,6 @@ def generate_failing_passing_dfs(
         Current run ID, as found in dot.run_log
     test_id: str
         ID of the tests, as found in dot.configured_tests
-    entity_name: str
-        Entity view of data tested, or the name of the primary table for custom
-        sql tests
     entity_id: str
         Entity id
     view_name: str
@@ -417,7 +409,6 @@ def generate_failing_passing_dfs(
         failing_ids,
         run_id,
         test_id,
-        entity_name,
         entity_id,
         "fail",
         view_name,
@@ -427,7 +418,6 @@ def generate_failing_passing_dfs(
         passing_ids,
         run_id,
         test_id,
-        entity_name,
         entity_id,
         "pass",
         view_name,
@@ -482,16 +472,24 @@ def get_test_rows(
     # result df, they determine ids
     id_col_names = ["uuid_list", "uuid", "index", "reported_by", "value_field"]
 
+    print(f"\n\n\n\n\n {tests_summary.head(10)}\n\n\n\n")
+
     for _, row in tests_summary.iterrows():
         failed_tests_view = row["failed_tests_view"]
         entity_id = row["entity_id"]
-        entity_or_primary_table = get_entity_name_from_id(project_id, row["entity_id"])
+        entity_or_primary_table = entity_id
         test_id = row["test_id"]
         test_type = row["test_type"]
         column_name = row["column_name"]
         test_status = row["test_status"]
         id_column_name = row.get("id_column_name")
         test_parameters = row["test_parameters"]
+
+        print(f"\n\n\n\n\n {failed_tests_view}\n{entity_id}\n{entity_or_primary_table}\n{test_id}\n{test_type}\n{column_name}"
+              f"\n{test_status}"
+              f"\n{id_column_name}"
+              f"\n{test_parameters}")
+
 
         # Get entity data from the DB
         if not entity_or_primary_table in entity_data:
@@ -812,7 +810,7 @@ def set_summary_stats(
     failed_count = []
     for _, row in tests_summary.iterrows():
         failed_tests_view = row["failed_tests_view"]
-        entity_or_primary_table = get_entity_name_from_id(project_id, row["entity_id"])
+        entity_or_primary_table = row["entity_id"]
         test_status = row["test_status"]
 
         # Get entity row count
@@ -853,64 +851,6 @@ def set_summary_stats(
     return tests_summary
 
 
-def get_entity_id_from_name(project_id: str, entity_name: str) -> str:
-    """
-    Gets entity name from entity_id
-
-    Parameters
-    ----------
-    project_id
-
-    entity_name e.g. dot_model__ancview_delivery
-
-    Returns
-    -------
-
-    """
-    schema_dot, _, conn_dot = get_db_params_from_config(
-        DbParamsConfigFile["dot_config.yml"], DbParamsConnection["dot"], project_id
-    )
-
-    query = f"""
-        SELECT
-            entity_id
-        FROM
-            {schema_dot}.configured_entities
-        WHERE
-            entity_name = '{entity_name.replace(dot_model_PREFIX, "")}'
-    """
-    return _get_entity(conn_dot, query)
-
-
-def get_entity_name_from_id(project_id: str, entity_id: str) -> str:
-    """
-    Gets entity name from entity_id
-
-    Parameters
-    ----------
-    project_id
-
-    entity_name e.g. dot_model__ancview_delivery
-
-    Returns
-    -------
-
-    """
-    schema_dot, _, conn_dot = get_db_params_from_config(
-        DbParamsConfigFile["dot_config.yml"], DbParamsConnection["dot"], project_id
-    )
-
-    query = f"""
-        SELECT
-            entity_name
-        FROM
-            {schema_dot}.configured_entities
-        WHERE
-            entity_id = '{entity_id}'
-    """
-    return f"{dot_model_PREFIX}{_get_entity(conn_dot, query)}"
-
-
 def _get_entity(conn_dot: pg.extensions.connection, query: str) -> str:
     """
     Gets entity name from entity_id
@@ -918,8 +858,6 @@ def _get_entity(conn_dot: pg.extensions.connection, query: str) -> str:
     Parameters
     ----------
     project_id
-
-    entity_name e.g. dot_model__ancview_delivery
 
     Returns
     -------
