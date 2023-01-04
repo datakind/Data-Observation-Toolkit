@@ -14,8 +14,8 @@ import pandas as pd
 from pandas import json_normalize
 from utils.connection_utils import get_db_params_from_config, get_metadata
 from utils.configuration_utils import DbParamsConfigFile, DbParamsConnection
+from utils.configuration_utils import DBT_MODELNAME_PREFIX
 
-dot_model_PREFIX = "dot_model__"
 
 
 def setup_custom_logger(log_name, log_level, file_logger=False):
@@ -257,7 +257,7 @@ def get_configured_tests_row(
                         {schema_dot}.configured_tests
                     WHERE
                         test_type = '{test_type}' AND
-                        entity_id = '{entity_id}' AND
+                        entity_id = '{entity_id.replace(DBT_MODELNAME_PREFIX,"")}' AND
                         column_name = '{column}'
                         {test_params_clause}
                 """
@@ -472,12 +472,10 @@ def get_test_rows(
     # result df, they determine ids
     id_col_names = ["uuid_list", "uuid", "index", "reported_by", "value_field"]
 
-    print(f"\n\n\n\n\n {tests_summary.head(10)}\n\n\n\n")
-
     for _, row in tests_summary.iterrows():
         failed_tests_view = row["failed_tests_view"]
         entity_id = row["entity_id"]
-        entity_or_primary_table = entity_id
+        entity_id_or_primary_table = f"{DBT_MODELNAME_PREFIX}{entity_id}"
         test_id = row["test_id"]
         test_type = row["test_type"]
         column_name = row["column_name"]
@@ -485,20 +483,14 @@ def get_test_rows(
         id_column_name = row.get("id_column_name")
         test_parameters = row["test_parameters"]
 
-        print(f"\n\n\n\n\n {failed_tests_view}\n{entity_id}\n{entity_or_primary_table}\n{test_id}\n{test_type}\n{column_name}"
-              f"\n{test_status}"
-              f"\n{id_column_name}"
-              f"\n{test_parameters}")
-
-
         # Get entity data from the DB
-        if not entity_or_primary_table in entity_data:
-            entity_or_primary_table = entity_or_primary_table.split("_id")[0]
-            entity_data[entity_or_primary_table] = pd.read_sql(
-                f"SELECT * FROM {schema_core}.{entity_or_primary_table}", conn_core
+        if not entity_id_or_primary_table in entity_data:
+            entity_id_or_primary_table = entity_id_or_primary_table.split("_id")[0]
+            entity_data[entity_id_or_primary_table] = pd.read_sql(
+                f"SELECT * FROM {schema_core}.{entity_id_or_primary_table.replace(DBT_MODELNAME_PREFIX+DBT_MODELNAME_PREFIX, DBT_MODELNAME_PREFIX)}", conn_core
             )
 
-        entity_df = entity_data[entity_or_primary_table]
+        entity_df = entity_data[entity_id_or_primary_table]
 
         # Get failed tests view data from the DB
         if test_status == "fail":
@@ -510,20 +502,20 @@ def get_test_rows(
                 "Failed tests for test type "
                 + test_type
                 + " on entity "
-                + entity_or_primary_table
+                + entity_id_or_primary_table
             )
         elif test_status == "error":
             logger.warning(
                 "!!!! Test type "
                 + test_type
                 + " on entity "
-                + entity_or_primary_table
+                + entity_id_or_primary_table
                 + " did not execute!"
             )
             continue
         else:
             # logger.info("All tests passed for test type " + test_type + " on entity
-            # " + entity_or_primary_table)
+            # " + entity_id_or_primary_table)
             continue
 
         # Interrogate results dataframes to identify unique id field and failing rows
@@ -607,7 +599,7 @@ def get_test_rows(
                 "Unknown ID column for test_type "
                 + test_type
                 + " cannot be processed with entity "
-                + entity_or_primary_table
+                + entity_id_or_primary_table
                 + " which has test view columns: "
                 + str(test_results_df_cols)
             )
@@ -617,7 +609,7 @@ def get_test_rows(
             "  -- Test type "
             + test_type
             + " on entity "
-            + entity_or_primary_table
+            + entity_id_or_primary_table
             + " has id field "
             + unique_column_name
             + " test view:"
@@ -645,8 +637,7 @@ def get_test_rows(
             passing_ids,
             run_id,
             test_id,
-            entity_or_primary_table,
-            entity_id,
+            entity_id_or_primary_table,
             failed_tests_view,
             unique_column_name,
         )
@@ -810,18 +801,18 @@ def set_summary_stats(
     failed_count = []
     for _, row in tests_summary.iterrows():
         failed_tests_view = row["failed_tests_view"]
-        entity_or_primary_table = row["entity_id"]
+        entity_id_or_primary_table = row["entity_id"]
         test_status = row["test_status"]
 
         # Get entity row count
-        if not entity_or_primary_table in entity_count_map:
-            entity_or_primary_table = entity_or_primary_table.split("_id")[0]
+        if not entity_id_or_primary_table in entity_count_map:
+            entity_id_or_primary_table = entity_id_or_primary_table.split("_id")[0]
             c = pd.read_sql(
-                f"SELECT count(*) FROM {schema_core}.{entity_or_primary_table}",
+                f"SELECT count(*) FROM {schema_core}.{DBT_MODELNAME_PREFIX}{entity_id_or_primary_table.replace(DBT_MODELNAME_PREFIX,'')}",
                 conn_data,
             )
-            entity_count_map[entity_or_primary_table] = float(c.iloc[0, 0])
-        c = entity_count_map[entity_or_primary_table]
+            entity_count_map[entity_id_or_primary_table] = float(c.iloc[0, 0])
+        c = entity_count_map[entity_id_or_primary_table]
         entity_count.append(c)
 
         # Get failed row count
@@ -840,6 +831,7 @@ def set_summary_stats(
 
     tests_summary["rows_total"] = entity_count
     tests_summary["rows_failed"] = failed_count
+    tests_summary["entity_id"] = tests_summary["entity_id"].apply(lambda x: x.replace(DBT_MODELNAME_PREFIX,''))
 
     tests_summary["rows_passed"] = tests_summary.apply(
         lambda x: x["rows_total"] - x["rows_failed"]

@@ -21,6 +21,7 @@ from utils.configuration_utils import (
     GE_GREAT_EXPECTATIONS_FINAL_FILENAME,
     GE_CONFIG_VARIABLES_FINAL_FILENAME,
     load_config_file,
+    DBT_MODELNAME_PREFIX
 )
 from utils.dbt import create_core_entities
 
@@ -321,7 +322,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
         if (
             entity_id not in config_options.keys()
         ):  # pylint: disable=consider-iterating-dictionary
-            config_options[entity_id] = {"name": entity_id, "columns": {}}
+            config_options[entity_id] = {"name": f"{DBT_MODELNAME_PREFIX}{entity_id}", "columns": {}}
 
         # Loop through tests for this entity
         df = dbt_schema_tests.loc[dot_tests["entity_id"] == entity_id]
@@ -330,7 +331,6 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             description = row["description"]
             test_type = row["test_type"]
             test_parameters = row["test_parameters"]
-
             # if test_parameters != None:
             #    test_parameters = "| ".join([f"{k}={test_parameters[k]}" for k in test_parameters])
             # else:
@@ -386,7 +386,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
         yaml_content = yaml.safe_dump(
             cfg, default_flow_style=False, sort_keys=False, indent=4
         )
-        output_file = model_dir + "/" + entity_id + ".yml"
+        output_file = model_dir + "/" + DBT_MODELNAME_PREFIX + entity_id + ".yml"
         logger.info("Writing schema test file: " + output_file)
         with open(output_file, "w") as f:
             f.write(yaml_content)
@@ -404,7 +404,7 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
         df = dbt_non_schema_tests.loc[dot_tests["entity_id"] == entity_id]
         for index, row in df.iterrows():
             custom_sql = row["test_parameters"]["query"]
-            output_file = tests_dir + "/" + entity_id + "_id" + str(index) + ".sql"
+            output_file = tests_dir + "/" + DBT_MODELNAME_PREFIX + entity_id + "_id" + str(index) + ".sql"
             logger.info("Writing custom sql test file: " + output_file)
             with open(output_file, "w") as f:
                 f.write(custom_sql)
