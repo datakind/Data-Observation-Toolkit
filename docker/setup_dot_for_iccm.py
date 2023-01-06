@@ -8,9 +8,9 @@ import re
 from pathlib import Path
 
 path_to_raw_file = str(
-    Path(__file__).parents[2]) + "\\raw_data\\drive-download-20221222T112811Z-001\\iccmview_assessment.pkl"
+    Path(__file__).parents[2]) + "/NEW_DOWNLOAD/pkl-20230103T192609Z-001/pkl/datakind.iccmview_assessment.pkl"
 path_to_synch_files = str(
-    Path(__file__).parents[2]) + "\\synthetic_data\\drive-download-20221222T135942Z-001"
+    Path(__file__).parents[2]) + "/synthetic_data/drive-download-20221222T135942Z-001"
 path_to_dot_setup = "\\db\\dot_iccm_environment.sql"
 
 def read_excel_file(file_path):
