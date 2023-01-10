@@ -39,8 +39,8 @@ class UtilsTest(BaseSelfTestClass):
         """
         test_summary_row = {
             "run_id": run_id,
-            "test_id": "dac4c545-f610-3dae-ad82-1ddf27dae144",
-            "entity_id": "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            "test_id": "cad13f73-27b5-3427-be8f-4d213bba3b19",
+            "entity_id": "all_flight_data",
             "test_type": "accepted_values",
             "column_name": "stops",
             "id_column_name": None,
@@ -110,7 +110,7 @@ class UtilsTest(BaseSelfTestClass):
 
         generated_test_id = get_test_id(
             test_type="not_negative_string_column",
-            entity_id="ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            entity_id="all_flight_data",
             column="price",
             project_id="ScanProject1",
             test_parameters="""$$
@@ -121,7 +121,7 @@ class UtilsTest(BaseSelfTestClass):
                 "\n", ""
             ),
         )
-        expected_test_id = "49aa2fd3-511c-3d84-a782-a5daf57f98da"
+        expected_test_id = "ed27037a-4054-3070-9d88-fdf9cd0231c8"
         self.assertEqual(
             expected_test_id,
             generated_test_id,
@@ -217,12 +217,12 @@ class UtilsTest(BaseSelfTestClass):
 
         configured_tests_row = get_configured_tests_row(
             test_type="not_negative_string_column",
-            entity_id="ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            entity_id="all_flight_data",
             column="price",
             project_id="ScanProject1",
             test_parameters="{'name': 'price'}",
         )
-        expected_test_id = "49aa2fd3-511c-3d84-a782-a5daf57f98da"
+        expected_test_id = "ed27037a-4054-3070-9d88-fdf9cd0231c8"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -238,7 +238,7 @@ class UtilsTest(BaseSelfTestClass):
             "description": "Price is not negative",
             "impact": "",
             "proposed_remediation": "",
-            "entity_id": "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            "entity_id": "all_flight_data",
             "test_type": "not_negative_string_column",
             "column_name": "price",
             "column_description": "",
