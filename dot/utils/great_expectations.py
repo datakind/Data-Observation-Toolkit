@@ -6,7 +6,7 @@ import great_expectations as ge
 import pandas as pd
 import yaml
 
-from utils.utils import get_test_id, get_entity_id_from_name
+from utils.utils import get_test_id
 from utils.connection_utils import (
     update_db_config_from_os,
     get_db_params_from_config,
@@ -268,16 +268,13 @@ def extract_df_from_ge_test_results_csv(run_id, project_id, logger):
         columns={"expectation_config.expectation_type": "test_type"}, inplace=True
     )
     ge_tests_summary.rename(
-        columns={"expectation_config.kwargs.data_table": "entity"}, inplace=True
+        columns={"expectation_config.kwargs.data_table": "entity_id"}, inplace=True
     )
     ge_tests_summary.rename(
         columns={"exception_info.exception_message": "test_status_message"},
         inplace=True,
     )
-    ge_tests_summary["entity_id"] = ge_tests_summary.apply(
-        lambda x: get_entity_id_from_name(project_id, x["entity"]),
-        axis=1,
-    )
+
     ge_tests_summary["test_id"] = ge_tests_summary.apply(
         lambda x: get_test_id(
             x["test_type"],

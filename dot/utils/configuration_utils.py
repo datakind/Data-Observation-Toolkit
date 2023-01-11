@@ -18,6 +18,7 @@ GE_BATCH_CONFIG_FINAL_FILENAME = "./great_expectations/batch_config.json"
 GE_CONFIG_VARIABLES_FINAL_FILENAME = (
     "./great_expectations/uncommitted/config_variables.yml"
 )
+DBT_MODELNAME_PREFIX = "dot_model__"
 
 DBT_PROJECT_SEPARATOR = "/"
 
