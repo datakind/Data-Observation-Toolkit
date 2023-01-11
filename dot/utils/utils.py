@@ -183,6 +183,7 @@ def get_test_id(
     UUID: str
         UUID3 id read from dot.configured_tests
     """
+    print(f"entity from get_test_id: {entity_id}")
     test_id = get_configured_tests_row(
         test_type, entity_id, column, project_id, test_parameters
     ).get("test_id")
@@ -245,7 +246,7 @@ def get_configured_tests_row(
     test_params_clause = ""
     if test_parameters != "":
         test_params_clause = (
-            f" AND regexp_replace(LOWER(CAST(test_parameters AS VARCHAR)), '\W+', '', 'g') = "
+            f" AND regexp_replace(LOWER(CAST('{test_parameters}' AS VARCHAR)), '\W+', '', 'g') = "
             f"'{prefix}{test_parameters.lower()}';"
         )
 
@@ -257,9 +258,8 @@ def get_configured_tests_row(
                         {schema_dot}.configured_tests
                     WHERE
                         test_type = '{test_type}' AND
-                        entity_id = '{entity_id}' AND
-                        column_name = '{column}'
-                        {test_params_clause}
+                        entity_id::text = '{entity_id}'
+                        
                 """
     # print(query)
 
@@ -575,7 +575,7 @@ def get_test_rows(
                         entity_df[column_name].isin(
                             test_results_df.value_field.unique()
                         ),
-                        "uuid",
+                        unique_column_name,
                     ].tolist()
                     break
                 # Rest are basic id fields
@@ -906,7 +906,7 @@ def get_entity_name_from_id(project_id: str, entity_id: str) -> str:
         FROM
             {schema_dot}.configured_entities
         WHERE
-            entity_id = '{entity_id}'
+            entity_id::text = '{entity_id}'
     """
     return f"{dot_model_PREFIX}{_get_entity(conn_dot, query)}"
 

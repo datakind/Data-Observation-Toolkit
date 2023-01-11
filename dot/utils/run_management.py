@@ -109,24 +109,34 @@ def run_dot_stages(project_id, logger, run_id):
     all_tests_summary = pd.concat([dbt_test_summary, ge_test_summary])
     all_tests_rows = pd.concat([dbt_test_rows, ge_test_rows])
 
-    # ===== Populate summary stats for rows total, passed, failed =====
-    all_tests_summary = set_summary_stats(all_tests_summary, project_id, logger)
+    if all_tests_summary.shape[0] > 0:
 
-    # ========================= Save results  =========================
-    # To flat file, useful for debugging
-    all_tests_summary.to_excel(f"./generated_files/{project_id}/all_tests_summary.xlsx")
-    all_tests_rows.to_excel(f"./generated_files/{project_id}/all_tests_rows.xlsx")
+        # ===== Populate summary stats for rows total, passed, failed =====
+        all_tests_summary = set_summary_stats(all_tests_summary, project_id, logger)
 
-    # To DB
-    save_tests_to_db(all_tests_rows, all_tests_summary, project_id, logger)
+        # ========================= Save results  =========================
+        # To flat file, useful for debugging
+        all_tests_summary.to_excel(f"./generated_files/{project_id}/all_tests_summary.xlsx")
+        all_tests_rows.to_excel(f"./generated_files/{project_id}/all_tests_rows.xlsx")
 
-    logger.info(
-        "Ping!!! ... DOT run "
-        + str(run_id)
-        + " complete for project "
-        + str(project_id)
-        + ". 😊"
-    )
+        # To DB
+        save_tests_to_db(all_tests_rows, all_tests_summary, project_id, logger)
+
+        logger.info(
+            "Ping!!! ... DOT run "
+            + str(run_id)
+            + " complete for project "
+            + str(project_id)
+            + ". 😊"
+        )
+    else:
+        logger.info(
+            "Ooops!!! ... DOT run "
+            + str(run_id)
+            + " or project "
+            + str(project_id)
+            + " has no test results."
+        )
 
 
 def run_dot_tests(project_id, logger, run_id):
