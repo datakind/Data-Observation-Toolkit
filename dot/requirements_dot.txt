@@ -71,7 +71,7 @@ nest-asyncio==1.5.4
 networkx==2.6.3
 notebook==6.4.12
 numpy==1.20.3
-oauthlib==3.2.1
+oauthlib==3.2.2
 openpyxl==3.0.9
 oscrypto==1.2.1
 packaging==20.9
