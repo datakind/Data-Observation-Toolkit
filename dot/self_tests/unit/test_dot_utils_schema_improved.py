@@ -42,12 +42,12 @@ class UtilsTestImproved(UtilsTest):
 
         configured_tests_row = get_configured_tests_row(
             test_type="accepted_values",
-            entity_id="ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            entity_id="all_flight_data",
             column="stops",
             project_id="ScanProject1",
             test_parameters='{"values": ["1", "2", "3", "Non-stop"]}',
         )
-        expected_test_id = "dac4c545-f610-3dae-ad82-1ddf27dae144"
+        expected_test_id = "cad13f73-27b5-3427-be8f-4d213bba3b19"
         self.assertEqual(
             expected_test_id,
             configured_tests_row["test_id"],
@@ -63,7 +63,7 @@ class UtilsTestImproved(UtilsTest):
             "description": "Disallowed FP methods entered in form",
             "impact": "",
             "proposed_remediation": "",
-            "entity_id": "ca4513fa-96e0-3a95-a1a8-7f0c127ea82a",
+            "entity_id": "all_flight_data",
             "test_type": "accepted_values",
             "column_name": "stops",
             "column_description": "",
