@@ -134,7 +134,7 @@ tzdata==2021.5
 tzlocal==4.1
 wcwidth==0.2.5
 webencodings==0.5.1
-Werkzeug==2.0.2
+Werkzeug==2.2.3
 widgetsnbextension==3.5.2
 zipp==3.6.0
 pytest==7.1.2
