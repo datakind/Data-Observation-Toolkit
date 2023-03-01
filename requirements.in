@@ -1,0 +1,18 @@
+black
+dbt-core==1.3.1
+dbt-postgres==1.3.1
+gdown
+# great-expectations==0.12.10
+matplotlib
+matplotlib-inline
+python-on-whales
+seaborn
+SQLAlchemy==1.3.24
+pytest
+mock
+pylint
+pytest-timeout
+faker
+faker-airtravel
+psycopg2-binary
+pip-tools
