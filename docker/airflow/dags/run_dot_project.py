@@ -19,6 +19,23 @@ from airflow.models import Variable  # pylint: disable=import-error
 from sqlalchemy import create_engine
 
 
+def get_connection(target_conn_in):
+    connection = BaseHook.get_connection(target_conn_in)
+    connection_string = (
+            "postgresql://"
+            + str(connection.login)
+            + ":"
+            + str(connection.password)
+            + "@"
+            + str(connection.host)
+            + ":"
+            + str(connection.port)
+            + "/"
+            + target_conn_in
+    )
+    return connection_string
+
+
 def get_object(
         object_name_in,
         earliest_date_to_sync,
@@ -269,6 +286,7 @@ def sync_object(
         object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
     )
 
+
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
     """
     We are syncing new data where new columns and columns types might change.
@@ -302,6 +320,7 @@ def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
                  f"END $$; "
         cur.execute(query1)
         cur.execute(query2)
+
 
 def run_dot_app(project_id_in):
     """
@@ -349,6 +368,14 @@ with DAG(
     target_conn = config["target_connid"]
 
     af_tasks = []
+
+    af_tasks.append(
+        BashOperator(
+            task_id=f"import_local_files",
+            dag=dag,
+            bash_command=f"cd /app/dot && python upload_local_files.py --connection_string {get_connection(target_conn)}",
+        )
+    )
 
     for project in config["dot_projects"]:
 
