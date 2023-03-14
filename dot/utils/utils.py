@@ -842,7 +842,6 @@ def set_summary_stats(
 
     return tests_summary
 
-
 def _get_entity(conn_dot: pg.extensions.connection, query: str) -> str:
     """
     Gets entity name from entity_id
