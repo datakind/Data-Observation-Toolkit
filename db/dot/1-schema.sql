@@ -79,8 +79,7 @@ CREATE TABLE IF NOT EXISTS dot.entity_categories (
 
 CREATE TABLE IF NOT EXISTS dot.configured_entities (
   project_id VARCHAR(300) NOT NULL,
-  entity_id UUID,
-  entity_name VARCHAR(300),
+  entity_id VARCHAR(300),
   entity_category VARCHAR(300),
   entity_definition VARCHAR(4096),
   date_added TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -104,7 +103,7 @@ CREATE TABLE IF NOT EXISTS dot.configured_tests(
     description VARCHAR(1000) NOT NULL,
     impact VARCHAR(1000) NULL,
     proposed_remediation VARCHAR(1000) NULL,
-    entity_id UUID NOT NULL references dot.configured_entities on update cascade,
+    entity_id VARCHAR(300) NOT NULL references dot.configured_entities on update cascade,
     test_type VARCHAR(300) NOT NULL references dot.test_types on update cascade,
     column_name VARCHAR(300) NULL,
     column_description VARCHAR(1000) NULL,
@@ -140,7 +139,7 @@ CREATE TABLE IF NOT EXISTS dot.test_results(
   test_result_id VARCHAR(300) NOT NULL,
   run_id UUID,
   test_id UUID references dot.configured_tests on update cascade,
-  entity_id UUID,
+  entity_id VARCHAR(300),
   status TEXT,
   view_name VARCHAR(300) NULL,
   id_column_name TEXT,
@@ -157,7 +156,7 @@ CREATE TABLE IF NOT EXISTS dot.test_results(
 CREATE TABLE IF NOT EXISTS dot.test_results_summary (
   run_id UUID,
   test_id UUID references dot.configured_tests on update cascade,
-  entity_id UUID references dot.configured_entities on update cascade,
+  entity_id VARCHAR(300) references dot.configured_entities on update cascade,
   test_type VARCHAR(300) NOT NULL references dot.test_types on update cascade,
   column_name VARCHAR(300) NULL,
   test_parameters VARCHAR(1000) NULL,
@@ -253,8 +252,6 @@ AS $$
 declare
    KEY_STRING text;
 BEGIN
-   KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
-   NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_added := NOW();
    new.date_modified := NOW();
    RETURN NEW;
@@ -267,11 +264,9 @@ LANGUAGE plpgsql
 AS $$
 declare
    KEY_STRING text;
-   OLD_ENTITY_ID uuid;
-   NEW_ENTITY_ID uuid;
+   OLD_ENTITY_ID  VARCHAR(300);
+   NEW_ENTITY_ID  VARCHAR(300);
 BEGIN
-   KEY_STRING := new.entity_name || new.entity_category || new.entity_definition;
-   NEW.entity_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
    new.date_modified := NOW();
    RETURN NEW;
 END;
