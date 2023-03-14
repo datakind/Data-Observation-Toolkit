@@ -12,8 +12,6 @@ from utils.utils import (
     get_short_test_name,
     get_configured_tests_row,
     run_sub_process,
-    get_entity_id_from_name,
-    dot_model_PREFIX,
 )
 from utils.connection_utils import get_db_params_from_config
 from utils.configuration_utils import (
@@ -21,6 +19,7 @@ from utils.configuration_utils import (
     DbParamsConnection,
     get_dbt_config_model_paths,
     adapt_core_entities,
+    DBT_MODELNAME_PREFIX
 )
 from utils.dbt_logs import (
     read_dbt_logs,
@@ -254,8 +253,7 @@ def extract_df_from_dbt_test_results_json(
     dbt_tests_summary = {}
     for row in dbt_results:
         processed_row = process_dbt_logs_row(row)
-
-        entity_id = get_entity_id_from_name(project_id, processed_row.entity_name)
+        entity_id = processed_row.entity_id.replace(DBT_MODELNAME_PREFIX,"")
         configured_test_row = get_configured_tests_row(
             processed_row.test_type,
             entity_id,
@@ -341,7 +339,7 @@ def create_core_entities(
 
     for i, row in configured_entities.iterrows():
         filename = os.path.join(
-            output_path, f"{dot_model_PREFIX}{row['entity_name']}.sql"
+            output_path, f"{DBT_MODELNAME_PREFIX}{row['entity_id']}.sql"
         )
         logger.info(f"Writing core entity file: {filename}")
         with open(filename, "w") as f:
