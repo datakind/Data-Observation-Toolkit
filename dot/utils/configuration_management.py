@@ -337,10 +337,10 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             #    test_parameters = ""
 
             # Update 'tests' node for this entity with non column-specific tests
-            if column_name in (None, ""):
+            if column_name in (None, "","null"):
                 if "tests" not in config_options[entity_id]:
                     config_options[entity_id]["tests"] = []
-                if test_parameters not in ("", None):
+                if test_parameters not in ("", None,"null"):
                     test = {test_type: test_parameters}
                     config_options[entity_id]["tests"].append(test)
 
