@@ -23,7 +23,7 @@ class DbtUtilsTest(BaseSelfTestClass):
 
     def setUp(self) -> None:
         with open("self_tests/data/queries/dbt_core_generated_objects.sql", "r") as f:
-            self.create_self_tests_db_schema(f.read())
+            self.create_self_tests_db_schema(additional_query=f.read())
 
     @patch("utils.configuration_utils._get_filename_safely")
     def test_extract_df_from_dbt_test_results_json(
