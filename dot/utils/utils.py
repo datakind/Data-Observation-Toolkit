@@ -565,7 +565,7 @@ def get_test_rows(
                         entity_df[column_name].isin(
                             test_results_df.value_field.unique()
                         ),
-                        "uuid",
+                        unique_column_name,
                     ].tolist()
                     break
                 # Rest are basic id fields
@@ -841,7 +841,6 @@ def set_summary_stats(
     )
 
     return tests_summary
-
 
 def _get_entity(conn_dot: pg.extensions.connection, query: str) -> str:
     """
