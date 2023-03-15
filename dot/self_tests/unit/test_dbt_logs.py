@@ -73,7 +73,7 @@ class DbtLogsUtilsTest(DbtBaseSelfTestClass):
                 test_status="fail",
                 test_message="got 53 results, configured to fail if != 0",
                 column_name="origin_airport",
-                entity_name="dot_model__all_flight_data",
+                entity_id="dot_model__all_flight_data",
                 test_parameters="{}",
                 short_test_name="tr_dot_model__all_flight_data_not_null_origin_a",
             )
