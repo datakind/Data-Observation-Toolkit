@@ -19,7 +19,7 @@ class DbtOutputProcessedRow:
     test_status: str
     test_message: str
     column_name: str
-    entity_name: str
+    entity_id: str
     test_parameters: str
     short_test_name: str
 
@@ -138,12 +138,12 @@ def process_dbt_logs_row(row: dict) -> dict:
     test_message = row["message"].lower() if row["message"] else ""
 
     column_name = node.get("column_name")
-    entity_name = node["original_file_path"].split("/")[-1].split(".")[0]
+    entity_id = node["original_file_path"].split("/")[-1].split(".")[0]
 
     test_parameters = _get_test_parameters(node, test_type)
 
     # For custom sql tests the view name has "id_XX" at the end, needs to be stripped
-    entity_name = entity_name.split("_id")[0]
+    entity_id = entity_id.split("_id")[0]
 
     _, short_test_name = get_short_test_name(node)
 
@@ -153,7 +153,7 @@ def process_dbt_logs_row(row: dict) -> dict:
         test_status,
         test_message,
         column_name,
-        entity_name,
+        entity_id,
         test_parameters,
         short_test_name,
     )
