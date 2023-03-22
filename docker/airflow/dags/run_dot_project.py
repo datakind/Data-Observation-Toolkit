@@ -220,7 +220,7 @@ def save_object(
         using = f"USING {col}::{type}"
         query = f"ALTER TABLE {schema}.{object_name_in} ALTER COLUMN {col} TYPE {type} {using};"
         with PostgresHook(
-            postgres_conn_id=target_conn_in, schema=target_conn_in
+                postgres_conn_id=target_conn_in, schema=target_conn_in
         ).get_conn() as conn:
             cur = conn.cursor()
             print(query)
@@ -272,10 +272,9 @@ def sync_object(
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
     """
     We are syncing new data where new columns and columns types might change.
-    Postgres will prevent ALTER TABLE if any views exist, so we will drop all
-    tables in the dot test schema. These will be recreated in the dot run.
-    This assumes the dot tests schema is dot_data_tests
-    (defined as variable "schema_to_drop_from").
+    Postgres will prevent ALTER TABLE if any views exist, so we will drop all tables in the dot test schema.
+    These will be recreated in the dot run.
+    This assumes the dot tests schema is dot_data_tests (defined as variable "schema_to_drop_from").
 
     Input
     -----
