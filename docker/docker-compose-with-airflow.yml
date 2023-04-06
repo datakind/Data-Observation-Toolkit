@@ -113,6 +113,14 @@ services:
   #  container_name: superset
 
   # ================================== Web App ===============================
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./appsmith/stacks:/appsmith-stacks
   #dot-webapp-server:
   #  build:
   #      context: ..
