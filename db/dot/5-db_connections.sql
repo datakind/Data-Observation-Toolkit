@@ -21,5 +21,6 @@ threads VARCHAR(255)
 
 INSERT INTO dot_config.dot_db_config(connection_name,type,host,user_name,password,port,dbname,schema,threads)
 VALUES('dot_db','postgres','dot_db','postgres','','5432','dot_db','dot','4');
-
+INSERT INTO dot_config.dot_db_config(connection_name,type,host,user_name,password,port,dbname,schema,threads)
+VALUES('ScanProject1','postgres','dot_db','postgres','','5432','dot_db','public','4');
 --ToDo:Hashthepasswordcolumn

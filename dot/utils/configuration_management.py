@@ -21,12 +21,10 @@ from utils.configuration_utils import (
     GE_GREAT_EXPECTATIONS_FINAL_FILENAME,
     GE_CONFIG_VARIABLES_FINAL_FILENAME,
     load_config_file,
-    DBT_MODELNAME_PREFIX
+    DBT_MODELNAME_PREFIX,
+    load_config_from_db
 )
 from utils.dbt import create_core_entities
-
-# %%
-
 
 def create_project_directories(project_id, logger=logging.Logger):
     """Function to generate project_directories if they don't exist. Creates ...
@@ -144,7 +142,7 @@ def generate_master_config_files(project_id, logger=logging.Logger):
           | | | |____config_variables.yml
           | | | |____batch_config.json
     """
-    dot_config = load_config_file()
+    dot_config = load_config_from_db(project_id)
     output_schema_suffix = dot_config.get("dot", {}).get("output_schema_suffix")
 
     project_db_config = dot_config[f"{project_id}_db"]
