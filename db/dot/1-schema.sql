@@ -1,6 +1,12 @@
 CREATE SCHEMA dot;
 -- CREATE SCHEMA data;
 
+CREATE SCHEMA airflow;
+-- Schema for airflow to store its metadata
+
+CREATE USER airflow WITH PASSWORD 'airflow';
+GRANT ALL PRIVILEGES ON DATABASE dot_db TO airflow;
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS dot.scenarios(

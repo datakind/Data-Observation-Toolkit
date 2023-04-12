@@ -8,7 +8,7 @@ faker_airtravel==0.4
 flatten_json==0.1.13
 gdown==4.5.3
 great-expectations==0.12.10
-ipython==8.10.0
+ipython==7.31.1
 ipython-genutils==0.2.0
 jinja2==2.11.3
 json-rpc==1.13.0
