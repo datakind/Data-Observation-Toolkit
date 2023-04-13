@@ -155,10 +155,15 @@ def load_config_from_db(project_id: str):
     # establish_db_connection(with db_config creds)
     sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
 
-    with engine.begin() as conn:
-        result = conn.execute(sql)
-        row = result.fetchone()
-        project_schema = row['project_schema']
+    #try with block, if it fails, print error
+    try:
+        with engine.begin() as conn:
+            result = conn.execute(sql)
+            row = result.fetchone()
+            project_schema = row['project_schema']
+    except Exception as e:
+        raise Exception(f"Looks like the project_id '{project_id}' has not been set up. "
+                        f"Please check the projects in appsmith or under the dot.projects table in the dot_db and try again.")
 
     project = project_id + "_db"
     new_entry = {project: {'type': 'postgres', 'host': 'dot_db', 'user': 'postgres', 'pass': os.getenv("POSTGRES_PASSWORD"), 'port': 5432, 'dbname': 'dot_db', 'schema': project_schema, 'threads': 4}}
