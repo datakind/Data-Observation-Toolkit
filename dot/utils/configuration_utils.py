@@ -5,6 +5,7 @@ import re
 from enum import Enum
 from pathlib import Path
 from typing import Iterable, Optional
+from sqlalchemy import create_engine
 import yaml
 
 DbParamsConfigFile = Enum("DbParamsConfigFile", "dot_config.yml")
@@ -100,7 +101,7 @@ def load_credentials(project_id: str, connection_params: DbParamsConnection) -> 
               connection_params : DbParamsConnection
                   enum type
     """
-    db_config = load_config_file()
+    db_config = load_config_from_db(project_id)
 
     db_credentials = _get_credentials(db_config, project_id, connection_params)
 
@@ -121,6 +122,57 @@ def load_config_file():
     with open(_get_filename_safely(dot_config_FILENAME)) as f:
         return yaml.load(f, Loader=yaml.FullLoader)
 
+
+def load_config_from_db(project_id: str):
+
+    """Reads config for project from db
+    Returns
+    -------
+    config: str
+        content of config file and project specific db connection"""
+
+    config = load_config_file()
+    db_credentials = config.get("dot_db", {})
+
+    engine = create_engine(
+        "postgresql://"
+        + db_credentials["user"]
+        + ":"
+        + os.getenv("POSTGRES_PASSWORD")
+        + "@"
+        + db_credentials["host"]
+        + ":"
+        + str(db_credentials["port"])
+        + "/"
+        + db_credentials["dbname"],
+        paramstyle="format",
+        executemany_mode="values",
+        executemany_values_page_size=1000,
+        executemany_batch_page_size=200,
+    )
+    # establish_db_connection(with db_config creds)
+    sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
+
+    with engine.begin() as conn:
+        result = conn.execute(sql)
+        row = result.fetchone()
+        project_schema = row['project_schema']
+    #try with block, if it fails, print error
+    try:
+        with engine.begin() as conn:
+            result = conn.execute(sql)
+            row = result.fetchone()
+            project_schema = row['project_schema']
+    except Exception as e:
+        raise Exception(f"Looks like the project_id '{project_id}' has not been set up. "
+                        f"Please check the projects in appsmith or under the dot.projects table in the dot_db and try again.")
+
+    project = project_id + "_db"
+    new_entry = {project: {'type': 'postgres', 'host': 'dot_db', 'user': 'postgres', 'pass': os.getenv("POSTGRES_PASSWORD"), 'port': 5432, 'dbname': 'dot_db', 'schema': project_schema, 'threads': 4}}
+
+    config[project] = new_entry[project]
+
+    return config
 
 def extract_dbt_config_env_variable(dbt_setting: dict) -> str:
     """Takes a dbt config file and replaces any environment variable syntax with the
