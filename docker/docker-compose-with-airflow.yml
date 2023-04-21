@@ -40,25 +40,26 @@ version: '2.1'
 #                              Default: airflow
 # _PIP_ADDITIONAL_REQUIREMENTS - Additional PIP requirements to add when starting all containers.
 #                                Default: ''
-#
 
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.2.4}
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.0}
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:${POSTGRES_PASSWORD}@dot_db:5432/dot_db?options=-csearch_path=airflow
+    AIRFLOW__DATABASE__RESULT_BACKEND: postgresql+psycopg2://postgres:${POSTGRES_PASSWORD}@dot_db:5432/dot_db?options=-csearch_path=airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CORE__SQL_ALCHEMY_SCHEMA: 'airflow'
+    AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA: 'airflow'
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
     PYTHON_BASE_IMAGE: "python:3:8-slim-buster"
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     SSH_AUTH_SOCK: /ssh-agent
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - airflow-logs-volume:/opt/airflow/logs
@@ -70,9 +71,9 @@ x-airflow-common:
   #user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
   user: "1000:0" # This will work but change mounts to root
   depends_on:
+    dot_db:
+      condition: service_started
     redis:
-      condition: service_healthy
-    postgres:
       condition: service_healthy
 
 services:
@@ -113,6 +114,14 @@ services:
   #  container_name: superset
 
   # ================================== Web App ===============================
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./appsmith/stacks:/appsmith-stacks
   #dot-webapp-server:
   #  build:
   #      context: ..
@@ -140,23 +149,6 @@ services:
   #    - ./webapp/frontend/env:/usr/src/app/.env
 
   # ================================== AIRFLOW ===============================
-
-  # DB used for airflow
-  postgres:
-    image: postgres:13
-    ports:
-      - "5434:5432"
-    environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
-    volumes:
-      - postgres-db-volume:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "airflow" ]
-      interval: 5s
-      retries: 5
-    restart: always
 
   redis:
     image: redis:latest
