@@ -166,9 +166,11 @@ def generate_master_config_files(project_id, logger=logging.Logger):
                 "models:",
                 "    dbt_model_1:",
                 "        core:",
-                f"            +schema: '{output_schema_suffix}'",
+                f"            +schema: '{output_schema_suffix}'\n"
+                f"            materialized: view",
                 "        test:",
-                f"            +schema: '{output_schema_suffix}'",
+                f"            +schema: '{output_schema_suffix}'\n"
+                f"            materialized: view",
             ]
         )
     with open(output_file, "a") as f:
