@@ -6,29 +6,19 @@ INSERT INTO dot.entity_categories VALUES('ZAG', 'Zagreb airport flights');
 INSERT INTO dot.entity_categories VALUES('ETH', 'Ethiopian Airlines');
 
 -- configured entities - db views of the data we want to scan
-INSERT INTO dot.configured_entities VALUES('ScanProject1', 'all_flight_data', 'ALL', '{{ config(materialized=''view'') }}
-{% set schema = <schema> %}
-select *
-from {{ schema }}.flight_data ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
+INSERT INTO dot.configured_entities VALUES('ScanProject1', 'all_flight_data', 'ALL', 'select *
+from public.flight_data ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
-INSERT INTO dot.configured_entities VALUES('ScanProject1', 'zagreb_flight_data', 'ZAG', '{{ config(materialized=''view'') }}
-{% set schema = <schema> %}
-select *
+INSERT INTO dot.configured_entities VALUES('ScanProject1', 'zagreb_flight_data', 'ZAG', 'select *
 from {{ schema }}.flight_data WHERE origin_airport=''Zagreb airport''    ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
-INSERT INTO dot.configured_entities VALUES('ScanProject1', 'ethiopia_airlines_data', 'ETH', '{{ config(materialized=''view'') }}
-{% set schema = <schema> %}
-select *
+INSERT INTO dot.configured_entities VALUES('ScanProject1', 'ethiopia_airlines_data', 'ETH', 'select *
 from {{ schema }}.flight_data WHERE airline=''Ethiopian Airlines''    ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
-INSERT INTO dot.configured_entities VALUES('ScanProject1', 'all_airports_data', 'ALL', '{{ config(materialized=''view'') }}
-{% set schema = <schema> %}
-select *
+INSERT INTO dot.configured_entities VALUES('ScanProject1', 'all_airports_data', 'ALL', 'select *
 from {{ schema }}.airport_data   ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
-INSERT INTO dot.configured_entities VALUES('ScanProject1', 'airlines_data', 'ALL', '{{ config(materialized=''view'') }}
-{% set schema = <schema> %}
-select DISTINCT airline
+INSERT INTO dot.configured_entities VALUES('ScanProject1', 'airlines_data', 'ALL', 'select DISTINCT(airline)
 from {{ schema }}.flight_data   ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 

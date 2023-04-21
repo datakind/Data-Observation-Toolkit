@@ -47,11 +47,10 @@ x-airflow-common:
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:${POSTGRES_PASSWORD}@dot_db:5432/dot_db?options=-csearch_path=airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: postgresql+psycopg2://postgres:${POSTGRES_PASSWORD}@dot_db:5432/dot_db?options=-csearch_path=airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:${POSTGRES_PASSWORD}@dot_db:5432/dot_db?options=-csearch_path=airflow
+    AIRFLOW__DATABASE__RESULT_BACKEND: postgresql+psycopg2://postgres:${POSTGRES_PASSWORD}@dot_db:5432/dot_db?options=-csearch_path=airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__DATABASE__SQL_ALCHEMY_SCHEMA: 'airflow'
-    AIRFLOW__CORE__SQL_ALCHEMY_SCHEMA: 'airflow'
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
