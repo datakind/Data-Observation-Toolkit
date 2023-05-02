@@ -17,7 +17,6 @@ from utils.configuration_utils import DbParamsConfigFile, DbParamsConnection
 from utils.configuration_utils import DBT_MODELNAME_PREFIX
 
 
-
 def setup_custom_logger(log_name, log_level, file_logger=False):
     """Sets up a custom logger which logs to file as well as console
 
@@ -152,7 +151,7 @@ def get_short_test_name(node: dict) -> Tuple[str, str]:
         )
         if word_to_shorten > 1:
             short_test_name = "_".join(
-                [short_test_name] + test_name_pieces[-word_to_shorten + 1:]
+                [short_test_name] + test_name_pieces[-word_to_shorten + 1 :]
             )
 
     return test_name, short_test_name
@@ -409,7 +408,7 @@ def generate_failing_passing_dfs(
         failing_ids,
         run_id,
         test_id,
-        entity_id.replace(DBT_MODELNAME_PREFIX,''),
+        entity_id.replace(DBT_MODELNAME_PREFIX, ""),
         "fail",
         view_name,
         id_column_name,
@@ -418,7 +417,7 @@ def generate_failing_passing_dfs(
         passing_ids,
         run_id,
         test_id,
-        entity_id.replace(DBT_MODELNAME_PREFIX,''),
+        entity_id.replace(DBT_MODELNAME_PREFIX, ""),
         "pass",
         view_name,
         id_column_name,
@@ -487,7 +486,8 @@ def get_test_rows(
         if not entity_id_or_primary_table in entity_data:
             entity_id_or_primary_table = entity_id_or_primary_table.split("_id")[0]
             entity_data[entity_id_or_primary_table] = pd.read_sql(
-                f"SELECT * FROM {schema_core}.{entity_id_or_primary_table.replace(DBT_MODELNAME_PREFIX+DBT_MODELNAME_PREFIX, DBT_MODELNAME_PREFIX)}", conn_core
+                f"SELECT * FROM {schema_core}.{entity_id_or_primary_table.replace(DBT_MODELNAME_PREFIX+DBT_MODELNAME_PREFIX, DBT_MODELNAME_PREFIX)}",
+                conn_core,
             )
 
         entity_df = entity_data[entity_id_or_primary_table]
@@ -831,7 +831,9 @@ def set_summary_stats(
 
     tests_summary["rows_total"] = entity_count
     tests_summary["rows_failed"] = failed_count
-    tests_summary["entity_id"] = tests_summary["entity_id"].apply(lambda x: x.replace(DBT_MODELNAME_PREFIX,''))
+    tests_summary["entity_id"] = tests_summary["entity_id"].apply(
+        lambda x: x.replace(DBT_MODELNAME_PREFIX, "")
+    )
 
     tests_summary["rows_passed"] = tests_summary.apply(
         lambda x: x["rows_total"] - x["rows_failed"]
@@ -841,6 +843,7 @@ def set_summary_stats(
     )
 
     return tests_summary
+
 
 def _get_entity(conn_dot: pg.extensions.connection, query: str) -> str:
     """
