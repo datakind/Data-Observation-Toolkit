@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS dot.test_parameters_interface(
     parameter VARCHAR(300) NOT NULL,
     parameter_type VARCHAR(300) CHECK(parameter_type IN ('entity any field', 'entity id field', 'entity columns boolean logic',
                                                          'view/table', 'entity date field', 'one of (hour, day, week)',
-                                                         'entity numeric field','sql statement','list of values')),
+                                                         'entity numeric field', 'sql statement', 'list of values')),
     example VARCHAR(300) NOT NULL,
     description VARCHAR(1000) NOT NULL,
     UNIQUE (test_type, parameter),
