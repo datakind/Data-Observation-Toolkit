@@ -275,17 +275,16 @@ also use the DOT user interface for tests, for more details please see section s
 The DOT will run tests against user-defined views onto the underlying data. These views are called "entities" and defined in table `dot.configured_entities`:
 
 
-| Column | Description |
-| :----------- | :----------- |
-| entity_id | UUID of the entity |
-| entity_name | Name of the entity e.g. ancview_danger_sign |
+| Column | Description                                                               |
+| :----------- |:--------------------------------------------------------------------------|
+| entity_id | Name of the entity e.g. ancview_danger_sign                               |
 | entity_category | Category of the entity e.g. anc => needs to be in `dot.entity_categories` |
-| entity_definition | String for the SQL query that defines the entity |
+| entity_definition | String for the SQL query that defines the entity                          |
 
 For example, this would be an insert command to create `ancview_danger_sign`:
 
 ```postgres-sql
-INSERT INTO dot.configured_entities VALUES('b05f1f9c-2176-46b0-8e8f-d6690f696b9b', 
+INSERT INTO dot.configured_entities (project_id,entity_id,entity_category,entity_definition,date_added,date_modified,last_updated_by) VALUES('Project1', 
 'ancview_danger_sign', 'anc', '{{ config(materialized=''view'') }}
 {% set schema = <schema> %}
 
@@ -293,8 +292,6 @@ select *
 from {{ schema }}.ancview_danger_sign');
 
 ```
-
-Note: UUID in the above statement will be overwritten with an automatically generated value.
 
 All entities use Jinja macro statements - the parts between `{ ... }` - which the DOT uses to create the entity 
 materialized views in the correct database location. Use the above format for any new entities you create.
@@ -368,7 +365,7 @@ generated one.
     <br><br>
     ```
     'INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', 
-    '', 'dot_model__ancview_pregnancy', 'relationships', 'uuid', '', 
+    '', 'ancview_pregnancy', 'relationships', 'uuid', '', 
     $${"name": "danger_signs_with_no_pregnancy", "to": "ref('dot_model__ancview_danger_sign')", "field": "pregnancy_uuid"}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
@@ -376,27 +373,27 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '52d7352e-56ee-3084-9c67-e5ab24afc3a3', 'DUPLICATE-1', 3, '', 
-    '', '', '6ba8075f-6f35-4ff1-be3a-4c75d0884bf4', 'unique', 'uuid', 'alternative index?', '', 
+    '', '', 'ancview_pregnancy', 'unique', 'uuid', 'alternative index?', '', 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 3. `not_negative_string_column`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '8aca2bee-9e95-3f8a-90e9-153714e05367', 'INCONSISTENT-1', 3, 
-    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'not_negative_string_column', 'patient_age_in_years', '', 
+    '', '', '', 'ancview_pregnancy', 'not_negative_string_column', 'patient_age_in_years', '', 
     $${"name": "patient_age_in_years"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 4. `not_null`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '549c0575-e64c-3605-85a9-70356a23c4d2', 'MISSING-1', 3, '', 
-    '', '', '638ed10b-3a2f-4f18-9ca1-ebf23563fdc0', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    '', '', 'ancview_pregnancy', 'not_null', 'patient_id', '', '', '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 5. `accepted_values`
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '935e6b61-b664-3eab-9d67-97c2c9c2bec0', 'INCONSISTENT-1', 3, 
-    '', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'accepted_values', 'fp_method_being_used', '', 
+    '', '', '', 'ancview_pregnancy', 'accepted_values', 'fp_method_being_used', '', 
     $${"values": ['oral mini-pill (progestogen)', 'male condom', 'female sterilization', 'iud', 'oral combination pill', 'implants', 'injectible']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
@@ -404,7 +401,7 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
-    '', '', '66f5d13a-8f74-4f97-836b-334d97932781', 'possible_duplicate_forms', '', '', 
+    '', '', 'ancview_pregnancy', 'possible_duplicate_forms', '', '', 
     $${"table_specific_reported_date": "delivery_date", "table_specific_patient_uuid": "patient_id", "table_specific_uuid": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 7. `associated_columns_not_null`
@@ -419,7 +416,7 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 3, 
-    'Test for miscalibrated thermometer', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 'expect_similar_means_across_reporters', 
+    'Test for miscalibrated thermometer', '', '', 'ancview_pregnancy', 'expect_similar_means_across_reporters', 
     'child_temperature_pre_chw', '', '{"key": "reported_by","quantity": "child_temperature_pre_chw",
     "form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', 
     '2022-01-19 20:00:00.000 -0500', 'your-name');
@@ -428,7 +425,7 @@ generated one.
     <br><br>
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 3, 
-    'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'baf349c9-c919-40ff-a611-61ddc59c2d52', 
+    'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'ancview_pregnancy', 
     'expression_is_true', '', '', 
     $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$, 
     '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'your-name');
@@ -437,7 +434,7 @@ generated one.
 <br><br>
 Custom SQL queries require special case because they must have `primary_table` and `primary_table_id_field` specified within the SQL query as shown below:
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', '95bd0f60-ab59-48fc-a62e-f256f5f3e6de', 'custom_sql', '', '',
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', 'ancview_pregnancy', 'custom_sql', '', '',
 format('{%s: %s}',
     to_json('query'::text),
     to_json($query$
@@ -527,72 +524,7 @@ custom SQL query. Given this, there is a useful Postgres function which will ret
 see 'Seeing the raw data for failed tests' above.
  
 
-## More complex configuration options
-
-All the configuration files must be located under the [config](dot/config) folder of the DOT.
-
-### Main config file
-
-The main config file must be called `dot_config.yml` and located at the top [config](dot/config) folder. Note that 
-this file will be ignored for version control. You may use the [example dot_config yaml](dot/config/example/dot_config.yml)
-as a template.
-
-Besides the DOT DB connection in the paragraph above, see below for additional config options.
-
-#### Connection parameters for each of the projects to run
-
-For each of the projects you would like to run, add a key to the DOT config yaml with the following structure:
-```
-<project_name>_db:
-  type: connection type e.g. postgres
-  host: host
-  user: username
-  pass: password
-  port: port number e.g 5432
-  dbname: database name
-  schema: schema name, e.g. public
-  threads: nubmer of threads for DBT, e.g. 4
-```
-
-#### Output schema suffix
-
-The DOT generates 2 kind of database objects:
-- Entities of the models that are being tested, e.g. assessments, follow ups, patients
-- Results of the failing tests
-
-If nothing is done, these objects would be created in the same schema as the original data for the project 
-(thus polluting the DB). If the key `output_schema_suffix` is added, its value will be added as a suffix; i.e. if the 
-project data is stored in a certain schema, the output objects will go to `<project_schema>_<schema_suffix>` 
-(e.g. to `public_tests` if the project schema is `public` and the suffix is set to `tests` in the lines above).
-
-Note that this mechanism uses a DBT feature, and that the same applies to the GE tests.
-
-#### Save passed tests
-
-The key `save_passed_tests` accepts boolean values. If set to true, tha results of the passing tests will be also stored
-to the DOT DB. If not, only the results of failing tests will be stored.
-
-### Other config file locations
-Optional configuration for DBT and Great Expectations can be added, per project, in a structure as follows.
-
-```bash
-|____config
-| |____<project_name>
-| | |____dbt
-| | | |____profiles.yml
-| | | |____dbt_project.yml
-| | |____ge
-| | | |____great_expectations.yml
-| | | |____config_variables.yml
-| | | |____batch_config.json
-```
-In general these customizations will not be needed, but only in some scenarios with particular requirements; these 
-require a deeper knowledge of the DOT and of either DBT and/or Great Expectations.
-
-There are examples for all the files above under [this folder](dot/config/example/project_name). For each of the 
-files you want to customize, you may copy and adapt the examples provided following the directory structure above.
-
-More details in the [config README](dot/config/README.md).
+### Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for information on more complex configuration options. 
 
 ## How to visualize the results using Superset
 
@@ -706,7 +638,7 @@ NOTE: You might need to use docker-compose on some hosts.
 
 `docker compose -f docker-compose-with-airflow.yml down -v` 
 
-### Running the DOT in Airflow
+### Running the DOT in Airflow (Demo)
 
 A DAG has been included which copies data from the uploaded DB dump into the DOT DB 'data_ScanProject1' schema, and then runs 
 the toolkit against this data. To do this ...
@@ -732,6 +664,23 @@ To use Airflow CLI for debugging a task (assuming you are getting object ancview
 Or to run just DOT stage ...
 
 `airflow tasks test run_dot_project run_dot  2022-03-01`
+
+
+### Running the DOT in Airflow (Connecting to external databases)
+
+The following instructions illustrate how to use a local airflow environment, connecting with external databases for the data and DOT.
+
+**NOTE:** These are for illustrative purposes only. If using Airflow in production it's important that it is set up correctly
+and does not expose a http connection to the internet, and also has adequate network security (firewal, strong password, etc)
+
+1. Edit [./dot/dot_config.yml] and set the correct parameters for your external dot_db
+2. Create a section for your data databases and set connection parameters
+3. If you have a DAG json file `dot_projects.json` already, deploy it into `./airflow/dags`
+4. Run steps 1-11 in [Configuring/Building Airflow Docker environment](#Configuring/Building Airflow Docker environment)
+5. Run steps 12 and 13, but use the values for your external databases you configured in `dot_config.yml`
+
+You will need to configure DOT tests and the DAG json file appropriately for your installation.
+
 
 #### Adding more projects
 

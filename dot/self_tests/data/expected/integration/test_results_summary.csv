@@ -1,5 +1,5 @@
 ,run_id,test_id,entity_id,test_type,column_name,test_parameters,test_status,test_status_message,failed_tests_view,failed_tests_view_sql,rows_total,rows_failed,rows_passed
-0,a92c500e-63a3-4984-ba90-523b162cb0a0,dac4c545-f610-3dae-ad82-1ddf27dae144,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,accepted_values,stops,"{'values': ['1', '2', '3', 'Non-stop']}",fail,"got 2 results, configured to fail if != 0",tr_dot_model__all_flight_data_accepted_values_stops," WITH all_values AS (
+0,51479924-b5ff-4efc-9ba0-97cbd021b39f,cad13f73-27b5-3427-be8f-4d213bba3b19,all_flight_data,accepted_values,stops,"{'values': ['1', '2', '3', 'Non-stop']}",fail,"got 2 results, configured to fail if != 0",tr_dot_model__all_flight_data_accepted_values_stops," WITH all_values AS (
          SELECT dot_model__all_flight_data.stops AS value_field,
             count(*) AS n_records
            FROM self_tests_public_tests.dot_model__all_flight_data
@@ -64,7 +64,7 @@
     dot_model__all_flight_data.price
    FROM self_tests_public_tests.dot_model__all_flight_data
   WHERE dot_model__all_flight_data.origin_airport IS NULL;",1001,53,948
-6,a92c500e-63a3-4984-ba90-523b162cb0a0,30c73263-50e2-3aaf-aee2-653c806bee36,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,possible_duplicate_forms,,"{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'airline', 'table_specific_reported_date': 'departure_time'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_possible_duplicate_f," WITH records_per_patient_period AS (
+5,51479924-b5ff-4efc-9ba0-97cbd021b39f,59b7fabd-acb8-3a38-8cbf-91736a214cab,all_flight_data,possible_duplicate_forms,,"{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'airline', 'table_specific_reported_date': 'departure_time'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_possible_duplicate_f," WITH records_per_patient_period AS (
          SELECT date_trunc('day'::text, dot_model__all_flight_data.departure_time::timestamp without time zone) AS date_period,
             dot_model__all_flight_data.airline AS patient_uuid_to_flag,
             count(dot_model__all_flight_data.uuid) AS number_of_records
@@ -81,7 +81,7 @@
    FROM possible_duplicate_combinations pdc
      LEFT JOIN self_tests_public_tests.dot_model__all_flight_data m ON date_trunc('day'::text, m.departure_time::timestamp without time zone) = pdc.date_period AND m.airline::text = pdc.patient_uuid_to_flag::text
  HAVING count(*) > 0;",1001,274,727
-7,a92c500e-63a3-4984-ba90-523b162cb0a0,7aa26bda-57e1-39b8-a3e9-979a3d882577,ca4513fa-96e0-3a95-a1a8-7f0c127ea82a,relationships,origin_airport,"{'to': ""ref('dot_model__all_airports_data')"", 'name': 'flight_with_no_airport', 'field': 'airport'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_flight_with_no_a," SELECT array_agg(from_model.from_uuid) AS uuid_list
+6,51479924-b5ff-4efc-9ba0-97cbd021b39f,2ba7f3e8-cd62-37ac-854f-01f704489130,all_flight_data,relationships,origin_airport,"{'to': ""ref('dot_model__all_airports_data')"", 'name': 'flight_with_no_airport', 'field': 'airport'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_flight_with_no_a," SELECT array_agg(from_model.from_uuid) AS uuid_list
    FROM ( SELECT dot_model__all_flight_data.uuid AS from_uuid,
             dot_model__all_flight_data.origin_airport AS from_column_id
            FROM self_tests_public_tests.dot_model__all_flight_data) from_model

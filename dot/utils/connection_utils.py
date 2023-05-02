@@ -35,7 +35,9 @@ def refresh_db_metadata(
     @return: updated database metadata
     """
     global metadata
-    metadata = MetaData(engine, reflect=True, schema=schema)
+    metadata = MetaData(engine, schema=schema)
+    metadata.reflect()
+    return metadata
 
 
 def create_sqlalchemy_engine(db_credentials: dict) -> sa.engine.base.Engine:

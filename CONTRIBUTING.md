@@ -16,6 +16,73 @@ you can open a new issue using a relevant [issue form](https://github.com/dataki
 
 As a general rule, we don’t assign issues to anyone. If you find an issue to work on, you are welcome to open a PR with a fix.
 
+### More complex configuration options
+
+All the configuration files must be located under the [config](dot/config) folder of the DOT.
+
+### Main config file
+
+The main config file must be called `dot_config.yml` and located at the top [config](dot/config) folder. Note that 
+this file will be ignored for version control. You may use the [example dot_config yaml](dot/config/example/dot_config.yml)
+as a template.
+
+Besides the DOT DB connection in the paragraph above, see below for additional config options.
+
+#### Connection parameters for each of the projects to run
+
+For each of the projects you would like to run, add a key to the DOT config yaml with the following structure:
+```
+<project_name>_db:
+  type: connection type e.g. postgres
+  host: host
+  user: username
+  pass: password
+  port: port number e.g 5432
+  dbname: database name
+  schema: schema name, e.g. public
+  threads: nubmer of threads for DBT, e.g. 4
+```
+
+#### Output schema suffix
+
+The DOT generates 2 kind of database objects:
+- Entities of the models that are being tested, e.g. assessments, follow ups, patients
+- Results of the failing tests
+
+If nothing is done, these objects would be created in the same schema as the original data for the project 
+(thus polluting the DB). If the key `output_schema_suffix` is added, its value will be added as a suffix; i.e. if the 
+project data is stored in a certain schema, the output objects will go to `<project_schema>_<schema_suffix>` 
+(e.g. to `public_tests` if the project schema is `public` and the suffix is set to `tests` in the lines above).
+
+Note that this mechanism uses a DBT feature, and that the same applies to the GE tests.
+
+#### Save passed tests
+
+The key `save_passed_tests` accepts boolean values. If set to true, tha results of the passing tests will be also stored
+to the DOT DB. If not, only the results of failing tests will be stored.
+
+### Other config file locations
+Optional configuration for DBT and Great Expectations can be added, per project, in a structure as follows.
+
+```bash
+|____config
+| |____<project_name>
+| | |____dbt
+| | | |____profiles.yml
+| | | |____dbt_project.yml
+| | |____ge
+| | | |____great_expectations.yml
+| | | |____config_variables.yml
+| | | |____batch_config.json
+```
+In general these customizations will not be needed, but only in some scenarios with particular requirements; these 
+require a deeper knowledge of the DOT and of either DBT and/or Great Expectations.
+
+There are examples for all the files above under [this folder](dot/config/example/project_name). For each of the 
+files you want to customize, you may copy and adapt the examples provided following the directory structure above.
+
+More details in the [config README](dot/config/README.md).
+
 ## Making Code changes
 
 ## Setting up a Development Environment
