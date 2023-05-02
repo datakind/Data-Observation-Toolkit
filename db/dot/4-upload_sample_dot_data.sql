@@ -65,7 +65,7 @@ $${"table_specific_reported_date": "departure_time", "table_specific_patient_uui
 "uuid", "table_specific_period": "day"}$$, '2021-12-23 19:00:00.000 -0500', '2022-03-21 19:00:00.000 -0500', 'Matt');
 
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1',
-5, 'Number of stops has a reasonible value', '', '', 'all_flight_data', 'custom_sql', '', '',
+5, 'Number of stops has a reasonable value', '', '', 'all_flight_data', 'custom_sql', '', '',
 format('{%s: %s}',
     to_json('query'::text),
     to_json($query$
