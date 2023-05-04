@@ -134,11 +134,7 @@ def load_config_from_db(project_id: str):
     config = load_config_file()
     db_credentials = config.get("dot_db", {})
 
-    # The following is to satisfy selftests
-    if os.getenv("POSTGRES_PASSWORD") is None:
-        db_credentials["pass"] = "password"
-    else:
-        db_credentials["pass"] = os.getenv("POSTGRES_PASSWORD")
+    db_credentials["pass"] = os.getenv("POSTGRES_PASSWORD", "postgres")
 
     engine = create_engine(
         "postgresql://"
