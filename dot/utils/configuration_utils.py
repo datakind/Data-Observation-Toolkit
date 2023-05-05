@@ -364,7 +364,7 @@ def adapt_core_entities(schema_project: str, entity_definition: str) -> Iterable
     output_lines = []
     for line in entity_definition.split("\n"):
         line = re.sub(
-            "%\s*set\s*schema\s*=\s*(.+%)",  # pylint: disable=anomalous-backslash-in-string
+            r"%\s*set\s*schema\s*=\s*(.+%)",  # pylint: disable=anomalous-backslash-in-string
             f"% set schema = '{schema_project}' %",
             line,
         )
