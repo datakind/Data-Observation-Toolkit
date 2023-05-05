@@ -159,10 +159,11 @@ def load_config_from_db(project_id: str):
     with engine.begin() as conn:
         try:
             result = conn.execute(sql)
+            row = result.fetchone()
         except Exception as e:
             result = conn.execute(f"SELECT project_schema FROM self_tests_dot.projects WHERE project_id = '{project_id}';")
+            row = result.fetchone()
 
-        row = result.fetchone()
         project_schema = row['project_schema']
     #try with block, if it fails, print error
     try:
