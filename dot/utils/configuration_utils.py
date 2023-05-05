@@ -155,7 +155,7 @@ def load_config_from_db(project_id: str):
 
     # establish_db_connection(with db_config creds)
     sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
-    sql_selftest = f"SELECT project_schema FROM self_tests_dot.projects WHERE project_id = '{project_id}';"
+    sql_selftest = f"SELECT project_schema FROM self_tests_public.projects WHERE project_id = '{project_id}';"
 
     #try with block, if it fails, print error
     try:
