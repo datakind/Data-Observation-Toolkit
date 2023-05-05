@@ -134,55 +134,45 @@ def load_config_from_db(project_id: str):
     config = load_config_file()
     db_credentials = config.get("dot_db", {})
 
-    db_credentials["pass"] = os.getenv("POSTGRES_PASSWORD", "postgres")
+    if f"{project_id}_db" not in config:
 
-    engine = create_engine(
-        "postgresql://"
-        + db_credentials["user"]
-        + ":"
-        + db_credentials["pass"]
-        + "@"
-        + db_credentials["host"]
-        + ":"
-        + str(db_credentials["port"])
-        + "/"
-        + db_credentials["dbname"],
-        paramstyle="format",
-        executemany_mode="values",
-        executemany_values_page_size=1000,
-        executemany_batch_page_size=200,
-    )
+        db_credentials["pass"] = os.getenv("POSTGRES_PASSWORD", "postgres")
 
-    # establish_db_connection(with db_config creds)
-    sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
-    sql_selftest = f"SELECT project_schema FROM self_tests_public.projects WHERE project_id = '{project_id}';"
-    with engine.begin() as conn:
-        result = conn.execute(sql_selftest)
-        row = result.fetchone()
-        project_schema = row['project_schema']
+        engine = create_engine(
+            "postgresql://"
+            + db_credentials["user"]
+            + ":"
+            + db_credentials["pass"]
+            + "@"
+            + db_credentials["host"]
+            + ":"
+            + str(db_credentials["port"])
+            + "/"
+            + db_credentials["dbname"],
+            paramstyle="format",
+            executemany_mode="values",
+            executemany_values_page_size=1000,
+            executemany_batch_page_size=200,
+        )
 
-    """#try with block, if it fails, print error
-    try:
-        with engine.begin() as conn:
-            result = conn.execute(sql)
-            row = result.fetchone()
+        # establish_db_connection(with db_config creds)
+        sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
 
-            if row is None:
-                raise Exception(f"Looks like the project_id '{project_id}' has not been set up. "
-                                f"Please check the projects in appsmith or under the dot.projects table in the dot_db and try again.")
-            else:
+        #try with block, if it fails, print error
+        try:
+            with engine.begin() as conn:
+                result = conn.execute(sql)
+                row = result.fetchone()
                 project_schema = row['project_schema']
 
-    except Exception as e:
-        with engine.begin() as conn:
-            result = conn.execute(sql_selftest)
-            row = result.fetchone()
-            project_schema = row['project_schema']"""
+        except Exception as e:
+            raise Exception(f"Looks like the project_id '{project_id}' has not been set up. "
+                            f"Please check the projects in appsmith or under the dot.projects table in the dot_db and try again.")
 
-    project = project_id + "_db"
-    new_entry = {project: {'type': 'postgres', 'host': 'dot_db', 'user': 'postgres', 'pass': os.getenv("POSTGRES_PASSWORD"), 'port': 5432, 'dbname': 'dot_db', 'schema': project_schema, 'threads': 4}}
+        project = project_id + "_db"
+        new_entry = {project: {'type': 'postgres', 'host': 'dot_db', 'user': 'postgres', 'pass': os.getenv("POSTGRES_PASSWORD"), 'port': 5432, 'dbname': 'dot_db', 'schema': project_schema, 'threads': 4}}
 
-    config[project] = new_entry[project]
+        config[project] = new_entry[project]
 
     return config
 
