@@ -155,9 +155,13 @@ def load_config_from_db(project_id: str):
 
     # establish_db_connection(with db_config creds)
     sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
-    sql_selftest = f"SELECT project_schema FROM self_tests_public.projects WHERE project_id = '{project_id}';"
+    sql_selftest = f"SELECT project_schema FROM self_tests_dot.projects WHERE project_id = '{project_id}';"
+    with engine.begin() as conn:
+        result = conn.execute(sql_selftest)
+        row = result.fetchone()
+        project_schema = row['project_schema']
 
-    #try with block, if it fails, print error
+    """#try with block, if it fails, print error
     try:
         with engine.begin() as conn:
             result = conn.execute(sql)
@@ -173,7 +177,7 @@ def load_config_from_db(project_id: str):
         with engine.begin() as conn:
             result = conn.execute(sql_selftest)
             row = result.fetchone()
-            project_schema = row['project_schema']
+            project_schema = row['project_schema']"""
 
     project = project_id + "_db"
     new_entry = {project: {'type': 'postgres', 'host': 'dot_db', 'user': 'postgres', 'pass': os.getenv("POSTGRES_PASSWORD"), 'port': 5432, 'dbname': 'dot_db', 'schema': project_schema, 'threads': 4}}
