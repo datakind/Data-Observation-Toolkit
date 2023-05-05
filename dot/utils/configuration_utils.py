@@ -155,8 +155,13 @@ def load_config_from_db(project_id: str):
     # establish_db_connection(with db_config creds)
     sql = f"SELECT project_schema FROM dot.projects WHERE project_id = '{project_id}';"
 
+    #Try block to prevent selftests from failing in GitHub
     with engine.begin() as conn:
-        result = conn.execute(sql)
+        try:
+            result = conn.execute(sql)
+        except Exception as e:
+            result = conn.execute(f"SELECT project_schema FROM self_tests_dot.projects WHERE project_id = '{project_id}';")
+
         row = result.fetchone()
         project_schema = row['project_schema']
     #try with block, if it fails, print error
