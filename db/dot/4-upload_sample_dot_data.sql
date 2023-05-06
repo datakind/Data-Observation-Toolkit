@@ -10,16 +10,16 @@ INSERT INTO dot.configured_entities VALUES('ScanProject1', 'all_flight_data', 'A
 from public.flight_data ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 INSERT INTO dot.configured_entities VALUES('ScanProject1', 'zagreb_flight_data', 'ZAG', 'select *
-from {{ schema }}.flight_data WHERE origin_airport=''Zagreb airport''    ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
+from public.flight_data WHERE origin_airport=''Zagreb airport''    ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 INSERT INTO dot.configured_entities VALUES('ScanProject1', 'ethiopia_airlines_data', 'ETH', 'select *
-from {{ schema }}.flight_data WHERE airline=''Ethiopian Airlines''    ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
+from public.flight_data WHERE airline=''Ethiopian Airlines''    ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 INSERT INTO dot.configured_entities VALUES('ScanProject1', 'all_airports_data', 'ALL', 'select *
-from {{ schema }}.airport_data   ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
+from public.airport_data   ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 INSERT INTO dot.configured_entities VALUES('ScanProject1', 'airlines_data', 'ALL', 'select DISTINCT(airline)
-from {{ schema }}.flight_data   ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
+from public.flight_data   ','2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt');
 
 
 -- Note these UUIDs get reset by the trigger

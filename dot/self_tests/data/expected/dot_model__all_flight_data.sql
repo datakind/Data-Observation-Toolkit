@@ -1,4 +1,2 @@
-{{ config(materialized='view') }}
-{% set schema = 'schema_project' %}
 select *
-from {{ schema }}.flight_data 
+from self_tests_public.flight_data
