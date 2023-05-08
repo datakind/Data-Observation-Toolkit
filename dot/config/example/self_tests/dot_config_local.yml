@@ -10,3 +10,12 @@ dot_db:
   dbname: dot_db
   schema: self_tests_dot
   threads: 4
+ScanProject1_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: dot_db
+  schema: self_tests_public
+  threads: 4
