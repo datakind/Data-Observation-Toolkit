@@ -263,6 +263,14 @@ class BaseSelfTestClass(unittest.TestCase):
                 cursor.execute(additional_query)
                 conn.commit()
 
+            #Query to update the schema for ScanProject1 to work in the self_test db
+            try:
+                cursor.execute("UPDATE dot.projects SET project_schema = 'self_tests_public' WHERE project_id = 'ScanProject1';")
+                conn.commit()
+            except Exception as e:
+                cursor.execute("UPDATE self_tests_dot.projects SET project_schema = 'self_tests_public' WHERE project_id = 'ScanProject1';")
+                conn.commit()
+
         except Exception as e:
             conn.rollback()
             raise e

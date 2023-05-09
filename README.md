@@ -75,7 +75,8 @@ https://user-images.githubusercontent.com/8402586/195226567-fe035544-7075-4750-8
 
 If you wish to build DOT yourself ...
   
-1. Save a postgres password to your local environment `export POSTGRES_PASSWORD=<some password you decide>`
+1. Save a postgres password to your local environment `export POSTGRES_PASSWORD=<some password you decide>` Alternatively, you can create a `.env` file in the 
+`docker` sub-directory and add the line `POSTGRES_PASSWORD=<some password you decide>` to it.
 2. Open a terminal and change directory into the `docker` sub-directory of DOT: `cd ./docker`
 3. Build the docker containers: `docker compose build`
 3. Start them: `docker compose up -d`

@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, MetaData
 from utils.configuration_utils import (
     DbParamsConfigFile,
     DbParamsConnection,
-    load_credentials,
+    load_credentials
 )
 
 metadata: sa.sql.schema.MetaData = None
@@ -47,7 +47,7 @@ def create_sqlalchemy_engine(db_credentials: dict) -> sa.engine.base.Engine:
     Parameters
     ----------
     db_credentials : dict
-        db credentials dictiontay
+        db credentials dictionary
     Returns
     -------
     engine :
