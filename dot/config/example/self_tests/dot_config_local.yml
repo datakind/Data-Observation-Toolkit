@@ -15,7 +15,7 @@ ScanProject1_db:
   host: localhost
   user: postgres
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
-  port: 5433
+  port: 5432
   dbname: dot_db
   schema: self_tests_public
   threads: 4
