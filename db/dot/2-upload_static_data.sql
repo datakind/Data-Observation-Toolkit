@@ -55,7 +55,7 @@ INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_re
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'quantity', 'entity numeric field', 'temperature', 'The name of the numeric field to analyze for variation');
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'data_table', 'view/table', 'dot_model__iccmview_assessment', 'The name of entity view where data is');
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'id_column', 'entity id field', 'reported_by', 'The id column to use to get failed test records');
-INSERT INTO dot.test_parameters_interface VALUES('associated_columns_not_null', 'condition', 'entity columns boolean logic', 'stops = "non-stop"', 'Where clause of rows that are going to be checked');
+INSERT INTO dot.test_parameters_interface VALUES('associated_columns_not_null', 'condition', 'entity columns boolean logic', $$stops = \"non-stop\"$$, 'Where clause of rows that are going to be checked');
 INSERT INTO dot.test_parameters_interface VALUES('associated_columns_not_null', 'associated_columns', 'list of values', $$["price", "origin_iata", "destination_iata"]$$, 'List of column names that should not be null');
 
 -- dot.scenario_test_types
