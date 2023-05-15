@@ -875,13 +875,10 @@ by adding a new feature or solving a bug, please follow the following guidelines
 
 #### Running self-tests
 
-##### Using Docker
+##### In your PRs
 
-The Docker build provided above to run DOT, also includes self-test. So once you have the container running, all you
-need to do is ..
-
-1. `exec -it dot /bin/bash`
-2. `pytest dot/self_tests/unit`
+Self tests will run automatically every time you push a commit into a PR. You will need to pass self tests for the PR
+to be eligible to be merged.
 
 ##### On your local machine
 
@@ -917,6 +914,8 @@ ScanProjec1_db:
   schema: self_tests_public
   threads: 4
 ```
+Please note that the schema names `self_tests_dot` and `self_tests_public` cannot be changed. Some of the test checks
+rely on these schema names
 
 And finally you can run the tests from a terminal as follows:
 ```
