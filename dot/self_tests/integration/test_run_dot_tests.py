@@ -1,4 +1,5 @@
 """ Integration test: runs DOT for the demo dataset and checks the results """
+import ast
 import uuid
 import logging
 import math
@@ -102,4 +103,29 @@ class RunDotTestsTest(DbtBaseSelfTestClass):
                     for v in test_results["id_column_value"]
                 ]
             ),
+        )
+
+        configured_tests_json = pd.read_sql(
+            f"""
+            SELECT
+                ct.test_id,
+                {schema_dot}.test_params_all_json()::jsonb
+            FROM
+                {schema_dot}.configured_tests ct,
+                {schema_dot}.configured_entities ce
+            where
+                ce.entity_id = ct.entity_id
+            """,
+            conn_dot,
+        )
+        expected_configured_tests_json = pd.read_csv(
+            "self_tests/data/expected/integration/configured_tests_json.csv",
+            index_col=0,
+        )
+        self.assertListEqual(
+            [
+                ast.literal_eval(item)
+                for item in expected_configured_tests_json["test_params_all_json"]
+            ],
+            [item for item in configured_tests_json["test_params_all_json"]],
         )
