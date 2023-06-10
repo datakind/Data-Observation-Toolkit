@@ -8,7 +8,7 @@ It will:
 """
 import json
 from os import system
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 from airflow.models import DAG  # pylint: disable=import-error
 from airflow.operators.python import PythonOperator  # pylint: disable=import-error
@@ -333,6 +333,31 @@ def default_config():
     file = open("./dags/dot_projects.json")
     return file
 
+def set_earliest_sync_date():
+    """
+    Sets the earliest date to sync for a project.
+    This is the latest date of the last successful run of the project.
+    Use default config to get the file, edit the file, then save it back
+    """
+
+    with open('./dags/dot_projects.json', 'r') as file:
+        # Parse the JSON data into a Python object
+        config = json.load(file)
+
+    # Make edits to the Python object
+    #ToDo: Make this more dynamic, so that the max date of the table to be scanned is pulled into
+    #the setting instead of the current date - this gives more flexibility and wont cause
+    # records not to be scanned if the source DB is updated on a different schedule than DOT runs
+    # Alternatively, always use two weeks to deal with delayed syncing (aka. if a record with
+    # date 01-01-2023 is only synced into the DB on 01-05-2023)
+    earliest_sync_date = (datetime.today() - timedelta(days=1))
+    earliest_sync_date = earliest_sync_date.strftime("%Y-%m-%d")
+    config['dot_projects'][0]['earliest_date_to_sync'] = earliest_sync_date
+
+    # Open the JSON file in write mode
+    with open('./dags/dot_projects.json', 'w') as file:
+        # Write the modified Python object back to the file in JSON format
+        json.dump(config, file)
 
 with DAG(
         dag_id="run_dot_project",
@@ -417,6 +442,15 @@ with DAG(
                 task_id=f"run_dot_{project_id}",
                 dag=dag,
                 bash_command=f"cd /app/dot && python run_everything.py --project_id {project_id}",
+            )
+        )
+
+        af_tasks.append(
+            PythonOperator(
+                task_id=f"set_earliest_sync_date_{project_id}",
+                python_callable=set_earliest_sync_date,
+                op_kwargs={"project_id_in": project_id},
+                dag=dag,
             )
         )
 
