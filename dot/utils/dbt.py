@@ -19,7 +19,7 @@ from utils.configuration_utils import (
     DbParamsConnection,
     get_dbt_config_model_paths,
     adapt_core_entities,
-    DBT_MODELNAME_PREFIX
+    DBT_MODELNAME_PREFIX,
 )
 from utils.dbt_logs import (
     read_dbt_logs,
@@ -253,7 +253,7 @@ def extract_df_from_dbt_test_results_json(
     dbt_tests_summary = {}
     for row in dbt_results:
         processed_row = process_dbt_logs_row(row)
-        entity_id = processed_row.entity_id.replace(DBT_MODELNAME_PREFIX,"")
+        entity_id = processed_row.entity_id.replace(DBT_MODELNAME_PREFIX, "")
         configured_test_row = get_configured_tests_row(
             processed_row.test_type,
             entity_id,

@@ -408,9 +408,9 @@ generated one.
 7. `associated_columns_not_null`
     <br><br>
     ```
-    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, '', 
-    '', '', 'ancview_pregnancy', 'associated_columns_not_null', 'diarrhea_dx', 'diarrhea diagnosis', 
-    $${"name": "diarrhea_dx_has_duration", "col_value": True, "associated_columns": ['max_symptom_duration']}$$, 
+    INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1', 3, 
+    'diarrhea diagnosis', '', '', 'ca4513fa-96e0-3a95-a1a8-7f0c127ea82a', 'associated_columns_not_null', '', '', 
+    $${"name": "diarrhea_dx_has_duration", "condition": "diarrhea_dx = True", "associated_columns": ['max_symptom_duration']}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 8. `expect_similar_means_across_reporters`
@@ -883,6 +883,7 @@ need to do is ..
 
 1. `exec -it dot /bin/bash`
 2. `pytest dot/self_tests/unit`
+3. `pytest dot/self_tests/integration`
 
 ##### On your local machine
 
@@ -922,11 +923,17 @@ ScanProjec1_db:
 And finally you can run the tests from a terminal as follows:
 ```
 pytest dot/self_tests/unit
+pytest dot/self_tests/integration
 ```
 
 #### Guidelines for adding new tests
-- Existing tests are at [the self-tests folder](dot/self_tests/unit)
-- All tests extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
+- Existing unit tests are at [the self-tests folder](dot/self_tests/unit)
+- When a function needs to be modified, ideally it will hava a passing test beforehand; if not, please consider adding it
+- One integration test at [the integration self-tests folder](dot/self_tests/unit) that
+  - instead of running unit test for functions, it runs the full dot pipeline for the fake data and checks results
+  - it runs all the tests configured in [sample_dot_data.sql](db/dot/4-upload_sample_dot_data.sql)
+  - whenever a new test type is designed for dot, consider adding a line to the SQL above so that it gets tested 
+- All tests (both unit & integration) extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
   - facilitates the import of modules under test
   - recreates a directory in the file system for the test outputs
   - provides a number of function for supporting tests that access the database, mocking the config files to point to the

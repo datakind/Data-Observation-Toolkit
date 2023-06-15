@@ -84,6 +84,10 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '3081f033-e8f4-4f3
 '', '', $${"name": "t_direct_flights_positive_price", "expression": "price is not null and price > 0",
 "condition": "stops = 'non-stop'"}$$, '2022-12-10 19:00:00.000 -0500', '2022-12-10 19:00:00.000 -0500', 'Lorenzo');
 
+INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'd74fc600-31c3-307d-9501-5b7f6b09aff5', 'MISSING-1',
+3, 'Direct flights have price, origin & destination', '', '', 'all_flight_data',
+'associated_columns_not_null', '', '', $${"name": "t_direct_flights_hava_data", "condition": "stops = 'non-stop'",
+"associated_columns": ["price", "origin_iata", "destination_iata"]}$$, '2022-12-11 19:00:00.000 -0500',
+'2022-12-11 19:00:00.000 -0500', 'Lorenzo');
+
 COMMIT;
-
-

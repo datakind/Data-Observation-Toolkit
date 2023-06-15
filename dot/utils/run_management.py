@@ -116,7 +116,9 @@ def run_dot_stages(project_id, logger, run_id):
 
         # ========================= Save results  =========================
         # To flat file, useful for debugging
-        all_tests_summary.to_excel(f"./generated_files/{project_id}/all_tests_summary.xlsx")
+        all_tests_summary.to_excel(
+            f"./generated_files/{project_id}/all_tests_summary.xlsx"
+        )
         all_tests_rows.to_excel(f"./generated_files/{project_id}/all_tests_rows.xlsx")
 
         # To DB
