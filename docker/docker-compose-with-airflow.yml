@@ -57,6 +57,8 @@ x-airflow-common:
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
     PYTHON_BASE_IMAGE: "python:3:8-slim-buster"
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    COMMCARE_USER: ${COMMCARE_USER}
+    COMMCARE_PW: ${COMMCARE_PW}
     SSH_AUTH_SOCK: /ssh-agent
   volumes:
     - ./airflow/dags:/opt/airflow/dags
@@ -86,6 +88,8 @@ services:
           POSTGRES_DB: dot_db
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+          COMMCARE_USER: ${COMMCARE_USER}
+          COMMCARE_PW: ${COMMCARE_PW}
       volumes:
           - .:/db_dumps
           - ../db/dot:/docker-entrypoint-initdb.d
@@ -126,17 +130,14 @@ services:
   #    - ../webapp/server:/usr/src/app
   #    - ./webapp/server/env:/usr/src/app/.env
 
-  #dot-webapp-frontend:
-  #  build:
-  #      context: ..
-  #      dockerfile: ./docker/webapp/frontend/Dockerfile
-  #  image: dot-tool-webapp-frontend
-  #  container_name: dot-dot-tool-web-app-frontend
-  #  ports:
-  #        - "3000:3000"
-  #  volumes:
-  #    - ../webapp/frontend:/usr/src/app
-  #    - ./webapp/frontend/env:/usr/src/app/.env
+  appsmith:
+    image: datakind/dot_appsmith:latest
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./demo/appsmith/stacks:/appsmith-stacks
 
   # ================================== AIRFLOW ===============================
 
@@ -149,6 +150,8 @@ services:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+      COMMCARE_USER: ${COMMCARE_USER}
+      COMMCARE_PW: ${COMMCARE_PW}
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
     healthcheck:
@@ -199,6 +202,8 @@ services:
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+      COMMCARE_USER: ${COMMCARE_USER}
+      COMMCARE_PW: ${COMMCARE_PW}
 
   flower:
     <<: *airflow-common

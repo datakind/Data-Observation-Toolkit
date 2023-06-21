@@ -8,6 +8,8 @@ It will:
 """
 import json
 from os import system
+from os import environ
+import os
 from datetime import datetime, timedelta
 import pandas as pd
 from airflow.models import DAG  # pylint: disable=import-error
@@ -17,6 +19,7 @@ from airflow.hooks.postgres_hook import PostgresHook  # pylint: disable=import-e
 from airflow.hooks.base import BaseHook  # pylint: disable=import-error
 from airflow.models import Variable  # pylint: disable=import-error
 from sqlalchemy import create_engine
+import requests
 
 
 def get_object(
@@ -269,6 +272,7 @@ def sync_object(
         object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
     )
 
+
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
     """
     We are syncing new data where new columns and columns types might change.
@@ -303,6 +307,7 @@ def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
         cur.execute(query1)
         cur.execute(query2)
 
+
 def run_dot_app(project_id_in):
     """
     Method to run the DOT.
@@ -333,6 +338,52 @@ def default_config():
     file = open("./dags/dot_projects.json")
     return file
 
+def sync_daily_commcare_report(target_conn_in, report):
+    username = environ.get("COMMCARE_USER")
+    password = environ.get("COMMCARE_PW")
+    print(f"Username: {username}, Password: {password}")
+    url = Variable.get(f"{report}_report")
+    response = requests.get(url, auth=(username, password))
+
+    with open(f'./dags/{report}.xlsx', 'wb') as f:
+        f.write(response.content)
+
+    connection = BaseHook.get_connection(target_conn_in)
+    connection_string = (
+            "postgresql://"
+            + str(connection.login)
+            + ":"
+            + str(connection.password)
+            + "@"
+            + str(connection.host)
+            + ":"
+            + str(connection.port)
+            + "/"
+            + target_conn_in
+    )
+
+    engine = create_engine(
+        connection_string,
+        paramstyle="format",
+        executemany_mode="values",
+        executemany_values_page_size=1000,
+        executemany_batch_page_size=200,
+    )
+    # read response into pandas dataframe and save to postgres
+    report_excel = pd.read_excel(f'./dags/{report}.xlsx')
+    # replace "---" with null so SQL and DOT can handle it
+    report_excel = report_excel.replace('---', 0)
+    # transform columns "Date & Time" and "date to date format
+    report_excel['Date & Time'] = pd.to_datetime(report_excel['Date & Time'])
+    if report == 'transportlogs':
+        report_excel['date'] = pd.to_datetime(report_excel['Date & Time']).dt.date
+
+    report_excel.to_sql(report, engine, if_exists='replace', index=False, schema='public')
+
+    # remove file from local directory
+    os.remove(f'./dags/{report}.xlsx')
+
+
 def set_earliest_sync_date():
     """
     Sets the earliest date to sync for a project.
@@ -345,8 +396,8 @@ def set_earliest_sync_date():
         config = json.load(file)
 
     # Make edits to the Python object
-    #ToDo: Make this more dynamic, so that the max date of the table to be scanned is pulled into
-    #the setting instead of the current date - this gives more flexibility and wont cause
+    # ToDo: Make this more dynamic, so that the max date of the table to be scanned is pulled into
+    # the setting instead of the current date - this gives more flexibility and wont cause
     # records not to be scanned if the source DB is updated on a different schedule than DOT runs
     # Alternatively, always use two weeks to deal with delayed syncing (aka. if a record with
     # date 01-01-2023 is only synced into the DB on 01-05-2023)
@@ -358,6 +409,7 @@ def set_earliest_sync_date():
     with open('./dags/dot_projects.json', 'w') as file:
         # Write the modified Python object back to the file in JSON format
         json.dump(config, file)
+
 
 with DAG(
         dag_id="run_dot_project",
@@ -405,35 +457,17 @@ with DAG(
             )
         )
 
-        # Sync data and link to dot.
-        for i in range(len(objects_to_sync)):
-
-            object_name = objects_to_sync[i]["object"]
-            if "date_field" in objects_to_sync[i] and objects_to_sync[i]["date_field"] != "":
-                date_field = objects_to_sync[i]["date_field"]
-            else:
-                date_field = None
-            id_field = objects_to_sync[i]["id_field"]
-            columns_to_exclude = (
-                objects_to_sync[i]["columns_to_exclude"]
-                if "columns_to_exclude" in objects_to_sync[i]
-                else []
-            )
-
-            # Get the data from a object in Postgres and copy to target DB
+        for element in ["transportlogs", "fuellogs"]:
+            # Get the data from scheduled report in commcare, transform it, and upload into DOT
             af_tasks.append(
                 PythonOperator(
-                    task_id=f"sync_object_{project_id}_{object_name}",
-                    python_callable=sync_object,
+                    task_id=f'sync_{element}_from_commcare',
+                    python_callable=sync_daily_commcare_report,
                     op_kwargs={
-                        "object_name_in": object_name,
-                        "earliest_date_to_sync": earliest_date_to_sync,
-                        "date_field": date_field,
-                        "source_conn_in": source_conn,
                         "target_conn_in": target_conn,
-                        "columns_to_exclude": columns_to_exclude,
+                        "report": element,
                     },
-                    dag=dag,
+                    dag=dag
                 )
             )
 
