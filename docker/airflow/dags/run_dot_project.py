@@ -378,7 +378,32 @@ def sync_daily_commcare_report(target_conn_in, report):
     if report == 'transportlogs':
         report_excel['date'] = pd.to_datetime(report_excel['Date & Time']).dt.date
 
-    report_excel.to_sql(report, engine, if_exists='replace', index=False, schema='public')
+        #define list of columns to be transformed to numeric
+        numeric_values =[[
+        "COVID-19 result quantity", "Gen. Invest result quantity", "VL result quantity", "VL-DBS result quantity", "TB result quantity",
+        "POC-EID result quantity", "DBS-DNA results quantity", "Microbiology result quantity", "Pathology result quantity",
+        "Histology result quantity", "Cytology result quantity", "Measles result quantity", "Other result quantity",
+        "Reagents quantity", "Request forms quantity", "Test kits quantity", "Sample tubes quantity", "Other quantity",
+        "COVID-19 sample quantity", "Gen. Invest sample quantity", "VL sample quantity", "VL-DBS sample quantity", "TB sample quantity",
+        "POC-EID sample quantity", "DBS-DNA sample quantity", "Micro sample quantity", "Pathology sample quantity",
+        "Histology sample quantity", "Cytology sample quantity", "Measles sample quantity", "Other sample quantity",
+        "COVID-19 result quantity1", "Gen. Invest result quantity1", "VL result quantity1", "VL-DBS result quantity1",
+        "TB result quantity1", "POC-EID result quantity1", "DBS-DNA result quantity", "Microbiology results quantity",
+        "Pathology result quantity1", "Histology result quantity1", "Cytology result quantity1", "Measles result quantity1",
+        "Other results quantity", "Reagents quantity1", "Request forms", "Test kits", "Sample tubes", "Other commodities1"
+        ]]
+
+        #transform columns to integer
+
+        for column in numeric_values:
+            report_excel[column] = report[column].apply(lambda x: int(x))
+
+    #Delete data of the previous run
+    delete_statement = f"TRUNCATE public.{report} RESTART IDENTITY"
+    print(delete_statement)
+    engine.execute(delete_statement)
+
+    report_excel.to_sql(report, engine, if_exists='append', index=False, schema='public', method='multi')
 
     # remove file from local directory
     os.remove(f'./dags/{report}.xlsx')
@@ -414,7 +439,7 @@ def set_earliest_sync_date():
 with DAG(
         dag_id="run_dot_project",
         schedule_interval="@weekly",
-        start_date=datetime(year=2022, month=3, day=1),
+        start_date=datetime(year=2023, month=6, day=19),
         catchup=False,
 ) as dag:
     config = json.loads(Variable.get("dot_config", default_var=default_config().read()))
