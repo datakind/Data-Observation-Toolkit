@@ -294,6 +294,14 @@ from {{ schema }}.ancview_danger_sign');
 
 ```
 
+The entity preview feature in the Appsmith UI provides a way to test the SQL statement before saving it.
+If a new entity is created through the Appsmith UI, the materialization and schema definition will be added automatically,
+so the above example would be:
+```select * from {{ schema }}.ancview_danger_sign');```
+Click the "Preview Entity" button for the table on the right side of the screen to update and show the view that will be saved for this entity with the next DOT run.
+
+```postgres-sql
+
 All entities use Jinja macro statements - the parts between `{ ... }` - which the DOT uses to create the entity 
 materialized views in the correct database location. Use the above format for any new entities you create.
 
@@ -622,6 +630,11 @@ WHERE pg_stat_activity.datname = 'dot_db' AND pid <> pg_backend_pid();`
 - Login: postgres
 - Password: *Whatever you used when building the DOT docker environment*
 - Port: 5432
+
+14. Run first data import
+After configuring the first project and entity categories and before creating the first entity for the new project, it is recommended to run
+the DAG "first_synchronization" to import the data from the source database into the DOT database.
+If no data is present, the entity preview in Appsmith will not work.
 
 See section below for how to run DOT
 
