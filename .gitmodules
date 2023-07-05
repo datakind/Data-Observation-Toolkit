@@ -1,0 +1,3 @@
+[submodule "Data-Observation-Toolkit-UI"]
+	path = Data-Observation-Toolkit-UI
+	url = git@github.com:datakind/Data-Observation-Toolkit-UI.git
