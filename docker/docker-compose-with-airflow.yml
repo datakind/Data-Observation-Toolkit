@@ -53,7 +53,6 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
     PYTHON_BASE_IMAGE: "python:3:8-slim-buster"
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -91,53 +90,15 @@ services:
           - .:/db_dumps
           - ../db/dot:/docker-entrypoint-initdb.d
 
-  # Not needed here, because we deploy DOT to airflow worker
-  #dot:
-  #  build:
-  #      context: ..
-  #      dockerfile: ./docker/dot/Dockerfile
-  #  image: dot
-  #  container_name: dot-dot-tool
-  #  environment:
-  #      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #  volumes:
-  #    - ../dot:/app
-  #    - ./dot/dot_config.yml:/app/dot_config.yml
-  #    - ./dot/dbt_profiles.yml:/root/.dbt/profiles.yml
-  #    - ./dot/ge_config_variables.yml:/app/great_expectations/uncommitted/config_variables.yml
-
-  #superset:
-  #  image: apache/superset
-  #  ports:
-  #      - "8080:8088"
-  #  container_name: superset
-
-  # ================================== Web App ===============================
-  #dot-webapp-server:
-  #  build:
-  #      context: ..
-  #      dockerfile: ./docker/webapp/server/Dockerfile
-  #  image: dot-tool-webapp-server
-  #  container_name: dot-dot-tool-web-app-server
-  #  environment:
-  #      DB_PASSWORD: ${POSTGRES_PASSWORD}
-  #  ports:
-  #        - "3002:3002"
-  #  volumes:
-  #    - ../webapp/server:/usr/src/app
-  #    - ./webapp/server/env:/usr/src/app/.env
-
-  #dot-webapp-frontend:
-  #  build:
-  #      context: ..
-  #      dockerfile: ./docker/webapp/frontend/Dockerfile
-  #  image: dot-tool-webapp-frontend
-  #  container_name: dot-dot-tool-web-app-frontend
-  #  ports:
-  #        - "3000:3000"
-  #  volumes:
-  #    - ../webapp/frontend:/usr/src/app
-  #    - ./webapp/frontend/env:/usr/src/app/.env
+    # ================================== Appsmith ===============================
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./appsmith/stacks:/appsmith-stacks
 
   # ================================== AIRFLOW ===============================
 
@@ -217,3 +178,6 @@ volumes:
   postgres-db-volume:
   airflow-logs-volume: 
   airflow-plugins-volume:
+  airflow-dags-volume:
+  app-volume:
+  dot-config-volume:
