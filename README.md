@@ -269,8 +269,7 @@ to the schema where the data is, for example `data_flights_db`.
 # Configuring DOT
 
 The following sections provide instructions for adding entities and tests to DOT directly in the DOT database. You can 
-also use the DOT user interface for tests, for more details please see section see section [The DOT User Interface](#the-dot-user-interface). 
-
+also use the DOT user interface for tests, for more details please see section see section [The DOT User Interface](#the-dot-user-interface). If you want to test DOT with health related data, please feel free to use this [fabricated dataset] (https://docs.google.com/spreadsheets/d/1l6inpa6ykgUewC-MJkgrQwwc8HjUiTLLJFEDBtAMDB4/edit#gid=31188808) which resembles appointment information and contains some quality issues which DOT can highlight. 
 ## How to add new entities
 The DOT will run tests against user-defined views onto the underlying data. These views are called "entities" and defined in table `dot.configured_entities`:
 
