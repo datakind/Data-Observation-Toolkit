@@ -1,7 +1,4 @@
----
-title: DataKind Code of Conduct
-description: DataKind Code of Conduct
----
+# DataKind Code of Conduct
 
 In order to ensure that all participants experience a positive and respectful DataKind community, we reinforce and protect our respectful and safe environment by requiring that all community members commit to a Code of Conduct. This Code of Conduct demonstrates [DataKind’s values](https://www.datakind.org/our-story), as well as how we’re accountable to each other, in a way that promotes shared understanding. We also provide transparency on how to identify and address situations if there are concerns that this code has been breached. DataKind commits to enforcing our Code of Conduct and to periodically reviewing our Code of Conduct to ensure DataKind remains a safe environment. Our Code of Conduct applies to any interactions within the DataKind community including all events (in-person or virtual) hosted by DataKind, shared online spaces (email, Slack, etc.), social media, and external events where volunteers or staff are representing DataKind as a speaker.
 
