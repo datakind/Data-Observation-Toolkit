@@ -6,6 +6,8 @@ RUN apt-get update
 
 RUN pip install --upgrade pip
 
+RUN apt-get update && apt-get install -y gcc build-essential
+
 # This uses the requirements as defined in the dot directory
 COPY ./dot/requirements_dot.txt requirements_dot.txt
 COPY ./dot/install_dot.sh install_dot.sh
