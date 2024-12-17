@@ -1,3 +1,6 @@
+# Sample data
+You are free to use [these rich datasets](https://drive.google.com/drive/folders/12tyTqYNNNpDZxQKMQqv7FVOCq18LCurQ?usp=sharing) ranging from global COVID-19 patients to United States childhood obesity records, from 1000 records to over a million patients, as well as a synthetic dataset showcasing DOT’s capabilities on frontline health data.
+
 # The Data Observation Toolkit (DOT)
 
 The Data Observation Toolkit (DOT) can be used to monitor data in order to flag problems with data integrity and
