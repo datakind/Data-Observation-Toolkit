@@ -38,7 +38,7 @@ _After completing the software prerequisites for your operating system, **downlo
  ### Configuration (work in progress)
 The following sections provide step-by-step instructions for configuring various components of DOT:
 -	[Getting Started with DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/07a44ca01526679912a04e0f20bb6364134cdaf7/documentation_DOT/gettingstartedDOT.md)
--	Setting Up the Docker Environment and Running DOT
+-	[Setting Up the Docker Environment and Running DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md)
 -	Deploying to Airflow
 -	
 -	
