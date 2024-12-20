@@ -1,8 +1,8 @@
 # Setting Up the Docker Environment and Running DOT
-To build DOT from source, please follow the steps below:
+### To build DOT from source, please follow the steps below:
 1. **Set up your Python environment.**
 2. **After cloning the repository, navigate to the repository's path:**
-     - **For Windows:** 
+     - **For Windows:**
        ```bash
        cd C:<PATH_TO_DOT>\Data-Observation-Toolkit\docker
        ```
