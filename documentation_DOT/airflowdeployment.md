@@ -23,7 +23,7 @@ AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
 ```
 🌟🌟
 
-### Step-by-Step Instructions to Set Up Airflow and Run DOT with Docker
+## Step-by-Step Instructions to Set Up Airflow and Run DOT with Docker
 1. Navigate to the Docker directory:
    ```bash
    cd ./docker
@@ -60,13 +60,13 @@ AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
 
 These steps will build and initialize your Docker containers, set up Airflow, and install DOT in the appropriate environment.
 
-#### Notes:
+**Notes:**
 - Make sure to replace `<THE PASSWORD YOU USED WHEN BUILDING DOT>` with the actual password used during setup.
 - If you face any issues with the container names (like `docker-airflow-worker-1`), check the container name using the `docker ps` command to confirm the exact name.
 -  _**If using Docker on AWS, you might need to use docker-compose instead of docker compose.**_
 
 
-### Airflow Docker Environment Management
+## Airflow Docker Environment Management
 You might need to use `docker-compose` on some hosts.
 
 **Starting Airflow Docker Environment**
