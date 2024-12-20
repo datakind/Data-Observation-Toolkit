@@ -63,4 +63,4 @@ These steps will build and initialize your Docker containers, set up Airflow, an
 ### Notes:
 - Make sure to replace `<THE PASSWORD YOU USED WHEN BUILDING DOT>` with the actual password used during setup.
 - If you face any issues with the container names (like `docker-airflow-worker-1`), check the container name using the `docker ps` command to confirm the exact name.
--** _If using Docker on AWS, you might need to use docker-compose instead of docker compose.**_
+- ** _If using Docker on AWS, you might need to use docker-compose instead of docker compose._**
