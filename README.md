@@ -44,6 +44,7 @@ The following sections provide step-by-step instructions for configuring various
 -
 -	[Developing the Appsmith UI]()
 -	[Advanced Topics]()
+- [Additional Resources]()
 
 
 
@@ -61,6 +62,8 @@ We have instituted a pair of tools to ensure the code base will remain at an acc
 1.	The [formulaic python formatter “black”](https://pypi.org/project/black/). As described by its authors it is deterministic and fast but can be modified. We use the default settings, most notably formatting to a character limit of 88 per line.
 2.	The [code linter pylint](https://pylint.org/). This follows the [PEP8](https://peps.python.org/pep-0008/) style standard. PEP8 formatting standards are taken care of in black, with the exception that the default pylint line length is 80. Pylint is also modifiable and a standard set of exclusion to the PEP8 standard we have chosen are found [here](https://github.com/datakind/medic_data_integrity/blob/main/.pylintrc). We chose the default score of 7 as the minimum score for pylint to be shared.
 The combination of black and pylint can be incorporated into the git process using a pre-commit hook by running setup_hooks.sh
+
+Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for information on more complex configuration options.
 
 
 #
