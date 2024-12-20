@@ -60,7 +60,32 @@ AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
     
 These steps will build and initialize your Docker containers, set up Airflow, and install DOT in the appropriate environment.
 
-### Notes:
+#### Notes:
 - Make sure to replace `<THE PASSWORD YOU USED WHEN BUILDING DOT>` with the actual password used during setup.
 - If you face any issues with the container names (like `docker-airflow-worker-1`), check the container name using the `docker ps` command to confirm the exact name.
-- ** _If using Docker on AWS, you might need to use docker-compose instead of docker compose._**
+-  _**If using Docker on AWS, you might need to use docker-compose instead of docker compose.**_
+
+
+### Airflow Docker Environment Management
+You might need to use `docker-compose` on some hosts.
+
+**Starting Airflow Docker Environment**
+To start the Airflow Docker environment in detached mode, run:
+
+```bash
+docker compose -f docker-compose-with-airflow.yml up -d
+```
+**Stopping Airflow Docker Environment**
+
+To stop the Airflow Docker containers, run:
+```bash
+docker compose -f docker-compose-with-airflow.yml stop
+```
+
+**Removing Airflow Docker Environment**
+
+To remove the Airflow Docker environment and its associated volumes, run:
+```bash
+docker compose -f docker-compose-with-airflow.yml down -v
+```
+This will remove the containers and any volumes defined in the docker-compose-with-airflow.yml file, ensuring a clean environment.
