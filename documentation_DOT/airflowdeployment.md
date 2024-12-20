@@ -89,3 +89,34 @@ To remove the Airflow Docker environment and its associated volumes, run:
 docker compose -f docker-compose-with-airflow.yml down -v
 ```
 This will remove the containers and any volumes defined in the docker-compose-with-airflow.yml file, ensuring a clean environment.
+
+## Running DOT in Airflow (Demo)
+
+A Directed Acyclic Graph (DAG) is included that copies data from the uploaded DB dump into the DOT database (data_ScanProject1 schema) and then runs the toolkit against this data. Follow these steps to execute the DAG:
+
+- Open your browser and navigate to [http://localhost:8083/](http://localhost:8083/).
+- Log in with the credentials: airflow / airflow.
+- In the top menu, click on DAGs.
+- Use the search box in the top-right corner to search for dot (press Enter twice to ensure it registers).
+- Toggle the run_dot_project DAG to Active (using the toggle on the far left of the row).
+- Click the Play icon under Actions to start the run.
+
+To monitor the progress and view logs:
+
+- Click on one of the status circles under Runs (e.g., running or completed).
+- Click on the top Dag Id.
+- Select a task and then click Log to view the logs.
+
+To debug a task using the Airflow CLI (e.g., if you encounter the object ancview_danger_sign error):
+Open a terminal and execute the following command to access the Airflow worker container:
+```bash
+docker exec -it docker-airflow-worker-1 /bin/bash
+```
+Run the following Airflow command to test the task:
+```bash
+airflow tasks test run_dot_project sync_object_flight_data 2022-03-01
+```
+To run just the DOT stage:
+```bash
+airflow tasks test run_dot_project run_dot 2022-03-01
+```
