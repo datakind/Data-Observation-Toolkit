@@ -24,6 +24,16 @@ The DOT database schema includes the following tables:
 
 The **test_results** table contains fields that link back to the data tested. This data can come from a fixed table or view, or even a custom SQL query. Additionally, a useful Postgres function exists that retrieves a JSON record of the data tested, as discussed in the section **'Seeing the raw data for failed tests'** above.
 
+Your test results will be in the dot-db container. You can view the results by opening a shell in the dot-db container:
+   ```bash
+   docker exec -it dot-db /bin/bash
+   ```
+
+Then running the psql client locally in that container:
+   ```bash
+   psql -U postgres -d dot_db
+   ```
+
 
 ##  To set up DB connection to the DOT Database
 You can use a database client (like [DBeaver](https://dbeaver.io)), and use the following configuration to start the database:
