@@ -57,7 +57,7 @@ AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
    ```bash
     cd /app/dot && ./install_dot.sh
    ```
-    
+
 These steps will build and initialize your Docker containers, set up Airflow, and install DOT in the appropriate environment.
 
 #### Notes:
