@@ -1,4 +1,4 @@
-# Deploying in Airflow
+# Deploying DOT to Airflow
 This setup serves as a proof-of-concept to demonstrate how Airflow can be configured to run DOT across multiple databases. It is designed to copy data from the **data** database back into the **DOT** database. In a production environment, the flow would instead transfer data from the source production database into the data_ schema of the DOT database. This configuration assumes you have already completed the Docker environment setup, as outlined in the previous section.
 
 ## Configuring/Building Airflow Docker environment
