@@ -8,10 +8,12 @@ The quickest way to start using DOT is by utilizing the provided Docker environm
 1.	Download or clone the DOT repository to your computer.
 2.	Start Docker.
 3.	Open a terminal and navigate to the docker folder inside your DOT installation directory:
-      **For Windows:**
+
+      - **For Windows:**
        ```bash
        cd C:<PATH_TO_DOT>\Data-Observation-Toolkit\docker
        ```
+
      - **For Mac/Linux:**
        ```bash
        cd <PATH_TO_DOT>/Data-Observation-Toolkit/docker/
