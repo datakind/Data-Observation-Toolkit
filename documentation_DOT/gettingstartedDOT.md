@@ -11,12 +11,11 @@ The quickest way to start using DOT is by utilizing the provided Docker environm
 
       - **For Windows:**
        ```bash
-       cd C:<PATH_TO_DOT>\Data-Observation-Toolkit\docker
+        cd C:<PATH_TO_DOT>\Data-Observation-Toolkit\docker
        ```
-
      - **For Mac/Linux:**
        ```bash
-       cd <PATH_TO_DOT>/Data-Observation-Toolkit/docker/
+        cd <PATH_TO_DOT>/Data-Observation-Toolkit/docker/
        ```
 4.	On Mac/Linux, run python3 run_demo.py. On Windows, run python3 .\run_demo.py.
 5.	The script will launch DOT and open a browser window with the [DOT User Interface](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True). Refer to the demo video above for a step-by-step guide.
