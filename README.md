@@ -41,7 +41,7 @@ The following sections provide step-by-step instructions for configuring various
 -	[Setting Up the Docker Environment and Running DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md)
 -	[Deploying DOT to Airflow](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/72a3bb7a36fbfc69b621180fd52034dc99d1ee86/documentation_DOT/airflowdeployment.md)
 - [Configuring the DOT Database](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/b70d3e044858387443698354b0c4253a6b618b17/documentation_DOT/configuringDOTdb.md)
--
+- [DBT for DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/3c59ddd5c284bc07dc8428e039655827cb736ad5/documentation_DOT/DBTforDOT.md)
 -	[Developing the Appsmith UI](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/d9845f8228bb147af7f28f7a300a68012e9b51ed/documentation_DOT/developingappsmith.md)
 -	[Advanced Topics]()
 - [Additional Resources]()
