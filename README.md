@@ -43,6 +43,7 @@ The following sections provide step-by-step instructions for configuring various
 - [Configuring the DOT Database](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/b70d3e044858387443698354b0c4253a6b618b17/documentation_DOT/configuringDOTdb.md)
 - [DBT for DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/3c59ddd5c284bc07dc8428e039655827cb736ad5/documentation_DOT/DBTforDOT.md)
 -	[Developing the Appsmith UI](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/d9845f8228bb147af7f28f7a300a68012e9b51ed/documentation_DOT/developingappsmith.md)
+-
 -	[Advanced Topics]()
 - [Additional Resources]()
 
