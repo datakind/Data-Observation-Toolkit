@@ -63,8 +63,8 @@ We have instituted a pair of tools to ensure the code base will remain at an acc
 2.	The [code linter pylint](https://pylint.org/). This follows the [PEP8](https://peps.python.org/pep-0008/) style standard. PEP8 formatting standards are taken care of in black, with the exception that the default pylint line length is 80. Pylint is also modifiable and a standard set of exclusion to the PEP8 standard we have chosen are found [here](https://github.com/datakind/medic_data_integrity/blob/main/.pylintrc). We chose the default score of 7 as the minimum score for pylint to be shared.
 The combination of black and pylint can be incorporated into the git process using a pre-commit hook by running setup_hooks.sh
 
-Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for information on more complex configuration options.
 
+_For detailed information on advanced configuration options and guidelines for contributing to the project, please refer to the [CONTRIBUTING.md](./CONTRIBUTING.md) document._
 
 #
 #
