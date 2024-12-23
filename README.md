@@ -20,7 +20,7 @@ The primary goal of DOT is to make data monitoring more accessible, allowing use
    <figcaption>DOT Architecture</figcaption>
    <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e650c78dc73b3842766d87d74f56701adb4019ff/images/dot_architecture.png" alt="dot_acrh" />
 </figure>
- 
+
 ### General Configuration Pre-requisites:
 To run DOT you will need to:
 1.	Install Python [3.8.9](https://www.python.org/downloads/release/python-389/)  
@@ -30,7 +30,7 @@ To run DOT you will need to:
 3.	Install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the [Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data being tested
 4.	If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set export DOCKER_DEFAULT_PLATFORM=linux/amd64 in the terminal where you will run the instructions below
 5.	(Windows Users only) Need to install WSL for Linux on Windows Pcs
-   
+
 Alternatively, you can use the provided  [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html)  installed.
 
 _After completing the software prerequisites for your operating system, **download or clone the DOT repository** to your computer. **You will need this repository for all the setups listed below.**_
@@ -55,8 +55,8 @@ Explore [these comprehensive datasets](https://drive.google.com/drive/folders/12
 
 ## Guidelines for adding new tests
 *	Existing tests are at [the self-tests folder](dot/self_tests/unit)
-*	All tests extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that 
-    -	facilitates the import of modules under test 
+*	All tests extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
+    -	facilitates the import of modules under test
     -	recreates a directory in the file system for the test outputs
     -	provides a number of function for supporting tests that access the database, mocking the config files to point to the test [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml), (re)creates a schema for DOT configuration and loads it with test data, etc.
 ## Code quality
@@ -71,69 +71,15 @@ _For detailed information on advanced configuration options and guidelines for c
 #
 #
 
+----------
 
-# Sample data
-You are free to use [these rich datasets](https://drive.google.com/drive/folders/12tyTqYNNNpDZxQKMQqv7FVOCq18LCurQ?usp=sharing) ranging from global COVID-19 patients to United States childhood obesity records, from 1000 records to over a million patients, as well as a synthetic dataset showcasing DOT’s capabilities on frontline health data.
-
-# The Data Observation Toolkit (DOT)
-
-The Data Observation Toolkit (DOT) can be used to monitor data in order to flag problems with data integrity and
-scenarios that might need attention. Typical tests include checks for missing/duplicate and inconsistent 
-data, outliers, and domain-specific signals such as a missed follow-up medical treatment after initial diagnosis. 
-
-DOT includes a simple user interface for configuring the powerful DBT and Great Expectations libraries, as well as a 
-database for storing and classifying data monitoring results.
-
-The ultimate aim of DOT is to provide easier access to data monitoring without the need for deep technical skills.
-
-![ER diagram](./images/dot.png) 
-
-In 2019, the United Nations Statistical Commission stated: “Every misclassified or unrecorded death is a lost opportunity to ensure other mothers and babies do not die in the same way. When it comes to health, better data can be a matter of life and death.” DataKind developed DOT in response to a demand for tool to increase trust in public health data which underpins the ability of a health system to provide equitable, data-driven, optimized health service delivery and improve policy response. 
-
-DOT was developed with our valuable and globally distributed frontline health partners working to strengthen frontline health systems, expertise from Ministries of Health, frontline health workers and funders.
-
-Read more here:
-
-[Pathways to Increasing Trust in Public Health Data](https://chance.amstat.org/2021/09/pathways/)
-
-[Empowering Health Worker and Community Health Systems: Data Integrity and the Future of Intelligent Community Health Systems in Uganda](https://www.datakind.org/blog/empowering-health-workers-and-community-health-systems)
-
-[Harnessing the power of data science in healthcare](https://anchor.fm/medxtekafrica/episodes/Ep19---Harnessing-the-power-of-data-science-in-healthcare-e1iijkm)
-
-[How Data Empowers Health Workers—and Powers Health Systems](https://chwi.jnj.com/news-insights/how-data-empowers-health-workers-and-powers-health-systems)
-
-
-# Quick start
-
-The fastest way to get started using DOT is to use the Docker environment and demo data provided. 
-
-## Prerequisites
-
-1. You will need to install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the
-[Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend 
- using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data 
- being tested
-2. If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set `export DOCKER_DEFAULT_PLATFORM=linux/amd64` in the terminal where you will run the instructions below
-
-## Setup
-
-You will need Python and some modules installed to run the DOT quick-start demo:
-
-1. Install Python [3.8.9](https://www.python.org/downloads/release/python-389/) 
-2. Install the necessary python packages by running the following commands in your terminal ([Additional information Mac/Linux terminal](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac#:~:text=On%20your%20Mac%2C%20do%20one,%2C%20then%20double%2Dclick%20Terminal.), [additional information Windows terminal](https://learn.microsoft.com/en-us/windows/terminal/)):
-
-   - `pip install gdown`
-   - `pip install python-on-whales`
-
-Alternatively, you can use the provided [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html) installed.
-    
 ## Running the DOT quick-start demo environment
 
 1. Start Docker
 2. Open a Terminal and cd into the `docker` sub-folder of where you installed DOT
-    - Example Windows: 
-      `cd C:<PATH TO WHERE YOU INSTALLED DOT>\Data-Observation-Toolkit\docker` 
-    - Example Mac/Linux: 
+    - Example Windows:
+      `cd C:<PATH TO WHERE YOU INSTALLED DOT>\Data-Observation-Toolkit\docker`
+    - Example Mac/Linux:
       `cd <PATH TO WHERE YOU INSTALLED DOT>/Data-Observation-Toolkit/docker/`
 3. When on Mac/Linux, run `python3 run_demo.py` or when on Windows, run `python3 .\run_demo.py` 
 4. The script will start DOT and open a browser with the [DOT User Interface](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True). See 
@@ -503,7 +449,7 @@ generated one.
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '3081f033-e8f4-4f3b-aea8-36f8c5df05dc', 'INCONSISTENT-1', 3, 
     'Wrong treatment/dosage arising from wrong age of children (WT-1)', '', '', 'ancview_pregnancy', 
     'expression_is_true', '', '', 
-    $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$, 
+    $${"name": "t_under_24_months_wrong_dosage", "expression": "malaria_act_dosage is not null", "condition": "(patient_age_in_months<24) and (malaria_give_act is not null)"}$$,
     '2022-02-14 19:00:00.000 -0500', '2022-02-14 19:00:00.000 -0500', 'your-name');
     ```
 10. `custom_sql`
