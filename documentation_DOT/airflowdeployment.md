@@ -34,12 +34,12 @@ AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
   ```
   Replace <THE PASSWORD YOU USED WHEN BUILDING DOT> with the actual password.
 
-3.  Build the Docker containers using docker-compose-with-airflow.yml:
+3.  Build the Docker containers using ```docker-compose-with-airflow.yml```:
    ```bash
     docker compose -f docker-compose-with-airflow.yml build
    ```
   _**Note** in case you get an error related to ssh-agent, be sure to use the following:_
-      ```eval $(ssh-agent)  ==> for windows users      Or    eval ssh-agent  ==> for Mac/Linux users
+      ```eval $(ssh-agent)  ==> for windows users   Or   eval ssh-agent  ==> for Mac/Linux users
       ```
 4.  Initialize the Airflow containers:
    ```bash

@@ -17,7 +17,7 @@ The Data Observation Toolkit (DOT) leverages two powerful open-source frameworks
 ---
 
 # Configuring DOT
-The following sections provide instructions for adding entities and tests to DOT directly in the DOT database. You can also use the DOT user interface for tests, for more details please see section see section [The DOT User Interface](#the-dot-user-interface). If you want to test DOT with health related data, please feel free to use this [fabricated dataset] (https://docs.google.com/spreadsheets/d/1l6inpa6ykgUewC-MJkgrQwwc8HjUiTLLJFEDBtAMDB4/edit#gid=31188808) which resembles appointment information and contains some quality issues which DOT can highlight.
+The following sections provide instructions for adding entities and tests to DOT directly in the DOT database. You can also use the DOT user interface for tests, for more details please see section see section [The DOT User Interface](#the-dot-user-interface). If you want to test DOT with health related data, please feel free to use this [fabricated dataset](https://docs.google.com/spreadsheets/d/1l6inpa6ykgUewC-MJkgrQwwc8HjUiTLLJFEDBtAMDB4/edit#gid=31188808) which resembles appointment information and contains some quality issues which DOT can highlight.
 
 ## How to add new entities
 The DOT will run tests against user-defined views on the underlying data. These views are called "entities" and defined in table dot.configured_entities:
