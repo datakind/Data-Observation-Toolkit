@@ -47,9 +47,6 @@ The following sections provide step-by-step instructions for configuring various
 -	[Advanced Topics](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/cb6796d15e46c209e8d08b0d3984bfb6cb9d262d/documentation_DOT/AdavanceTopics.md#adding-more-projects-to-airflow)
 
 
-
-
-
 ### Sample data
 Explore [these comprehensive datasets](https://drive.google.com/drive/folders/12tyTqYNNNpDZxQKMQqv7FVOCq18LCurQ?usp=sharing), including global COVID-19 data, U.S. childhood obesity records, and datasets ranging from 1,000 to over a million patient entries, along with a synthetic dataset demonstrating DOT's capabilities with frontline health data.
 
@@ -59,6 +56,7 @@ Explore [these comprehensive datasets](https://drive.google.com/drive/folders/12
     -	facilitates the import of modules under test
     -	recreates a directory in the file system for the test outputs
     -	provides a number of function for supporting tests that access the database, mocking the config files to point to the test [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml), (re)creates a schema for DOT configuration and loads it with test data, etc.
+
 ## Code quality
 We have instituted a pair of tools to ensure the code base will remain at an acceptable quality as it is shared and developed in the community.
 1.	The [formulaic python formatter “black”](https://pypi.org/project/black/). As described by its authors it is deterministic and fast but can be modified. We use the default settings, most notably formatting to a character limit of 88 per line.
@@ -73,49 +71,10 @@ _For detailed information on advanced configuration options and guidelines for c
 
 ----------
 
-## Running the DOT quick-start demo environment
-
-1. Start Docker
-2. Open a Terminal and cd into the `docker` sub-folder of where you installed DOT
-    - Example Windows:
-      `cd C:<PATH TO WHERE YOU INSTALLED DOT>\Data-Observation-Toolkit\docker`
-    - Example Mac/Linux:
-      `cd <PATH TO WHERE YOU INSTALLED DOT>/Data-Observation-Toolkit/docker/`
-3. When on Mac/Linux, run `python3 run_demo.py` or when on Windows, run `python3 .\run_demo.py` 
-4. The script will start DOT and open a browser with the [DOT User Interface](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True). See 
-   demo video below for how to get started.  
-5. Once you are done with the demo, press return in your Terminal, to stop the docker containers
-
-### Video Demo of DOT 
-
-**Note: Be sure to activate audio** ...
-
-https://user-images.githubusercontent.com/8402586/195226567-fe035544-7075-4750-8bd8-ddfa7f57a811.mp4
-
-# The not-so-quick start, setting up DOT
-
-## Building the DOT Docker environment
-
-If you wish to build DOT yourself ...
-  
-1. Save a postgres password to your local environment `export POSTGRES_PASSWORD=<some password you decide>`
-2. Open a terminal and change directory into the `docker` sub-directory of DOT: `cd ./docker`
-3. Build the docker containers: `docker compose build`
-3. Start them: `docker compose up -d`
-
-Your environment is now running! 
-
-## Running DOT
-
-1. `docker exec -it dot /bin/bash`
-2. `cd dot`
-3. `python3 ./run_everything.py --project_id 'ScanProject1'`
-
-This will run the sample tests against the demo data and save results to the DOT database. 
 
 ## Setting up the DOT User Interface
 
-The above steps will start the DOT user interface, which will allow you to manage DOT and see results. You need to 
+The above steps will start the DOT user interface, which will allow you to manage DOT and see results. You need to
 do a few steps the first time you use it ...
 
 1. Go to [http://localhost:82/](http://localhost:82)
@@ -124,7 +83,7 @@ do a few steps the first time you use it ...
 4. Click app smith icon top-left to go back tom homepage
 5. Top-right next to the new button, click on the '...' and select *import*
 6. Select *Import from file* and navigate to file `./docker/appsmith/DOT App V2.json`
-7. You will be prompted to enter details for the database connection. You can set these as required, but if using the 
+7. You will be prompted to enter details for the database connection. You can set these as required, but if using the
    DOT dockerized Postgres database, the parameters are:
     - `Host address: dot-db`
     - `Port: 5432`
@@ -135,7 +94,7 @@ do a few steps the first time you use it ...
 You should now see the DOT user interface in developer mode (ie you could edit it). To run in end-user mode:
 
 1. Click button top-right click the 'Deploy' button. This should open a new tab with the user interface in all its glory!
- 
+
 Note: If you want to remove Appsmith information on the deployed app, add `?embed=True` at the end
 of the deployed app URL.
 
@@ -546,7 +505,6 @@ custom SQL query. Given this, there is a useful Postgres function which will ret
 see 'Seeing the raw data for failed tests' above.
  
 
-### Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for information on more complex configuration options. 
 
 ## How to visualize the results using Superset
 
@@ -594,71 +552,6 @@ IMPORTANT! If superset dashboards and using Docker, be sure to export your dashb
 work if rebuilding your Docker environment.
 
 
-# Deploying in Airflow 
-
-The following setup is a proof-of-concept to illustrate how Airflow might be configured to run the DOT on multiple
-databases. It is configured to copy data from the data DB back into the DOT DB, in production the flow would
-be to copy data from the source production db into the DOT DB data_<project> schema.
-
-### Configuring/Building Airflow Docker environment
-
-1. `cd ./docker`
-2`export POSTGRES_PASSWORD=<**Some password you will use to access DOT DB**>`
-3`docker compose -f docker-compose-with-airflow.yml build`
-4`docker compose -f docker-compose-with-airflow.yml up airflow-init`
-5`docker compose -f docker-compose-with-airflow.yml up -d`
-6`docker exec -it docker-airflow-worker-1 /bin/bash`
-7`cd /app/dot && ./install_dot.sh` 
-
-**Note:** If using Docker on AWS, you might need to use `docker-compose` instead of `docker compose`.
-
-Now, to set up DB connection for the DOT  ...
-
-8. To test: Connect to the DOT DB as mentioned above in section 'Testing your database connection' 
-9. Go to: [http://localhost:8083/](http://localhost:8083/) and log in with airflow/airflow
-10. Next, create a copy of the DOT DB to be used as the source database. Open a SQL session and run ...
-
-`SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity 
-WHERE pg_stat_activity.datname = 'dot_db' AND pid <> pg_backend_pid();`
-
-`CREATE DATABASE dot_data WITH TEMPLATE dot_db OWNER postgres;`
-
-11. In top menu select **Admin** > **Connections**, click **+**
-12. Enter the Docker DOT DB details as follows:
-
-- Conn Id: dot_db
-- Conn Type: Postgres
-- Host: dot_db
-- Schema: dot
-- Login: postgres
-- Password: *Whatever you used when building the DOT docker environment*
-- Port: 5432
-
-13. Set up new connection in Airflow as follows:
-
-- Conn Id: dot_data
-- Conn Type: Postgres
-- Host: dot_db
-- Schema: public
-- Login: postgres
-- Password: *Whatever you used when building the DOT docker environment*
-- Port: 5432
-
-See section below for how to run DOT
-
-### Starting Airflow docker environment
-
-NOTE: You might need to use docker-compose on some hosts.
-
-`docker compose -f docker-compose-with-airflow.yml up -d` 
-
-### Stopping Airflow docker environment
-
-`docker compose -f docker-compose-with-airflow.yml stop` 
-
-### Removing Airflow docker environment
-
-`docker compose -f docker-compose-with-airflow.yml down -v` 
 
 ### Running the DOT in Airflow (Demo)
 
@@ -945,18 +838,6 @@ And finally you can run the tests from a terminal as follows:
 pytest dot/self_tests/unit
 ```
 
-#### Guidelines for adding new tests
-- Existing tests are at [the self-tests folder](dot/self_tests/unit)
-- All tests extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
-  - facilitates the import of modules under test
-  - recreates a directory in the file system for the test outputs
-  - provides a number of function for supporting tests that access the database, mocking the config files to point to the
-the test [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml), (re)creates a schema for DOT configuration
-and loads it with test data, etc
 
-### Code quality 
-We have instituted a pair of tools to ensure the code base will remain at an acceptable quality as it is shared and developed in the community.
-1. The [formulaic python formatter “black”](https://pypi.org/project/black/). As described by its authors it is deterministic and fast, but can be modified. We use the default settings, most notably formatting to a character limit of 88 per line.
-2. The [code linter pylint](https://pylint.org/). This follows the [PEP8](https://peps.python.org/pep-0008/) style standard. PEP8 formatting standards are taken care of in black, with the exception that the default pylint line length is 80. Pylint is also modifiable and a standard set of exclusion to the PEP8 standard we have chosen are found [here](https://github.com/datakind/medic_data_integrity/blob/main/.pylintrc). We chose the default score of 7 as the minimum score for pylint to be shared.
- 
-The combination of black and pylint can be incorporated into the git process using a pre-commit hook by running `setup_hooks.sh`
+
+
