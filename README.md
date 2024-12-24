@@ -28,14 +28,14 @@ To run DOT you will need to:
      - `pip install gdown`
      - `pip install python-on-whales`
 3.	Install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the [Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data being tested
-4.	If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set export DOCKER_DEFAULT_PLATFORM=linux/amd64 in the terminal where you will run the instructions below
+4.	If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set export ```DOCKER_DEFAULT_PLATFORM=linux/amd64``` in the terminal where you will run the instructions below
 5.	(Windows Users only) Need to install WSL for Linux on Windows Pcs
 
 Alternatively, you can use the provided  [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html)  installed.
 
 _After completing the software prerequisites for your operating system, **download or clone the DOT repository** to your computer. **You will need this repository for all the setups listed below.**_
 
- ### Configuration (work in progress)
+ ### Configuration (still need to connect them all)
 The following sections provide step-by-step instructions for configuring various components of DOT:
 -	[Getting Started with DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/07a44ca01526679912a04e0f20bb6364134cdaf7/documentation_DOT/gettingstartedDOT.md)
 -	[Setting Up the Docker Environment and Running DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md)
