@@ -29,7 +29,7 @@ To run DOT you will need to:
      - `pip install python-on-whales`
 3.	Install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the [Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data being tested
 4.	If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set export ```DOCKER_DEFAULT_PLATFORM=linux/amd64``` in the terminal where you will run the instructions below
-5.	(Windows Users only) Need to install WSL for Linux on Windows Pcs
+5.	**(Windows Users only)** Need to install WSL for Linux on Windows Pcs
 
 Alternatively, you can use the provided  [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html)  installed.
 
