@@ -13,7 +13,7 @@ The **Data Observation Toolkit (DOT)** is designed to monitor data and flag pote
 The primary goal of DOT is to make data monitoring more accessible, allowing users to ensure high-quality data without requiring extensive technical expertise. – Below is a high overview of the tool and how is architected:
  <figure style="text-align:center;">
    <figcaption> DOT high overview </figcaption>
-   <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e650c78dc73b3842766d87d74f56701adb4019ff/images/dot.png" alt=" dot_overview " />
+   <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/a1a25e1643c28113b50a75989a1fdaca1f3d1b19/images/dot1.png" alt=" dot_overview " />
 </figure>
 
 <figure style="text-align:center;">
