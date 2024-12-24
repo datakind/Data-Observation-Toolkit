@@ -17,7 +17,7 @@ Finally, initialize Superset by running:
 ```bash
 docker exec -it superset superset init
  ```
-You can safely ignore any warnings about CACHE_TYPE being null.
+You can safely ignore any warnings about ```CACHE_TYPE``` being null.
 ## Accessing Superset
 Once the setup is complete, you can access the Superset UI by opening the following URL in a web browser:
 [http://localhost:8080/login/](http://localhost:8080/login/)
@@ -99,4 +99,3 @@ This section outlines the process for using a local Airflow environment to conne
   If you are configuring Airflow in a production environment, be sure to modify the ```./docker/dot/dot_config.yml``` file to accommodate additional projects. Furthermore, you can extend the list of projects by adding entries to the projects array in the Airflow configuration JSON. This allows you to easily scale and manage multiple data projects within your Airflow environment.
 
 ---
-

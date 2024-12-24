@@ -111,6 +111,30 @@ WHERE s.scenario_id=ct.scenario_id AND tr.test_id=ct.test_id AND ce.entity_id = 
 LIMIT 10
 ```
 
+## Viewing test results
+
+Your test results will be in the `dot-db` container. You can view the results by opening a shell in the dot-db container:
+
+`docker exec -it dot-db /bin/bash`
+
+Then running the psql client locally in that container:
+
+`psql -U postgres -d dot_db`
+
+
+Or if you prefer a database client (like [DBeaver](https://dbeaver.io)), you can use their settings:
+```
+host=localhost
+port=5433
+database=dot_db
+user=postgres
+password=<the POSTGRES_PASSWORD you set above>
+```
+
+Note: The host and port are set in the [docker-compose.yml](./docker/docker-compose.yml)
+
+To see some raw results you can run `SELECT * from dot.test_results LIMIT 100;`. Some more advanced queries are provided below.
+
 #### Deactivating all tests except one dbt and one great expectation
 ```sql
 UPDATE dot.configured_tests
@@ -132,5 +156,5 @@ Where the function parameters are:
 - Test Result ID column value
 - Test results schema name
 
-This returns a json record for the data that was tested. 
+This returns a json record for the data that was tested.
 **Note:** If using the airflow environment, change ```public_tests``` to the schema where the data is, for example ```data_flights_db```.

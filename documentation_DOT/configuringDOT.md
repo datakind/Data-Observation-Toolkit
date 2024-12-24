@@ -86,7 +86,7 @@ Tests are defined in the table ```dot.configured_tests```. Each test has an asso
 
 The UUID in the above example will get overwritten with an automatically generated value. Also, your test must be unique for the project. If you get a key violation it's probably because that test already exists.
 Test validation
-Any insert of update of configured tests will call database function dot.test_validation, as defined in [./db/dot/1-schema.sql](./db/dot/1-schema.sql). This function performs some basic validation to ensure test parameters are in an expected format. It is not infallable, if there are any issues with test parameters and tests do not execute, you can confirm this by looking at columns test_status and test_status_message in dot.test_results_summary.
+Any insert of update of configured tests will call database function ```dot.test_validation```, as defined in [./db/dot/1-schema.sql](./db/dot/1-schema.sql). This function performs some basic validation to ensure test parameters are in an expected format. It is not infallable, if there are any issues with test parameters and tests do not execute, you can confirm this by looking at columns test_status and test_status_message in dot.test_results_summary.
 
 ### Example INSERT statements for adding a new test for each test type:
 
@@ -129,7 +129,7 @@ INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '3081f033-e8f4-4f3
 ```
 10.	**custom_sql**
 
-Custom SQL queries require special case because they must have primary_table and primary_table_id_field specified within the SQL query as shown below:
+Custom SQL queries require special case because they must have ```primary_table``` and ```primary_table_id_field``` specified within the SQL query as shown below:
 ```sql
 INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', 'c4a3da8f-32f4-4e9b-b135-354de203ca90', 'TREAT-1', 6, 'Test for new family planning method (NFP-1)', '', '', 'ancview_pregnancy', 'custom_sql', '', '',format('{%s: %s}', to_json('query'::text), to_json(query select a.patient_id, a.reported, a.fp_method_being_used, 'dot_model__fpview_registration' as primary_table, 'patient_id' as primary_table_id_field from {{ ref('dot_model__fpview_registration') }} a inner join ( select distinct patient_id, max(reported) reported from {{ ref('dot_model__fpview_registration') }} where fp_method_being_used in ('vasectomie','female sterilization') group by patient_id ) b on a.patient_id = b.patient_id and a.reported > b.reported and fp_method_being_used not in ('vasectomie','female sterilization') and fp_method_being_used not like '%condom%' query::text) )::json,'2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'Leah');
 ```
@@ -140,3 +140,86 @@ UPDATE dot.configured_tests
 SET test_activated=false 
 WHERE test_id not in ('7db8742b-c20b-3060-93e2-614e35da2d4b','0f26d515-a70f-3758-8266-8da326d90eb6');
 ```
+
+
+## Developing DOT
+
+The DOT is open source so we encourage any development is done as part of that intiative. For reference this would
+include code quality standards and self-tests, some details of which are provided below.
+
+### Self-tests
+
+The DOT runs some self-tests to check that its functions are running fine. If you are contributing to the project
+by adding a new feature or solving a bug, please follow the following guidelines:
+- find the existing tests applicable to the area that you are modifying
+- add a few more relevant tests for your bugfix/improvement
+- implement your changes until the test pass
+
+#### Running self-tests
+
+##### Using Docker
+
+The Docker build provided above to run DOT, also includes self-test. So once you have the container running, all you
+need to do is:
+
+1. `exec -it dot /bin/bash`
+2. `pytest dot/self_tests/unit`
+
+##### On your local machine
+
+Assuming you would like to run the tests locally, as preparation steps, you will need to:
+- Create a local env for python via either venv or conda
+- Make sure your Python version aligns with that in `.github/workflows/lint.yml`
+- Create a conda environment using the `environment.yml` file at the root directory
+- Prepare a postgres database that the tests can use (e.g. you can deploy a docker container and use it as a database
+only, or you could use a local instance of a Postgres DB)
+- Prepare a [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml) at directory
+`dot/self_tests/data/base_self_test` with the same structure as the [dot_config.yml](dot/config/example/dot_config.yml)
+for the DOT; should look like something as follows (note that the config below points to DB in the docker container):
+```YAML
+dot:
+  save_passed_tests: False
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5433
+  dbname: dot_db
+  schema: self_tests_dot
+  threads: 4
+ScanProjec1_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5433
+  dbname: dot_db
+  schema: self_tests_public
+  threads: 4
+```
+
+And finally you can run the tests from a terminal as follows:
+```bash
+pytest dot/self_tests/unit
+```
+
+#### Additional notes
+
+The Data Observation Toolkit (DOT) works with a few assumptions in terms of what an expectation should accept and return.
+
+1. We create views out of the DOT results with Postgresql-specific syntax. If you're using any other database engine,
+please adapt the query in [great_expectations.py](dot/utils/great_expectations.py).
+
+2. An expectation accepts both column names and table names as arguments. Great Expectations generally has
+table-agnostic suites running on specific single tables, but we're changing this model a bit because data integrity
+queries often depend on more than one table. Therefore, a default empty dataset is added in the `batch_config.json`
+for all custom expectations, and a relevant table name should be passed to the expectation in the suite definition.
+The default dataset won't be read at all and is used as a placeholder.
+
+3. Custom expectations are found in custom_expectations.py under plugins, it is recommended to follow their format and
+to add your own custom expectations as methods of that same class.
+
+4. The toolkit's post-processing step expects a few specific field in the output of the expectations
+(refer to example custom expectations to see how they're implemented)
