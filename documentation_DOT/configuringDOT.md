@@ -209,17 +209,10 @@ pytest dot/self_tests/unit
 
 The Data Observation Toolkit (DOT) works with a few assumptions in terms of what an expectation should accept and return.
 
-1. We create views out of the DOT results with Postgresql-specific syntax. If you're using any other database engine,
-please adapt the query in [great_expectations.py](dot/utils/great_expectations.py).
+  1.	We create views out of the DOT results with Postgresql-specific syntax. If you're using any other database engine, please adapt the query in [great_expectations.py](dot/utils/great_expectations.py).
 
-2. An expectation accepts both column names and table names as arguments. Great Expectations generally has
-table-agnostic suites running on specific single tables, but we're changing this model a bit because data integrity
-queries often depend on more than one table. Therefore, a default empty dataset is added in the `batch_config.json`
-for all custom expectations, and a relevant table name should be passed to the expectation in the suite definition.
-The default dataset won't be read at all and is used as a placeholder.
+  2.	An expectation accepts both column names and table names as arguments. Great Expectations generally has table-agnostic suites running on specific single tables, but we're changing this model a bit because data integrity queries often depend on more than one table. Therefore, a default empty dataset is added in the ```batch_config.json``` for all custom expectations, and a relevant table name should be passed to the expectation in the suite definition. The default dataset won't be read at all and is used as a placeholder.
 
-3. Custom expectations are found in custom_expectations.py under plugins, it is recommended to follow their format and
-to add your own custom expectations as methods of that same class.
-
-4. The toolkit's post-processing step expects a few specific field in the output of the expectations
-(refer to example custom expectations to see how they're implemented)
+  3.	Custom expectations are found in ```custom_expectations.py``` under plugins, it is recommended to follow their format and to add your own custom expectations as methods of that same class.
+  
+  4.	The toolkit's post-processing step expects a few specific field in the output of the expectations (refer to example custom expectations to see how they're implemented)
