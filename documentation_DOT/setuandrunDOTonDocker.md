@@ -15,7 +15,7 @@
          cd ./docker
         ```
 3. **To save a PostgreSQL password to your local environment, use the following command in your terminal:**
- 
+
      ```bash
       export POSTGRES_PASSWORD=<your_password_here>
      ```
@@ -29,7 +29,7 @@
 **Note** in case you get an error related to ssh-agent, be sure to use the following:
 
   ```bash
-   eval $(ssh-agent)      ==> for windows users 
+   eval $(ssh-agent)      ==> for windows users
    Or 
    eval ssh-agent       ==> for Mac/Linux users 
   ```
@@ -62,18 +62,18 @@ To start the DOT user interface and manage the system, follow these steps. You w
 3.	After registration, click **'Build my own'** on the subsequent popup.
 4.	Click the **Appsmith** icon in the top-left corner to return to the homepage.
 5.	In the top-right corner, next to the **New** button, click on the ellipsis ('...') and select **Import**.
-6.	Select **Import from file**, then navigate to the file ./docker/appsmith/DOT App V2.json.
+6.	Select **Import from file**, then navigate to the file ```./docker/appsmith/DOT``` App V2.json.
 7.	You will be prompted to enter details for the database connection. Set these parameters as needed, but if using the DOT Dockerized PostgreSQL database, use the following:
-   
+
      - **Host address:** dot-db
      - **Port:** 5432
      - **Database name** dot_db
      - **Authentication > User name:** postgres
      - **Authentication > Password:** [THE PASSWORD YOU USED WHEN BUILDING DOT]
-     
+
 **You should now see the DOT user interface in developer mode, where you can edit it.**
 To switch to end-user mode:
 
   1.	Click the button in the top-right corner and select **'Deploy'**. This will open a new tab displaying the user interface as it will appear to end users.
-      
+
 **Note:** If you wish to remove the Appsmith branding on the deployed app, append ?embed=True to the end of the deployed app URL.
