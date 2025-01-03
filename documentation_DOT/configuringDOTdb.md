@@ -1,5 +1,5 @@
 # Configuring the DOT Database
-After configuring the environment as described in the previous sections, you can proceed to set up the DOT database for your environment. This setup will enable you to continue working with the data or view the results of the available data. The database schema is defined as follows:
+After configuring either [Docker Environment to Run DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md) or 	[Deploying DOT to Airflow](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/72a3bb7a36fbfc69b621180fd52034dc99d1ee86/documentation_DOT/airflowdeployment.md), you can proceed to set up the DOT database for your environment. This setup will enable you to continue working with the data or view the results of the available data. The database schema is defined as follows:
 
 <figure style="text-align:center;">
   <figcaption>DOT Database Schema</figcaption>
