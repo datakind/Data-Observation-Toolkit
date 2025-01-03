@@ -29,7 +29,7 @@
 **Note** in case you get an error related to ssh-agent, be sure to use the following:
 
   ```bash
-   eval $(ssh-agent)      ==> for windows users
+   eval $(ssh-agent)    ==> for windows users
    Or 
    eval ssh-agent       ==> for Mac/Linux users 
   ```
