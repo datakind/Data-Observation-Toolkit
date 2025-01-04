@@ -111,7 +111,7 @@ WHERE s.scenario_id=ct.scenario_id AND tr.test_id=ct.test_id AND ce.entity_id = 
 LIMIT 10
 ```
 
-## Viewing test results
+# Viewing test results
 
 Your test results will be in the `dot-db` container. You can view the results by opening a shell in the dot-db container:
 
