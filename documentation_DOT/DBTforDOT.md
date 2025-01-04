@@ -161,3 +161,7 @@ OOTB expectations have various outputs that might not conform to the format expe
 
 If you need to use a combination of OOTB and custom expectations, it is suggested to keep them in two separate suites for easier management and to avoid potential conflicts.
 
+
+
+For further references on advanced topics related to DOT, you can consult the [Advanced Topics](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/cb6796d15e46c209e8d08b0d3984bfb6cb9d262d/documentation_DOT/AdavanceTopics.md#adding-more-projects-to-airflow) guide
+

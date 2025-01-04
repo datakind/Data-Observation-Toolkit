@@ -158,3 +158,6 @@ Where the function parameters are:
 
 This returns a json record for the data that was tested.
 **Note:** If using the airflow environment, change ```public_tests``` to the schema where the data is, for example ```data_flights_db```.
+
+
+After configuring the database with DOT, you can explore the [DBT for DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/3c59ddd5c284bc07dc8428e039655827cb736ad5/documentation_DOT/DBTforDOT.md) guide for further testing and validation of the software. DBT (Data Build Tool) is an essential tool for transforming raw data into a more structured, analytical form within your database. It allows you to build, test, and document your data pipelines, ensuring that the data used by DOT is reliable, clean, and well-structured for analysis.
