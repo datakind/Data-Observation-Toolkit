@@ -120,3 +120,6 @@ To run just the DOT stage:
 ```bash
 airflow tasks test run_dot_project run_dot 2022-03-01
 ```
+
+
+If you need to [set up the database for DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/b70d3e044858387443698354b0c4253a6b618b17/documentation_DOT/configuringDOTdb.md) or [configure Appsmith](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/d9845f8228bb147af7f28f7a300a68012e9b51ed/documentation_DOT/developingappsmith.md), check out the guide for setting up the DOT Database and the guide for configuring Appsmith. These resources will provide step-by-step instructions for both tasks.
