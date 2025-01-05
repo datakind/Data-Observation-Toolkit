@@ -35,7 +35,7 @@ Alternatively, you can use the provided  [environment.yml](./environment.yml) if
 
 _After completing the software prerequisites for your operating system, **download or clone the DOT repository** to your computer. **You will need this repository for all the setups listed below.**_
 
- ### Configuration (still need to connect them all)
+ ### Configuration
 The following sections provide step-by-step instructions for configuring various components of DOT:
 -	[Getting Started with DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/07a44ca01526679912a04e0f20bb6364134cdaf7/documentation_DOT/gettingstartedDOT.md)
 -	[Setting Up the Docker Environment and Running DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md)
@@ -55,7 +55,7 @@ Explore [these comprehensive datasets](https://drive.google.com/drive/folders/12
 *	All tests extend the [test base class](dot/self_tests/unit/base_self_test_class.py) that
     -	facilitates the import of modules under test
     -	recreates a directory in the file system for the test outputs
-    -	provides a number of function for supporting tests that access the database, mocking the config files to point to the test [dot_config.yml](dot/self_tests/data/base_self_test/dot_config.yml), (re)creates a schema for DOT configuration and loads it with test data, etc.
+    -	provides a number of function for supporting tests that access the database, mocking the config files to point to the test [dot_config.yml](https://github.com/datakind/Data-Observation-Toolkit/blob/9c28925298e4b4a03e75a3b093d26efe13d8c3be/dot/config/example/dot_config.yml), (re)creates a schema for DOT configuration and loads it with test data, etc.
 
 ## Code quality
 We have instituted a pair of tools to ensure the code base will remain at an acceptable quality as it is shared and developed in the community.
