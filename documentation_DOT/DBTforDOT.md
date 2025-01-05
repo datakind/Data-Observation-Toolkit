@@ -163,5 +163,4 @@ If you need to use a combination of OOTB and custom expectations, it is suggeste
 
 
 
-For further references on advanced topics related to DOT, you can consult the [Advanced Topics](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/cb6796d15e46c209e8d08b0d3984bfb6cb9d262d/documentation_DOT/AdavanceTopics.md#adding-more-projects-to-airflow) guide
-
+For further reference on advanced topics related to DOT, you can consult the [Advanced Topics](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/cb6796d15e46c209e8d08b0d3984bfb6cb9d262d/documentation_DOT/AdavanceTopics.md#adding-more-projects-to-airflow) guide.
