@@ -20,3 +20,6 @@ The quickest way to start using DOT is by utilizing the provided Docker environm
 4.	On Mac/Linux, run python3 ```run_demo.py```. On Windows, run python3 ```.\run_demo.py```.
 5.	The script will launch DOT and open a browser window with the [DOT User Interface](http://localhost:82/app/data-observation-toolkit/run-log-634491ea0da61b0e9f38760d?embed=True). Refer to the demo video above for a step-by-step guide.
 6.	When you're finished with the demo, press **Return** in the terminal to stop the Docker containers.
+
+
+To explore DOT in more depth, refer to the guides on setting it up: for running DOT in a Docker environment, check out the [Docker Environment to Run DOT guide](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md), and for deploying DOT to Airflow, see the [Deploying DOT to Airflow guide](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/72a3bb7a36fbfc69b621180fd52034dc99d1ee86/documentation_DOT/airflowdeployment.md). These resources provide step-by-step instructions for setting up and using DOT in different environments.

@@ -29,7 +29,7 @@
 **Note** in case you get an error related to ssh-agent, be sure to use the following:
 
   ```bash
-   eval $(ssh-agent)      ==> for windows users
+   eval $(ssh-agent)    ==> for windows users
    Or 
    eval ssh-agent       ==> for Mac/Linux users 
   ```
@@ -77,3 +77,6 @@ To switch to end-user mode:
   1.	Click the button in the top-right corner and select **'Deploy'**. This will open a new tab displaying the user interface as it will appear to end users.
 
 **Note:** If you wish to remove the Appsmith branding on the deployed app, append ?embed=True to the end of the deployed app URL.
+
+
+If you need to [set up the database for DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/b70d3e044858387443698354b0c4253a6b618b17/documentation_DOT/configuringDOTdb.md) or [configure Appsmith](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/d9845f8228bb147af7f28f7a300a68012e9b51ed/documentation_DOT/developingappsmith.md), check out the guide for setting up the DOT Database and the guide for configuring Appsmith. These resources will provide step-by-step instructions for both tasks.

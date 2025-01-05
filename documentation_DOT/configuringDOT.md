@@ -1,5 +1,7 @@
 # How the DOT Works
-The Data Observation Toolkit (DOT) leverages two powerful open-source frameworks—[DBT]( https://docs.getdbt.com/docs/introduction/) and [Great Expectations](https://greatexpectations.io/)—to define, develop, and execute data tests. These frameworks allow DOT to perform comprehensive and flexible data validation across various stages of the data pipeline.
+
+Once you have configured your containers following the instructions in the [Docker Environment to Run DOT](https://github.com/wvelebanks/Data-Observation-Toolkit/blob/e95231bdaf4c8410633b298ac246173b061dbe52/documentation_DOT/setuandrunDOTonDocker.md) guide, you can proceed with configuring DOT. The Data Observation Toolkit (DOT) integrates two powerful open-source frameworks—[DBT]( https://docs.getdbt.com/docs/introduction/) and [Great Expectations](https://greatexpectations.io/)—to define, develop, and execute data tests. These frameworks enable DOT to perform comprehensive and flexible data validation at multiple stages of the data pipeline, ensuring the integrity and quality of your data throughout the process.
+
 1.	### DBT for Data Tests
 
       DBT (Data Build Tool) serves as the backbone for most of the testing in DOT. It provides robust support for foundational data tests, such as verifying column nullability, checking foreign key constraints, and validating uniqueness. These tests can be easily defined in DBT through simple entries in a YAML file, ensuring they are automated and repeatable.
