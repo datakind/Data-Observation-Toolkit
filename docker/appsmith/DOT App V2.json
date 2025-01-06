@@ -35500,7 +35500,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "UPDATE dot.\"configured_tests\" SET\n    \"test_activated\" = {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t\"project_id\" = '{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t\"scenario_id\" = '{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t\"priority\" = {{Edit_Add_Test_Form.formData.priority}},\n\t\t\"description\" = '{{Edit_Add_Test_Form.formData.description}}',\n\t\t\"impact\" = '{{Edit_Add_Test_Form.formData.impact}}',\n\t\t\"proposed_remediation\" = '{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t\"entity_id\" = '{{Edit_Add_Test_Form.formData.entity_id}}',\n\t\t\"test_type\" = '{{Edit_Add_Test_Form.formData.test_type}}',\n\t\t\"column_name\" = '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t\"test_parameters\" = $${{Edit_Add_Test_Form.formData.form_test_parameters_string}}$$,\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}',\n\t\t\"date_modified\" = NOW()\n  WHERE \"test_id\" = '{{Edit_Add_Test_Form.formData.test_id}}';",
+                    "body": "UPDATE dot.\"configured_tests\" SET\n    \"test_activated\" = {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t\"project_id\" = '{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t\"scenario_id\" = '{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t\"priority\" = {{Edit_Add_Test_Form.formData.priority}},\n\t\t\"description\" = '{{Edit_Add_Test_Form.formData.description}}',\n\t\t\"impact\" = '{{Edit_Add_Test_Form.formData.impact}}',\n\t\t\"proposed_remediation\" = '{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t\"entity_id\" = '{{Edit_Add_Test_Form.formData.entity_id}}',\n\t\t\"test_type\" = '{{Edit_Add_Test_Form.formData.test_type}}',\n\t\t\"column_name\" = '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t\"test_parameters\" = $${{Edit_Add_Test_Form.formData.form_test_parameters_string}}$$,\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name }}',\n\t\t\"date_modified\" = NOW()\n  WHERE \"test_id\" = '{{Edit_Add_Test_Form.formData.test_id}}';",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -35521,7 +35521,7 @@
                     "Edit_Add_Test_Form.formData.description",
                     "Edit_Add_Test_Form.formData.scenario_id",
                     "Edit_Add_Test_Form.formData.priority",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "Edit_Add_Test_Form.formData.test_activated",
                     "Edit_Add_Test_Form.formData.form_test_parameters_string",
                     "Edit_Add_Test_Form.formData.impact",
@@ -35554,7 +35554,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "UPDATE dot.\"configured_tests\" SET\n    \"test_activated\" = {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t\"project_id\" = '{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t\"scenario_id\" = '{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t\"priority\" = {{Edit_Add_Test_Form.formData.priority}},\n\t\t\"description\" = '{{Edit_Add_Test_Form.formData.description}}',\n\t\t\"impact\" = '{{Edit_Add_Test_Form.formData.impact}}',\n\t\t\"proposed_remediation\" = '{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t\"entity_id\" = '{{Edit_Add_Test_Form.formData.entity_id}}',\n\t\t\"test_type\" = '{{Edit_Add_Test_Form.formData.test_type}}',\n\t\t\"column_name\" = '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t\"test_parameters\" = $${{Edit_Add_Test_Form.formData.form_test_parameters_string}}$$,\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}',\n\t\t\"date_modified\" = NOW()\n  WHERE \"test_id\" = '{{Edit_Add_Test_Form.formData.test_id}}';",
+                    "body": "UPDATE dot.\"configured_tests\" SET\n    \"test_activated\" = {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t\"project_id\" = '{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t\"scenario_id\" = '{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t\"priority\" = {{Edit_Add_Test_Form.formData.priority}},\n\t\t\"description\" = '{{Edit_Add_Test_Form.formData.description}}',\n\t\t\"impact\" = '{{Edit_Add_Test_Form.formData.impact}}',\n\t\t\"proposed_remediation\" = '{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t\"entity_id\" = '{{Edit_Add_Test_Form.formData.entity_id}}',\n\t\t\"test_type\" = '{{Edit_Add_Test_Form.formData.test_type}}',\n\t\t\"column_name\" = '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t\"test_parameters\" = $${{Edit_Add_Test_Form.formData.form_test_parameters_string}}$$,\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name}}',\n\t\t\"date_modified\" = NOW()\n  WHERE \"test_id\" = '{{Edit_Add_Test_Form.formData.test_id}}';",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -35575,7 +35575,7 @@
                     "Edit_Add_Test_Form.formData.description",
                     "Edit_Add_Test_Form.formData.scenario_id",
                     "Edit_Add_Test_Form.formData.priority",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "Edit_Add_Test_Form.formData.test_activated",
                     "Edit_Add_Test_Form.formData.form_test_parameters_string",
                     "Edit_Add_Test_Form.formData.impact",
@@ -37366,7 +37366,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "UPDATE dot.\"configured_entities\" SET\n\t\t\"entity_id\" = '{{entity_id.text}}',\n\t\t\"entity_category\" = '{{entity_category.selectedOptionValue}}',\n    \"entity_definition\" = '{{entity_definition.text}}',\n\t\t\"date_modified\" = NOW(),\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}'\nWHERE \"entity_id\" = {{data_table.selectedRow.entity_id}};",
+                    "body": "UPDATE dot.\"configured_entities\" SET\n\t\t\"entity_id\" = '{{entity_id.text}}',\n\t\t\"entity_category\" = '{{entity_category.selectedOptionValue}}',\n    \"entity_definition\" = '{{entity_definition.text}}',\n\t\t\"date_modified\" = NOW(),\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name}}'\nWHERE \"entity_id\" = {{data_table.selectedRow.entity_id}};",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -37387,7 +37387,7 @@
                     "entity_definition.text",
                     "entity_id.text",
                     "entity_category.selectedOptionValue",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "data_table.selectedRow.entity_id"
                 ],
                 "userSetOnLoad": false,
@@ -37412,7 +37412,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "UPDATE dot.\"configured_entities\" SET\n\t\t\"entity_id\" = '{{entity_id.text}}',\n\t\t\"entity_category\" = '{{entity_category.selectedOptionValue}}',\n    \"entity_definition\" = '{{entity_definition.text}}',\n\t\t\"date_modified\" = NOW(),\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}'\nWHERE \"entity_id\" = {{data_table.selectedRow.entity_id}};",
+                    "body": "UPDATE dot.\"configured_entities\" SET\n\t\t\"entity_id\" = '{{entity_id.text}}',\n\t\t\"entity_category\" = '{{entity_category.selectedOptionValue}}',\n    \"entity_definition\" = '{{entity_definition.text}}',\n\t\t\"date_modified\" = NOW(),\n\t\t\"last_updated_by\" = '{{appsmith.user.name == null ? '' : appsmith.user.name}}'\nWHERE \"entity_id\" = {{data_table.selectedRow.entity_id}};",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -37433,7 +37433,7 @@
                     "entity_definition.text",
                     "entity_id.text",
                     "entity_category.selectedOptionValue",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "data_table.selectedRow.entity_id"
                 ],
                 "userSetOnLoad": false,
@@ -38001,7 +38001,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "INSERT INTO dot.\"configured_entities\" (\n\t\"entity_id\",\n\t\"entity_category\",\n\t\"project_id\",\n\t\"entity_definition\",\n\t\"date_added\",\n\t\"date_modified\",\n\t\"last_updated_by\")\nVALUES (\n\t'{{insert_form.formData.entity_id}}',\n\t'{{insert_form.formData.entity_category}}',\n\t'{{insert_form.formData.entity_project_id}}',\n\t'{{insert_form.formData.entity_definition}}',\n\tNOW(),\n\tNOW(),\n\t'{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}');",
+                    "body": "INSERT INTO dot.\"configured_entities\" (\n\t\"entity_id\",\n\t\"entity_category\",\n\t\"project_id\",\n\t\"entity_definition\",\n\t\"date_added\",\n\t\"date_modified\",\n\t\"last_updated_by\")\nVALUES (\n\t'{{insert_form.formData.entity_id}}',\n\t'{{insert_form.formData.entity_category}}',\n\t'{{insert_form.formData.entity_project_id}}',\n\t'{{insert_form.formData.entity_definition}}',\n\tNOW(),\n\tNOW(),\n\t'{{appsmith.user.name == null ? '' : appsmith.user.name}}');",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -38021,7 +38021,7 @@
                 "jsonPathKeys": [
                     "insert_form.formData.entity_project_id",
                     "insert_form.formData.entity_definition",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "insert_form.formData.entity_category",
                     "insert_form.formData.entity_id"
                 ],
@@ -38047,7 +38047,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "INSERT INTO dot.\"configured_entities\" (\n\t\"entity_id\",\n\t\"entity_category\",\n\t\"project_id\",\n\t\"entity_definition\",\n\t\"date_added\",\n\t\"date_modified\",\n\t\"last_updated_by\")\nVALUES (\n\t'{{insert_form.formData.entity_id}}',\n\t'{{insert_form.formData.entity_category}}',\n\t'{{insert_form.formData.entity_project_id}}',\n\t'{{insert_form.formData.entity_definition}}',\n\tNOW(),\n\tNOW(),\n\t'{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}');",
+                    "body": "INSERT INTO dot.\"configured_entities\" (\n\t\"entity_id\",\n\t\"entity_category\",\n\t\"project_id\",\n\t\"entity_definition\",\n\t\"date_added\",\n\t\"date_modified\",\n\t\"last_updated_by\")\nVALUES (\n\t'{{insert_form.formData.entity_id}}',\n\t'{{insert_form.formData.entity_category}}',\n\t'{{insert_form.formData.entity_project_id}}',\n\t'{{insert_form.formData.entity_definition}}',\n\tNOW(),\n\tNOW(),\n\t'{{appsmith.user.name == null ? '' : appsmith.user.name}}');",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -38067,7 +38067,7 @@
                 "jsonPathKeys": [
                     "insert_form.formData.entity_project_id",
                     "insert_form.formData.entity_definition",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "insert_form.formData.entity_category",
                     "insert_form.formData.entity_id"
                 ],
@@ -38460,7 +38460,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "INSERT INTO dot.\"configured_tests\" (\n\t  \"test_id\",\n    \"test_activated\" ,\n\t\t\"project_id\",\n\t\t\"scenario_id\" ,\n\t\t\"priority\",\n\t\t\"description\" ,\n\t\t\"impact\",\n\t\t\"proposed_remediation\" ,\n\t\t\"entity_id\",\n\t\t\"test_type\" ,\n\t\t\"column_name\" ,\n\t\t\"test_parameters\",\n\t  \"last_updated_by\",\n\t  \"date_added\",\n\t  \"date_modified\"\n) VALUES(\n\t   uuid_generate_v3(uuid_ns_oid(), '123'), \n     {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t'{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t'{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t {{Edit_Add_Test_Form.formData.priority}},\n\t\t'{{Edit_Add_Test_Form.formData.description}}',\n\t\t'{{Edit_Add_Test_Form.formData.impact}}',\n\t\t'{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t'{{Edit_Add_Test_Form.formData.entity_id}}',\n\t  '{{Edit_Add_Test_Form.formData.test_type}}',\n\t  '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t'{{Edit_Add_Test_Form.formData.form_test_parameters_string}}',\n\t\t'{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}',\n\t\t NOW(),\n\t\t NOW()) ;\n",
+                    "body": "INSERT INTO dot.\"configured_tests\" (\n\t  \"test_id\",\n    \"test_activated\" ,\n\t\t\"project_id\",\n\t\t\"scenario_id\" ,\n\t\t\"priority\",\n\t\t\"description\" ,\n\t\t\"impact\",\n\t\t\"proposed_remediation\" ,\n\t\t\"entity_id\",\n\t\t\"test_type\" ,\n\t\t\"column_name\" ,\n\t\t\"test_parameters\",\n\t  \"last_updated_by\",\n\t  \"date_added\",\n\t  \"date_modified\"\n) VALUES(\n\t   uuid_generate_v3(uuid_ns_oid(), '123'), \n     {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t'{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t'{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t {{Edit_Add_Test_Form.formData.priority}},\n\t\t'{{Edit_Add_Test_Form.formData.description}}',\n\t\t'{{Edit_Add_Test_Form.formData.impact}}',\n\t\t'{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t'{{Edit_Add_Test_Form.formData.entity_id}}',\n\t  '{{Edit_Add_Test_Form.formData.test_type}}',\n\t  '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t'{{Edit_Add_Test_Form.formData.form_test_parameters_string}}',\n\t\t'{{appsmith.user.name == null ? '' : appsmith.user.name}}',\n\t\t NOW(),\n\t\t NOW()) ;\n",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -38487,7 +38487,7 @@
                     "Edit_Add_Test_Form.formData.test_type",
                     "Edit_Add_Test_Form.formData.column_name",
                     "Edit_Add_Test_Form.formData.proposed_remediation",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "Edit_Add_Test_Form.formData.test_activated",
                     "Edit_Add_Test_Form.formData.form_test_parameters_string"
                 ],
@@ -38513,7 +38513,7 @@
                     "timeoutInMillisecond": 10000.0,
                     "paginationType": "NONE",
                     "encodeParamsToggle": true,
-                    "body": "INSERT INTO dot.\"configured_tests\" (\n\t  \"test_id\",\n    \"test_activated\" ,\n\t\t\"project_id\",\n\t\t\"scenario_id\" ,\n\t\t\"priority\",\n\t\t\"description\" ,\n\t\t\"impact\",\n\t\t\"proposed_remediation\" ,\n\t\t\"entity_id\",\n\t\t\"test_type\" ,\n\t\t\"column_name\" ,\n\t\t\"test_parameters\",\n\t  \"last_updated_by\",\n\t  \"date_added\",\n\t  \"date_modified\"\n) VALUES(\n\t   uuid_generate_v3(uuid_ns_oid(), '123'), \n     {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t'{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t'{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t {{Edit_Add_Test_Form.formData.priority}},\n\t\t'{{Edit_Add_Test_Form.formData.description}}',\n\t\t'{{Edit_Add_Test_Form.formData.impact}}',\n\t\t'{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t'{{Edit_Add_Test_Form.formData.entity_id}}',\n\t  '{{Edit_Add_Test_Form.formData.test_type}}',\n\t  '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t'{{Edit_Add_Test_Form.formData.form_test_parameters_string}}',\n\t\t'{{appsmith.user.name == null ? '' : appsmith.user.name == null  }}',\n\t\t NOW(),\n\t\t NOW()) ;\n",
+                    "body": "INSERT INTO dot.\"configured_tests\" (\n\t  \"test_id\",\n    \"test_activated\" ,\n\t\t\"project_id\",\n\t\t\"scenario_id\" ,\n\t\t\"priority\",\n\t\t\"description\" ,\n\t\t\"impact\",\n\t\t\"proposed_remediation\" ,\n\t\t\"entity_id\",\n\t\t\"test_type\" ,\n\t\t\"column_name\" ,\n\t\t\"test_parameters\",\n\t  \"last_updated_by\",\n\t  \"date_added\",\n\t  \"date_modified\"\n) VALUES(\n\t   uuid_generate_v3(uuid_ns_oid(), '123'), \n     {{Edit_Add_Test_Form.formData.test_activated}},\n\t\t'{{Edit_Add_Test_Form.formData.project_id}}',\n\t\t'{{Edit_Add_Test_Form.formData.scenario_id}}',\n\t\t {{Edit_Add_Test_Form.formData.priority}},\n\t\t'{{Edit_Add_Test_Form.formData.description}}',\n\t\t'{{Edit_Add_Test_Form.formData.impact}}',\n\t\t'{{Edit_Add_Test_Form.formData.proposed_remediation}}',\n\t\t'{{Edit_Add_Test_Form.formData.entity_id}}',\n\t  '{{Edit_Add_Test_Form.formData.test_type}}',\n\t  '{{Edit_Add_Test_Form.formData.column_name || ''}}',\n\t\t'{{Edit_Add_Test_Form.formData.form_test_parameters_string}}',\n\t\t'{{appsmith.user.name == null ? '' : appsmith.user.name}}',\n\t\t NOW(),\n\t\t NOW()) ;\n",
                     "selfReferencingDataPaths": [],
                     "pluginSpecifiedTemplates": [
                         {
@@ -38540,7 +38540,7 @@
                     "Edit_Add_Test_Form.formData.test_type",
                     "Edit_Add_Test_Form.formData.column_name",
                     "Edit_Add_Test_Form.formData.proposed_remediation",
-                    "appsmith.user.name == null ? '' : appsmith.user.name == null",
+                    "appsmith.user.name == null ? '' : appsmith.user.name",
                     "Edit_Add_Test_Form.formData.test_activated",
                     "Edit_Add_Test_Form.formData.form_test_parameters_string"
                 ],
