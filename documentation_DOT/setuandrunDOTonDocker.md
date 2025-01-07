@@ -59,10 +59,35 @@ These steps will execute the sample tests on the demo data and save the results 
 To start the DOT user interface and manage the system, follow these steps. You will need to complete the initial setup the first time you use it:
 1.	Navigate to [http://localhost:82/](http://localhost:82)
 2.	Click the **Register** button to create a login (make sure to note the password, as it is specifically for the web application).
-3.	After registration, click **'Build my own'** on the subsequent popup.
+
+     <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+    </figure>
+
+3.	After registration, click **'Create Now'**  button  at the top right corner
+
+      <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+     </figure>
+
+     and the click on **'import file'** a popup window will request you to upload the file or application:
+
+      <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+     </figure>
+.
 4.	Click the **Appsmith** icon in the top-left corner to return to the homepage.
 5.	In the top-right corner, next to the **New** button, click on the ellipsis ('...') and select **Import**.
 6.	Select **Import from file**, then navigate to the file ```./docker/appsmith/DOT``` App V2.json.
+
+     <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+     </figure>
+
 7.	You will be prompted to enter details for the database connection. Set these parameters as needed, but if using the DOT Dockerized PostgreSQL database, use the following:
 
      - **Host address:** dot-db
@@ -70,6 +95,12 @@ To start the DOT user interface and manage the system, follow these steps. You w
      - **Database name** dot_db
      - **Authentication > User name:** postgres
      - **Authentication > Password:** [THE PASSWORD YOU USED WHEN BUILDING DOT]
+
+     <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+     </figure>
+
 
 **You should now see the DOT user interface in developer mode, where you can edit it.**
 To switch to end-user mode:
