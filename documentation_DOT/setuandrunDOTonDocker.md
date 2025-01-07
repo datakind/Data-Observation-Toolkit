@@ -78,14 +78,14 @@ To start the DOT user interface and manage the system, follow these steps. You w
       <figcaption></figcaption>
       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importappsmithapp.png" alt="dot_acrh" />
      </figure>
-.
+
 4.	Click the **Appsmith** icon in the top-left corner to return to the homepage.
 5.	In the top-right corner, next to the **New** button, click on the ellipsis ('...') and select **Import**.
 6.	Select **Import from file**, then navigate to the file ```./docker/appsmith/DOT``` App V2.json.
 
      <figure style="text-align:center;">
       <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/29960ed70da625ae75a1272286720c77df5171c0/images/importingDOTapptoAppsmith.png" alt="dot_acrh" />
      </figure>
 
 7.	You will be prompted to enter details for the database connection. Set these parameters as needed, but if using the DOT Dockerized PostgreSQL database, use the following:
