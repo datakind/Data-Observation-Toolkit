@@ -59,7 +59,7 @@ To see some raw results you can run ```SELECT * from dot.test_results LIMIT 100;
    ```bash
    CREATE DATABASE dot_data WITH TEMPLATE dot_db OWNER postgres;
    ```
-In top menu select **Admin > Connections, click on the (+)** Enter the Docker DOT DB details as follows:
+Now On Ariflow interface, go to the top menu and select **Admin > Connections, click on the (+)** Enter the Docker DOT DB details as follows:
   -  **Conn Id:** dot_db
   -  **Conn Type:** Postgres
   -  **Host:** dot_db
@@ -78,6 +78,19 @@ Set up new connection in Airflow as follows:
 - **Port:** 5432
 
 ---
+
+You will have to fill out the above information for the two different connection above as shown below:
+
+<figure style="text-align:center;">
+  <figcaption>DOT Database connection configuration on Airflow</figcaption>
+  <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/7a3c5cf3f563c824452e60563061079c4e56d839/images/airflowdot_db_connection.png" alt="dot_db_configuration_airflow " /> </figure>
+
+and a list of two connections on Airflow interface as shwn below:
+
+<figure style="text-align:center;">
+  <figcaption>List of Db connections on Airflow</figcaption>
+  <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/7a3c5cf3f563c824452e60563061079c4e56d839/images/both_connections_on_airflow.png" alt="dot_db_list_ariflow" /> </figure>
+
 
 # Useful DOT Database Queries
 The following queries can be helpful for visualizing the DOT DB schema and extracting key insights from the data. These queries can assist in monitoring and analyzing the performance of your DOT setup, especially with respect to failed tests.
