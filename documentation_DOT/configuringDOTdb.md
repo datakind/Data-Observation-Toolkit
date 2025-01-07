@@ -47,7 +47,7 @@ You can use a database client (like [DBeaver](https://dbeaver.io)), and use the 
 
 <figure style="text-align:center;">
   <figcaption>DOT Database connection configuration on DB</figcaption>
-  <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/7a3c5cf3f563c824452e60563061079c4e56d839/dbeacerconnectionsetup.png" alt="dot_db_configuration_airflow " /> </figure>
+  <img src="hhttps://github.com/wvelebanks/Data-Observation-Toolkit/blob/1b0731b2edbcf1d43ec736736b2ac9266cd44939/images/dbeacerconnectionsetup.png" alt="dot_db_configuration_airflow " /> </figure>
 
 You will need to do the same setup as in the image above with db_data.
 
