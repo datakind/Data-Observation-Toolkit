@@ -62,21 +62,21 @@ To start the DOT user interface and manage the system, follow these steps. You w
 
      <figure style="text-align:center;">
       <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/appsmith_signup.png" alt="dot_acrh" />
     </figure>
 
 3.	After registration, click **'Create Now'**  button  at the top right corner
 
       <figure style="text-align:center;">
       <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importDOTonAppsmith.png" alt="dot_acrh" />
      </figure>
 
      and the click on **'import file'** a popup window will request you to upload the file or application:
 
       <figure style="text-align:center;">
       <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importappsmithapp.png" alt="dot_acrh" />
      </figure>
 .
 4.	Click the **Appsmith** icon in the top-left corner to return to the homepage.
