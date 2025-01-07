@@ -95,10 +95,27 @@ This will remove the containers and any volumes defined in the docker-compose-wi
 A Directed Acyclic Graph (DAG) is included that copies data from the uploaded DB dump into the DOT database (```data_ScanProject1``` schema) and then runs the toolkit against this data. Follow these steps to execute the DAG:
 
 - Open your browser and navigate to [http://localhost:8083/](http://localhost:8083/).
-- Log in with the credentials: airflow / airflow.
-- In the top menu, click on DAGs.
+- Log in with the credentials: 'airflow' / 'airflow'. as shown below:
+
+   <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/airflow_lgin.png" alt="dot_acrh" />
+   </figure>
+
+- In the top menu, click on DAGs on the top menu, you should see a detail view panel for the Dags as shown below:
+   <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/airflow_interface.png" alt="dot_acrh" />
+   </figure>
+
 - Use the search box in the top-right corner to search for dot (press Enter twice to ensure it registers).
 - Toggle the ```run_dot_project``` DAG to Active (using the toggle on the far left of the row).
+
+   <figure style="text-align:center;">
+      <figcaption></figcaption>
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f3759185cdec418275d1f7c84114234e1aa5d27b/images/DAG_list.png" alt="dot_acrh" />
+   </figure>
+
 - Click the Play icon under Actions to start the run.
 
 To monitor the progress and view logs:
