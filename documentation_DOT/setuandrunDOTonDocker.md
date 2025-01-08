@@ -73,7 +73,7 @@ To start the DOT user interface and manage the system, follow these steps. You w
        <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importDOTonAppsmith.png" alt="dot_appsmith2" />
      </figure>
 
-5.     Then click on **'import file'** a popup window will request you to upload the file or application:
+5.  Then click on **'import file'** a popup window will request you to upload the file or application:
 
       <figure style="text-align:center;">
        <figcaption></figcaption>
