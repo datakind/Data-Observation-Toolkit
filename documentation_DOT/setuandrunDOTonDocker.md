@@ -62,21 +62,21 @@ To start the DOT user interface and manage the system, follow these steps. You w
 
      <figure style="text-align:center;">
       <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/appsmith_signup.png" alt="dot_acrh" />
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/appsmith_signup.png" alt="dot_appsmith1" />
     </figure>
 
 3.	After registration, click **'Create Now'**  button  at the top right corner
 
       <figure style="text-align:center;">
-      <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importDOTonAppsmith.png" alt="dot_acrh" />
+       <figcaption></figcaption>
+       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importDOTonAppsmith.png" alt="dot_appsmith2" />
      </figure>
 
      and the click on **'import file'** a popup window will request you to upload the file or application:
 
       <figure style="text-align:center;">
-      <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importappsmithapp.png" alt="dot_acrh" />
+       <figcaption></figcaption>
+       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/f5a7a35828a871e5f7b9f6c9d03aee8f6f762d89/images/importappsmithapp.png" alt="dot_appsmith3" />
      </figure>
 
 4.	Click the **Appsmith** icon in the top-left corner to return to the homepage.
@@ -84,8 +84,8 @@ To start the DOT user interface and manage the system, follow these steps. You w
 6.	Select **Import from file**, then navigate to the file ```./docker/appsmith/DOT``` App V2.json.
 
      <figure style="text-align:center;">
-      <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/29960ed70da625ae75a1272286720c77df5171c0/images/importingDOTapptoAppsmith.png" alt="dot_acrh" />
+       <figcaption></figcaption>
+       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/29960ed70da625ae75a1272286720c77df5171c0/images/importingDOTapptoAppsmith.png" alt="dot_appsmith4" />
      </figure>
 
 7.	You will be prompted to enter details for the database connection. Set these parameters as needed, but if using the DOT Dockerized PostgreSQL database, use the following:
@@ -96,16 +96,18 @@ To start the DOT user interface and manage the system, follow these steps. You w
      - **Authentication > User name:** postgres
      - **Authentication > Password:** [THE PASSWORD YOU USED WHEN BUILDING DOT]
 
+
      <figure style="text-align:center;">
-      <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/bd12481733f398e3dcf69c555631f9baf137aa0a/images/dbconnection_on_appsmisth.png" alt="dot_acrh" />
+       <figcaption></figcaption>
+       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/bd12481733f398e3dcf69c555631f9baf137aa0a/images/dbconnection_on_appsmisth.png" alt="dot_appsmith5" />
      </figure>
 
    once connected you should see te following information about the database:
 
+
      <figure style="text-align:center;">
-      <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/48cf09c1bb328baca5271a53db38e28679005e87/images/dbconnectedtoappsmith.png" alt="dot_acrh" />
+       <figcaption></figcaption>
+       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/48cf09c1bb328baca5271a53db38e28679005e87/images/dbconnectedtoappsmith.png" alt="dot_appsmith7" />
      </figure>
 
 
