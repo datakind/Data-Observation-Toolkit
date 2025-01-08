@@ -97,6 +97,7 @@ To start the DOT user interface and manage the system, follow these steps. You w
      - **Authentication > Password:** [THE PASSWORD YOU USED WHEN BUILDING DOT]
 
 
+
      <figure style="text-align:center;">
        <figcaption></figcaption>
        <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/bd12481733f398e3dcf69c555631f9baf137aa0a/images/dbconnection_on_appsmisth.png" alt="dot_appsmith5" />
@@ -106,7 +107,7 @@ To start the DOT user interface and manage the system, follow these steps. You w
 
       <figure style="text-align:center;">
        <figcaption></figcaption>
-       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/48cf09c1bb328baca5271a53db38e28679005e87/images/dbconnectedtoappsmith.png" alt="dot_appsmith7" />
+       <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/9df5e37ccee8ed25cba0991bf7b22a7309522818/images/dbconnectedtoappsmith.png" alt="dot_appsmith7" />
      </figure>
 
 
