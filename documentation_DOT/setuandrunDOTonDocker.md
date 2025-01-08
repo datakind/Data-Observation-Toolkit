@@ -103,12 +103,9 @@ To start the DOT user interface and manage the system, follow these steps. You w
 
    once connected you should see te following information about the database:
 
-    <figure style="text-align:center;">
+     <figure style="text-align:center;">
       <figcaption></figcaption>
-      <img src="<figure style="text-align:center;">
-      <figcaption></figcaption>
-      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/bd12481733f398e3dcf69c555631f9baf137aa0a/images/dbconnection_on_appsmisth.png" alt="dot_acrh" />
-     </figure>" alt="dot_acrh" />
+      <img src="https://github.com/wvelebanks/Data-Observation-Toolkit/blob/48cf09c1bb328baca5271a53db38e28679005e87/images/dbconnectedtoappsmith.png" alt="dot_acrh" />
      </figure>
 
 
