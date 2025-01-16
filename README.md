@@ -22,7 +22,8 @@ The primary goal of DOT is to make data monitoring more accessible, allowing use
 </figure>
 
 ### General Configuration Pre-requisites:
-To run DOT you will need to:
+Ensure that your system has a minimum of 8GB of free storage space and at least 8GB of RAM. These requirements are essential to accommodate the necessary packages and ensure optimal performance of the application. To run DOT you will need to:
+
 1.	Install Python [3.8.9](https://www.python.org/downloads/release/python-389/)  
 2.	Install the necessary python packages by running the following commands in your terminal ([Additional information Mac/Linux terminal](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac#:~:text=On%20your%20Mac%2C%20do%20one,%2C%20then%20double%2Dclick%20Terminal.), [additional information Windows terminal](https://learn.microsoft.com/en-us/windows/terminal/)):
      - `pip install gdown`
