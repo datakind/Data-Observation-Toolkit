@@ -31,6 +31,8 @@ To run DOT you will need to:
 4.	If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set export ```DOCKER_DEFAULT_PLATFORM=linux/amd64``` in the terminal where you will run the instructions below
 5.	**(Windows Users only)** Need to install WSL for Linux on Windows Pcs
 
+**NOTE:** Ensure that your system has a minimum of 8GB of free storage space and at least 8GB of RAM. These requirements are essential to accommodate the necessary packages and ensure optimal performance of the application.
+
 Alternatively, you can use the provided  [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html)  installed.
 
 _After completing the software prerequisites for your operating system, **download or clone the DOT repository** to your computer. **You will need this repository for all the setups listed below.**_
