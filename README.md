@@ -22,7 +22,8 @@ The primary goal of DOT is to make data monitoring more accessible, allowing use
 </figure>
 
 ### General Configuration Pre-requisites:
-To run DOT you will need to:
+Ensure that your system has a minimum of 8GB of free storage space and at least 8GB of RAM. These requirements are essential to accommodate the necessary packages and ensure optimal performance of the application. To run DOT you will need to:
+
 1.	Install Python [3.8.9](https://www.python.org/downloads/release/python-389/)  
 2.	Install the necessary python packages by running the following commands in your terminal ([Additional information Mac/Linux terminal](https://support.apple.com/guide/terminal/open-or-quit-terminal-apd5265185d-f365-44cb-8b09-71a064a42125/mac#:~:text=On%20your%20Mac%2C%20do%20one,%2C%20then%20double%2Dclick%20Terminal.), [additional information Windows terminal](https://learn.microsoft.com/en-us/windows/terminal/)):
      - `pip install gdown`
@@ -30,8 +31,6 @@ To run DOT you will need to:
 3.	Install [Docker desktop](https://www.docker.com/products/docker-desktop/). First make sure you have checked the [Docker prerequisites](https://github.com/datakind/medic_data_integrity/tree/main/docker#pre-requisites). We recommend using at least 4GB memory which can be set in the docker preferences, but this can vary depending on the volume of data being tested
 4.	If running on a Mac M1/M2 chip, install [Rosetta](https://support.apple.com/en-us/HT211861) and set export ```DOCKER_DEFAULT_PLATFORM=linux/amd64``` in the terminal where you will run the instructions below
 5.	**(Windows Users only)** Need to install WSL for Linux on Windows Pcs
-
-**NOTE:** Ensure that your system has a minimum of 8GB of free storage space and at least 8GB of RAM. These requirements are essential to accommodate the necessary packages and ensure optimal performance of the application.
 
 Alternatively, you can use the provided  [environment.yml](./environment.yml) if you have [miniconda](https://docs.conda.io/en/latest/miniconda.html)  installed.
 
