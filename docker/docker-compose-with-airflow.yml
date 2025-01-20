@@ -44,7 +44,7 @@ version: '2.1'
 
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.2.4}
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.3-python3.8}
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -55,10 +55,9 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
-    PYTHON_BASE_IMAGE: "python:3:8-slim-buster"
+    PYTHON_BASE_IMAGE: "python:3.8.9-slim-buster"
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     SSH_AUTH_SOCK: /ssh-agent
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - airflow-logs-volume:/opt/airflow/logs
