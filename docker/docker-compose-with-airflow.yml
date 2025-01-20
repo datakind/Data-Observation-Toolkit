@@ -53,7 +53,7 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
     PYTHON_BASE_IMAGE: "python:3.8.9-slim-buster"
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -89,6 +89,15 @@ services:
       volumes:
           - .:/db_dumps
           - ../db/dot:/docker-entrypoint-initdb.d
+
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./appsmith/stacks:/appsmith-stacks
 
   # Not needed here, because we deploy DOT to airflow worker
   #dot:
