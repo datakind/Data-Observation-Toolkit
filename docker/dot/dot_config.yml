@@ -1,0 +1,20 @@
+dot:
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: edu_container
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: edu_system
+  schema: dot
+  threads: 4
+EduProject_db:
+  type: postgres
+  host: edu_container
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5432
+  dbname: edu_system
+  schema: public
+  threads: 4
