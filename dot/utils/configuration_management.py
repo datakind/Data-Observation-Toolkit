@@ -331,10 +331,6 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             description = row["description"]
             test_type = row["test_type"]
             test_parameters = row["test_parameters"]
-            
-            if isinstance(test_parameters, dict) and 'tags' in test_parameters:
-                test_parameters['config'] = {'tags': test_parameters.pop('tags')}
-
             # if test_parameters != None:
             #    test_parameters = "| ".join([f"{k}={test_parameters[k]}" for k in test_parameters])
             # else:
