@@ -1,6 +1,6 @@
 from airflow import DAG
 from airflow.operators import BashOperator
-from airflow.models import Variable
+fromasf airflow.models import Variable
 
 
 with DAG(
