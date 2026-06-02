@@ -13,6 +13,5 @@ with DAG(
 
     run_dot = BashOperator(
         task_id = "run_dot",
-        env = {"POSTGRES_PASSWORD": Variable.get('POSTGRES_PASSWORD', default_var='postgres')},
         bash_command = "cd /app/dot && eval `ssh-agent` && python run_everything.py --project_id EduProject"
 )
