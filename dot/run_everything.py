@@ -1,3 +1,6 @@
+import sys
+if not sys.executable:
+    sys.executable = '/usr/local/bin/python'
 import logging
 import argparse
 import uuid

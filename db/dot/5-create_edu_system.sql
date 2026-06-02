@@ -1,0 +1,1 @@
+CREATE DATABASE edu_system;
