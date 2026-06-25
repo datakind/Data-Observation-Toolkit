@@ -16,5 +16,5 @@ EduProject_db:
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
   dbname: edu_system
-  schema: public
+  schema: education
   threads: 4
