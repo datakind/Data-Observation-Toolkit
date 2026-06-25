@@ -15,6 +15,6 @@ EduProject_db:
   user: postgres
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
-  dbname: dot_db
+  dbname: edu_system
   schema: public
   threads: 4
