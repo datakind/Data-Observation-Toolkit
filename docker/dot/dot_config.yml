@@ -9,12 +9,12 @@ dot_db:
   dbname: dot_db
   schema: dot
   threads: 4
-EduProject_db:
+ScanProject1_db:
   type: postgres
-  host: edu_container
+  host: dot_db
   user: postgres
-  pass: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
-  dbname: edu_system
-  schema: education
+  dbname: dot_db
+  schema: public
   threads: 4
