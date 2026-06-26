@@ -16,5 +16,5 @@ EduProject_db:
   pass: postgres
   port: 5432
   dbname: edu_system
-  schema: public
+  schema: education
   threads: 4
