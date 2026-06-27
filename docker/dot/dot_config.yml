@@ -16,5 +16,5 @@ ScanProject1_db:
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
   dbname: dot_db
-  schema: public
+  schema: data_dot_data
   threads: 4

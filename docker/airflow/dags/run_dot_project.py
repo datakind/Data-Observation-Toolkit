@@ -297,7 +297,7 @@ def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
                  f"BEGIN " \
                  f"FOR r IN (SELECT table_name FROM information_schema.tables WHERE table_schema = current_schema()) " \
                  f"LOOP	" \
-                 f"EXECUTE 'DROP TABLE IF EXISTS ' || QUOTE_IDENT(r.table_name) || ' CASCADE'; " \
+                 f"EXECUTE 'DROP VIEW IF EXISTS ' || QUOTE_IDENT(r.table_name) || ' CASCADE'; " \
                  f"END LOOP; " \
                  f"END $$; "
         cur.execute(query1)
