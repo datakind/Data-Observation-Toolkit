@@ -67,7 +67,7 @@ x-airflow-common:
 
     - ../:/app
     - ./dot/dot_config.yml:/app/dot/config/dot_config.yml
-    - ${SSH_AUTH_SOCK}:/ssh-agent # Forward local machine SSH key to docker so we can use ssh tunnel on host to access DB
+    # - ${SSH_AUTH_SOCK}:/ssh-agent # Forward local machine SSH key to docker so we can use ssh tunnel on host to access DB
   #user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
   user: "1000:0" # This will work but change mounts to root
   depends_on:
