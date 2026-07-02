@@ -137,7 +137,7 @@ def get_object(
 
 
 def save_object(
-        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
+        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in, source_schema_in
         ):
     """
 
@@ -157,7 +157,8 @@ def save_object(
        List of table column types for target table
     source_db_in: String
        Name of source database (same as source connid string)
-
+    source_schema_in: String
+       Name of source schema
     """
 
     # Temporary, replace existing data. TODO support delta loads
@@ -185,7 +186,7 @@ def save_object(
         executemany_batch_page_size=200,
     )
 
-    schema = "data_" + source_db_in.replace("-", "_")
+    schema = "data_" + source_db_in.replace("-", "_") + '_' + source_schema_in.replace("-", "_")
 
     # Cascade drop target table if in replace mode.
     # This will also drop any DOT model views onto this data
@@ -269,7 +270,7 @@ def sync_object(
 
     # Save the data
     save_object(
-        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
+        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in, source_schema_in
     )
 
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
@@ -370,7 +371,7 @@ with DAG(
         source_schema = project.get("source_schema", "public")
 
         # Drop the tables in the DOT tests schema, so we can import new data, columns and types
-        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_tests"
+        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_" + source_schema.replace("-", "_") + "_tests"
         print(schema_to_drop_from)
         af_tasks.append(
             PythonOperator(
