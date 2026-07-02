@@ -26,7 +26,7 @@ def get_object(
         source_conn_in,
         columns_to_exclude,
         source_schema_in,
-):
+        ):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -138,7 +138,7 @@ def get_object(
 
 def save_object(
         object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
-):
+        ):
     """
 
     Saves data to target DOT database in data schema.
@@ -236,7 +236,7 @@ def sync_object(
         target_conn_in,
         columns_to_exclude,
         source_schema_in,
-):
+        ):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -342,7 +342,7 @@ with DAG(
         schedule_interval="@weekly",
         start_date=datetime(year=2022, month=3, day=1),
         catchup=False,
-) as dag:
+        ) as dag:
     config = json.loads(Variable.get("dot_config", default_var=default_config().read()))
 
     """
