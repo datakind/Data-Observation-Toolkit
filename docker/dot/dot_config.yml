@@ -16,7 +16,7 @@ ScanProject1_db:
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
   dbname: dot_db
-  schema: data_dot_data_public
+  schema: data_postgres_public
   threads: 4
 EduProject_db:
   type: postgres
@@ -25,5 +25,5 @@ EduProject_db:
   pass: "{{ env_var('POSTGRES_PASSWORD') }}"
   port: 5432
   dbname: dot_db
-  schema: data_dot_data_education
+  schema: data_postgres_education
   threads: 4

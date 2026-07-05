@@ -3,7 +3,7 @@
     "dot_projects":[
         {
             "project_id":"ScanProject1",
-            "source_connid": "dot_data",
+            "source_connid": "postgres",
             "earliest_date_to_sync":"2021-10-02",
             "objects":[
                 {
@@ -19,7 +19,7 @@
         },
         {
             "project_id":"EduProject",
-            "source_connid": "dot_data",
+            "source_connid": "postgres",
             "source_schema": "education",
             "earliest_date_to_sync":"2023-01-01",
             "objects":[
