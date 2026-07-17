@@ -39,7 +39,7 @@ INSERT INTO dot.test_types VALUES('expression_is_true', 'dbt', 'Test to confirm 
 
 -- dot.test_parameters_interface
 -- INSERT INTO dot.test_parameters_interface VALUES('relationships', 'name', 'function_argument', 'Name of the test');
-INSERT INTO dot.test_parameters_interface VALUES('relationships', 'reference', 'view/table', $$ref('dot_model__ancview_pregnancy')$$, 'Referenced field to be checked if missing');
+INSERT INTO dot.test_parameters_interface VALUES('relationships', 'to', 'view/table', 'ancview_pregnancy', 'Referenced entity to be checked if missing');
 INSERT INTO dot.test_parameters_interface VALUES('relationships', 'field', 'entity any field', 'uuid', 'Field being checked');
 -- INSERT INTO dot.test_parameters_interface VALUES('not_negative_string_column', 'name', 'function_argument', 'Name of column to be check3ed for non-negative values');
 INSERT INTO dot.test_parameters_interface VALUES('accepted_values', 'values', 'list of values', $$["dog","cat","ostrich"]$$,'List of accepted values for the field being checked');
@@ -53,7 +53,7 @@ INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'conditio
 INSERT INTO dot.test_parameters_interface VALUES('expression_is_true', 'expression', 'entity columns boolean logic', 'malaria_act_dosage is not null', 'If not true, the row fails the test');
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'key', 'entity id field', 'reported_by', 'The grouping field to check means by, ie a person-specific id');
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'quantity', 'entity numeric field', 'temperature', 'The name of the numeric field to analyze for variation');
-INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'data_table', 'view/table', 'dot_model__iccmview_assessment', 'The name of entity view where data is');
+INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'data_table', 'view/table', 'iccmview_assessment', 'The name of entity view where data is');
 INSERT INTO dot.test_parameters_interface VALUES('expect_similar_means_across_reporters', 'id_column', 'entity id field', 'reported_by', 'The id column to use to get failed test records');
 
 -- dot.scenario_test_types

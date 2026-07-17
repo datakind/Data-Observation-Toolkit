@@ -27490,7 +27490,7 @@
                                       "label": "Reference Field",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
-                                      "options": "{{Edit_Add_Test_Form.formData.form_test_parameters != undefined && Edit_Add_Test_Form.formData.form_test_parameters.to != undefined ?  JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,undefined, Edit_Add_Test_Form.formData.form_test_parameters.to.replace(\"ref('dot_model__\",\"\").replace(\"')\",\"\")) : [] }}",
+                                      "options": "{{Edit_Add_Test_Form.formData.form_test_parameters != undefined && Edit_Add_Test_Form.formData.form_test_parameters.to != undefined ?  JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,undefined, Edit_Add_Test_Form.formData.form_test_parameters.to) : [] }}",
                                       "placeholderText": "",
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('field')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
@@ -27552,7 +27552,7 @@
                                       "dataType": "string",
                                       "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.to\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
-                                      "sourceData": "ref('dot_model__ancview_pregnancy')",
+                                      "sourceData": "ancview_pregnancy",
                                       "isCustomField": false,
                                       "accessor": "to",
                                       "identifier": "relationships___reference",
@@ -27569,7 +27569,7 @@
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{Entities_dropdown_dbt_ref_fmt.data}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('field')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('to')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expression_is_true___condition": {
                                       "children": {},
@@ -27721,9 +27721,9 @@
                                     "expect_similar_means_across_reporters___form_name": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.form_name\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.data_table\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
-                                      "sourceData": "dot_model__iccmview_assessment",
+                                      "sourceData": "iccmview_assessment",
                                       "isCustomField": false,
                                       "accessor": "data_table",
                                       "identifier": "expect_similar_means_across_reporters___form_name",
@@ -27740,7 +27740,7 @@
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{Entities_dropdown_with_prefix.data}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('form_name')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('data_table')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expect_similar_means_across_reporters___id_column": {
                                       "children": {},
@@ -27829,14 +27829,14 @@
                                       "cat",
                                       "ostrich"
                                     ],
-                                    "relationships%%%reference": "ref('dot_model__ancview_pregnancy')",
+                                    "relationships%%%reference": "ancview_pregnancy",
                                     "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                     "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                     "expect_similar_means_across_reporters%%%key": "reported_by",
                                     "possible_duplicate_forms%%%table_specific_uuid": "uuid",
                                     "expect_similar_means_across_reporters%%%quantity": "temperature",
                                     "possible_duplicate_forms%%%table_specific_period": "day",
-                                    "expect_similar_means_across_reporters%%%form_name": "dot_model__iccmview_assessment",
+                                    "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                     "expect_similar_means_across_reporters%%%id_column": "reported_by",
                                     "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
                                     "possible_duplicate_forms%%%table_specific_reported_date": "reported"
@@ -27961,14 +27961,14 @@
                                     "cat",
                                     "ostrich"
                                   ],
-                                  "relationships%%%reference": "ref('dot_model__ancview_pregnancy')",
+                                  "relationships%%%reference": "ancview_pregnancy",
                                   "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                   "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                   "expect_similar_means_across_reporters%%%key": "reported_by",
                                   "possible_duplicate_forms%%%table_specific_uuid": "uuid",
                                   "expect_similar_means_across_reporters%%%quantity": "temperature",
                                   "possible_duplicate_forms%%%table_specific_period": "day",
-                                  "expect_similar_means_across_reporters%%%form_name": "dot_model__iccmview_assessment",
+                                  "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                   "expect_similar_means_across_reporters%%%id_column": "reported_by",
                                   "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
                                   "possible_duplicate_forms%%%table_specific_reported_date": "reported"
@@ -31631,7 +31631,7 @@
                                       "label": "Reference Field",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
-                                      "options": "{{Edit_Add_Test_Form.formData.form_test_parameters != undefined && Edit_Add_Test_Form.formData.form_test_parameters.to != undefined ?  JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,undefined, Edit_Add_Test_Form.formData.form_test_parameters.to.replace(\"ref('dot_model__\",\"\").replace(\"')\",\"\")) : [] }}",
+                                      "options": "{{Edit_Add_Test_Form.formData.form_test_parameters != undefined && Edit_Add_Test_Form.formData.form_test_parameters.to != undefined ?  JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,undefined, Edit_Add_Test_Form.formData.form_test_parameters.to) : [] }}",
                                       "placeholderText": "",
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('field')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
@@ -31693,7 +31693,7 @@
                                       "dataType": "string",
                                       "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.to\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
-                                      "sourceData": "ref('dot_model__ancview_pregnancy')",
+                                      "sourceData": "ancview_pregnancy",
                                       "isCustomField": false,
                                       "accessor": "to",
                                       "identifier": "relationships___reference",
@@ -31710,7 +31710,7 @@
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{Entities_dropdown_dbt_ref_fmt.data}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('field')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('to')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expression_is_true___condition": {
                                       "children": {},
@@ -31862,9 +31862,9 @@
                                     "expect_similar_means_across_reporters___form_name": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.form_name\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.data_table\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
-                                      "sourceData": "dot_model__iccmview_assessment",
+                                      "sourceData": "iccmview_assessment",
                                       "isCustomField": false,
                                       "accessor": "data_table",
                                       "identifier": "expect_similar_means_across_reporters___form_name",
@@ -31881,7 +31881,7 @@
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{Entities_dropdown_with_prefix.data}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('form_name')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('data_table')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expect_similar_means_across_reporters___id_column": {
                                       "children": {},
@@ -31970,14 +31970,14 @@
                                       "cat",
                                       "ostrich"
                                     ],
-                                    "relationships%%%reference": "ref('dot_model__ancview_pregnancy')",
+                                    "relationships%%%reference": "ancview_pregnancy",
                                     "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                     "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                     "expect_similar_means_across_reporters%%%key": "reported_by",
                                     "possible_duplicate_forms%%%table_specific_uuid": "uuid",
                                     "expect_similar_means_across_reporters%%%quantity": "temperature",
                                     "possible_duplicate_forms%%%table_specific_period": "day",
-                                    "expect_similar_means_across_reporters%%%form_name": "dot_model__iccmview_assessment",
+                                    "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                     "expect_similar_means_across_reporters%%%id_column": "reported_by",
                                     "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
                                     "possible_duplicate_forms%%%table_specific_reported_date": "reported"
@@ -32102,14 +32102,14 @@
                                     "cat",
                                     "ostrich"
                                   ],
-                                  "relationships%%%reference": "ref('dot_model__ancview_pregnancy')",
+                                  "relationships%%%reference": "ancview_pregnancy",
                                   "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                   "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                   "expect_similar_means_across_reporters%%%key": "reported_by",
                                   "possible_duplicate_forms%%%table_specific_uuid": "uuid",
                                   "expect_similar_means_across_reporters%%%quantity": "temperature",
                                   "possible_duplicate_forms%%%table_specific_period": "day",
-                                  "expect_similar_means_across_reporters%%%form_name": "dot_model__iccmview_assessment",
+                                  "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                   "expect_similar_means_across_reporters%%%id_column": "reported_by",
                                   "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
                                   "possible_duplicate_forms%%%table_specific_reported_date": "reported"
@@ -35888,7 +35888,7 @@
           "timeoutInMillisecond": 10000.0,
           "paginationType": "NONE",
           "encodeParamsToggle": true,
-          "body": "select \n   entity_id as \"label\" ,\n\t CONCAT('dot_model__',entity_id) as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
+          "body": "select \n   entity_id as \"label\" ,\n\t entity_id as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
           "selfReferencingDataPaths": [],
           "pluginSpecifiedTemplates": [
             {
@@ -35930,7 +35930,7 @@
           "timeoutInMillisecond": 10000.0,
           "paginationType": "NONE",
           "encodeParamsToggle": true,
-          "body": "select \n   entity_id as \"label\" ,\n\t CONCAT('dot_model__',entity_id) as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
+          "body": "select \n   entity_id as \"label\" ,\n\t entity_id as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
           "selfReferencingDataPaths": [],
           "pluginSpecifiedTemplates": [
             {
@@ -36066,7 +36066,7 @@
           "timeoutInMillisecond": 10000.0,
           "paginationType": "NONE",
           "encodeParamsToggle": true,
-          "body": "select \n   entity_id as \"label\" ,\n\t CONCAT('ref(''dot_model__',entity_id, ''')') as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
+          "body": "select \n   entity_id as \"label\" ,\n\t entity_id as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
           "selfReferencingDataPaths": [],
           "pluginSpecifiedTemplates": [
             {
@@ -36108,7 +36108,7 @@
           "timeoutInMillisecond": 10000.0,
           "paginationType": "NONE",
           "encodeParamsToggle": true,
-          "body": "select \n   entity_id as \"label\" ,\n\t CONCAT('ref(''dot_model__',entity_id, ''')') as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
+          "body": "select \n   entity_id as \"label\" ,\n\t entity_id as \"value\" \nfrom \n   dot.configured_entities\nwhere\n   {{Edit_Add_Test_Form.formData.project_id == undefined ? \"1=1\" : \"project_id='\"+Edit_Add_Test_Form.formData.project_id+\"'\" }}",
           "selfReferencingDataPaths": [],
           "pluginSpecifiedTemplates": [
             {
@@ -36825,7 +36825,7 @@
           "timeoutInMillisecond": 10000.0,
           "paginationType": "NONE",
           "encodeParamsToggle": true,
-          "body": "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  entity_id_in = entity_id_in == undefined ? undefined : entity_id_in.replace(\"ref('dot_model__\", \"\").replace(\"')\", \"\");\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}",
+          "body": "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}",
           "selfReferencingDataPaths": [],
           "jsArguments": [
             {},
@@ -36845,7 +36845,7 @@
         "invalids": [],
         "messages": [],
         "jsonPathKeys": [
-          "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  entity_id_in = entity_id_in == undefined ? undefined : entity_id_in.replace(\"ref('dot_model__\", \"\").replace(\"')\", \"\");\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}"
+          "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}"
         ],
         "userSetOnLoad": false,
         "confirmBeforeExecute": false,
@@ -36870,7 +36870,7 @@
           "timeoutInMillisecond": 10000.0,
           "paginationType": "NONE",
           "encodeParamsToggle": true,
-          "body": "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  entity_id_in = entity_id_in == undefined ? undefined : entity_id_in.replace(\"ref('dot_model__\", \"\").replace(\"')\", \"\");\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}",
+          "body": "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}",
           "selfReferencingDataPaths": [],
           "jsArguments": [
             {},
@@ -36890,7 +36890,7 @@
         "invalids": [],
         "messages": [],
         "jsonPathKeys": [
-          "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  entity_id_in = entity_id_in == undefined ? undefined : entity_id_in.replace(\"ref('dot_model__\", \"\").replace(\"')\", \"\");\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}"
+          "(project_id_in, entity_id_in, entity_id_in, data_type_in) => {\n  var columns = Entity_column_names_cache.data.filter(function (el) {\n    return (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.entity_id == entity_id_in || entity_id_in == undefined) && (el.project_id == project_id_in || project_id_in == undefined) && (el.data_type == data_type_in || data_type_in == undefined);\n  }).map(({label, value}) => ({\n    label,\n    value\n  }));\n  return columns;\n}"
         ],
         "userSetOnLoad": false,
         "confirmBeforeExecute": false,
@@ -38395,7 +38395,7 @@
         "pluginType": "JS",
         "actions": [],
         "archivedActions": [],
-        "body": "export default {\n\tallowUpdate: () => !!configured_tests.selectedRows.length,\n\tgetIds: () => {\n\t\treturn `(${configured_tests.selectedRows.map(item => `\\'${item.test_id}\\'`).join(\", \")})`\n\t},\n\tbulkUpdate: () => {\n\t\tlet test_activated_b = test_activated_bulk.isChecked;\n\t\tBulk_Update_Test_Activated.run(() => {\n\t\t\tshowAlert('Successfully updated test activation status');\n\t\t\tcloseModal('Activate_Tests_Modal');\n\t\t\tresetWidget('test_activated_bulk');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_activated_bulk': test_activated_b, 'test_ids': this.getIds()});\n\t},\n\tbulkDelete: () => {\n\t\tBulk_Delete_Tests.run(() => {\n\t\t\tshowAlert('Successfully deleted tests');\n\t\t\tcloseModal('Delete_Tests_Modal');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_ids': this.getIds()});\n\t},\n\t// Flag to say if a test_type uses test_parameters in configured_tests\n\ttestUsesParameters: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Parameters.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\t// Flag to say if a test_type uses columns in configured_tests\n\ttestUsesColumn: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Column.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\tparamIsVisible: (test_type_in, param_in) => {\n\t\tconst params = Test_Parameters.data.map(item => { return item.test_type == test_type_in ? item.parameter : undefined;});\n\t\treturn params.includes(param_in);\n\t},\n\tgetEntityColumns: (project_id_in, entity_id_in, data_type_in) => { \n\t\t//project_id_in = 'riders';\n\t\t//entity_id_in = 'riders_all_fuel_log_data';\n\t\t//data_type_in='double precision'\n\t\t// JSON forms don't allow us to access selected label, unlike regular forms, so we need tor strip out artifacts\n\t\t// TODO Refactor test_parameters to lose dbt artifacts like ref('<entity>')\n\t\tentity_id_in = entity_id_in == undefined ? undefined : entity_id_in.replace(\"ref('dot_model__\",\"\").replace(\"')\",\"\");\n\t\t// Filter and subset\n\t\tvar columns = Entity_column_names_cache.data.filter(function (el) {\n  \t\treturn (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.project_id  == project_id_in || project_id_in == undefined) &&\n\t\t\t\t     (el.data_type  == data_type_in || data_type_in == undefined);\n\t\t}).map( ({label, value}) => ({label, value} ) );\n\t\treturn columns;\n\t},\n\tgetTestParameterDescription: (test_parameter_in) => { \n\t\t//test_parameter_in = 'values';\n\t\t// Filter \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t},\n\tgetTestParameterExample: (test_parameter_in) => { \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar example = params.length == 0 ? ' ' : params[0].example;\n\t\treturn example;\n\t},\n\tgetTestTypeDescription: (test_type_in) => { \n\t\t// Filter \n\t\tvar params =  Test_Types_Cache.data.filter(function (el) {\n  \t\treturn el.test_type == test_type_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t}\n}",
+        "body": "export default {\n\tallowUpdate: () => !!configured_tests.selectedRows.length,\n\tgetIds: () => {\n\t\treturn `(${configured_tests.selectedRows.map(item => `\\'${item.test_id}\\'`).join(\", \")})`\n\t},\n\tbulkUpdate: () => {\n\t\tlet test_activated_b = test_activated_bulk.isChecked;\n\t\tBulk_Update_Test_Activated.run(() => {\n\t\t\tshowAlert('Successfully updated test activation status');\n\t\t\tcloseModal('Activate_Tests_Modal');\n\t\t\tresetWidget('test_activated_bulk');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_activated_bulk': test_activated_b, 'test_ids': this.getIds()});\n\t},\n\tbulkDelete: () => {\n\t\tBulk_Delete_Tests.run(() => {\n\t\t\tshowAlert('Successfully deleted tests');\n\t\t\tcloseModal('Delete_Tests_Modal');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_ids': this.getIds()});\n\t},\n\t// Flag to say if a test_type uses test_parameters in configured_tests\n\ttestUsesParameters: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Parameters.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\t// Flag to say if a test_type uses columns in configured_tests\n\ttestUsesColumn: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Column.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\tparamIsVisible: (test_type_in, param_in) => {\n\t\tconst params = Test_Parameters.data.map(item => { return item.test_type == test_type_in ? item.parameter : undefined;});\n\t\treturn params.includes(param_in);\n\t},\n\tgetEntityColumns: (project_id_in, entity_id_in, data_type_in) => { \n\t\t//project_id_in = 'riders';\n\t\t//entity_id_in = 'riders_all_fuel_log_data';\n\t\t//data_type_in='double precision'\n\t\t// Filter and subset\n\t\tvar columns = Entity_column_names_cache.data.filter(function (el) {\n  \t\treturn (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.project_id  == project_id_in || project_id_in == undefined) &&\n\t\t\t\t     (el.data_type  == data_type_in || data_type_in == undefined);\n\t\t}).map( ({label, value}) => ({label, value} ) );\n\t\treturn columns;\n\t},\n\tgetTestParameterDescription: (test_parameter_in) => { \n\t\t//test_parameter_in = 'values';\n\t\t// Filter \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t},\n\tgetTestParameterExample: (test_parameter_in) => { \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar example = params.length == 0 ? ' ' : params[0].example;\n\t\treturn example;\n\t},\n\tgetTestTypeDescription: (test_type_in) => { \n\t\t// Filter \n\t\tvar params =  Test_Types_Cache.data.filter(function (el) {\n  \t\treturn el.test_type == test_type_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t}\n}",
         "variables": [],
         "userPermissions": []
       },
@@ -38406,7 +38406,7 @@
         "pluginType": "JS",
         "actions": [],
         "archivedActions": [],
-        "body": "export default {\n\tallowUpdate: () => !!configured_tests.selectedRows.length,\n\tgetIds: () => {\n\t\treturn `(${configured_tests.selectedRows.map(item => `\\'${item.test_id}\\'`).join(\", \")})`\n\t},\n\tbulkUpdate: () => {\n\t\tlet test_activated_b = test_activated_bulk.isChecked;\n\t\tBulk_Update_Test_Activated.run(() => {\n\t\t\tshowAlert('Successfully updated test activation status');\n\t\t\tcloseModal('Activate_Tests_Modal');\n\t\t\tresetWidget('test_activated_bulk');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_activated_bulk': test_activated_b, 'test_ids': this.getIds()});\n\t},\n\tbulkDelete: () => {\n\t\tBulk_Delete_Tests.run(() => {\n\t\t\tshowAlert('Successfully deleted tests');\n\t\t\tcloseModal('Delete_Tests_Modal');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_ids': this.getIds()});\n\t},\n\t// Flag to say if a test_type uses test_parameters in configured_tests\n\ttestUsesParameters: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Parameters.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\t// Flag to say if a test_type uses columns in configured_tests\n\ttestUsesColumn: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Column.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\tparamIsVisible: (test_type_in, param_in) => {\n\t\tconst params = Test_Parameters.data.map(item => { return item.test_type == test_type_in ? item.parameter : undefined;});\n\t\treturn params.includes(param_in);\n\t},\n\tgetEntityColumns: (project_id_in, entity_id_in, data_type_in) => { \n\t\t//project_id_in = 'Brac';\n\t\t//entity_id_in = 'ancview_pregnancy';\n\t\t// JSON forms don't allow us to access selected label, unlike regular forms, so we need tor strip out artifacts\n\t\t// TODO Refactor test_parameters to lose dbt artifacts like ref('<entity>')\n\t\tentity_id_in = entity_id_in == undefined ? undefined : entity_id_in.replace(\"ref('dot_model__\",\"\").replace(\"')\",\"\");\n\t\t// Filter and subset\n\t\tvar columns = Entity_column_names_cache.data.filter(function (el) {\n  \t\treturn (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.project_id  == project_id_in || project_id_in == undefined) &&\n\t\t\t\t     (el.data_type  == data_type_in || data_type_in == undefined);\n\t\t}).map( ({label, value}) => ({label, value} ) );\n\t\treturn columns;\n\t},\n\tgetTestParameterDescription: (test_parameter_in) => { \n\t\t//test_parameter_in = 'values';\n\t\t// Filter \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t},\n\tgetTestParameterExample: (test_parameter_in) => { \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar example = params.length == 0 ? ' ' : params[0].example;\n\t\treturn example;\n\t},\n\tgetTestTypeDescription: (test_type_in) => { \n\t\t// Filter \n\t\tvar params =  Test_Types_Cache.data.filter(function (el) {\n  \t\treturn el.test_type == test_type_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t}\n}",
+        "body": "export default {\n\tallowUpdate: () => !!configured_tests.selectedRows.length,\n\tgetIds: () => {\n\t\treturn `(${configured_tests.selectedRows.map(item => `\\'${item.test_id}\\'`).join(\", \")})`\n\t},\n\tbulkUpdate: () => {\n\t\tlet test_activated_b = test_activated_bulk.isChecked;\n\t\tBulk_Update_Test_Activated.run(() => {\n\t\t\tshowAlert('Successfully updated test activation status');\n\t\t\tcloseModal('Activate_Tests_Modal');\n\t\t\tresetWidget('test_activated_bulk');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_activated_bulk': test_activated_b, 'test_ids': this.getIds()});\n\t},\n\tbulkDelete: () => {\n\t\tBulk_Delete_Tests.run(() => {\n\t\t\tshowAlert('Successfully deleted tests');\n\t\t\tcloseModal('Delete_Tests_Modal');\n\t\t\tConfigured_tests_data.run();\n\t\t}, () => {}, {'test_ids': this.getIds()});\n\t},\n\t// Flag to say if a test_type uses test_parameters in configured_tests\n\ttestUsesParameters: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Parameters.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\t// Flag to say if a test_type uses columns in configured_tests\n\ttestUsesColumn: (test_type_in) => {\n\t\tconst test_types = Test_Types_That_Use_Column.data.map(item => { return item.test_type;});\n\t\treturn test_types.includes(test_type_in);\n\t},\n\tparamIsVisible: (test_type_in, param_in) => {\n\t\tconst params = Test_Parameters.data.map(item => { return item.test_type == test_type_in ? item.parameter : undefined;});\n\t\treturn params.includes(param_in);\n\t},\n\tgetEntityColumns: (project_id_in, entity_id_in, data_type_in) => { \n\t\t//project_id_in = 'Brac';\n\t\t//entity_id_in = 'ancview_pregnancy';\n\t\t// Filter and subset\n\t\tvar columns = Entity_column_names_cache.data.filter(function (el) {\n  \t\treturn (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.entity_id == entity_id_in || entity_id_in == undefined) &&\n\t\t\t\t     (el.project_id  == project_id_in || project_id_in == undefined) &&\n\t\t\t\t     (el.data_type  == data_type_in || data_type_in == undefined);\n\t\t}).map( ({label, value}) => ({label, value} ) );\n\t\treturn columns;\n\t},\n\tgetTestParameterDescription: (test_parameter_in) => { \n\t\t//test_parameter_in = 'values';\n\t\t// Filter \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t},\n\tgetTestParameterExample: (test_parameter_in) => { \n\t\tvar params =  Test_Parameters_Cache.data.filter(function (el) {\n  \t\treturn el.parameter == test_parameter_in;\n\t\t});\n\t\tvar example = params.length == 0 ? ' ' : params[0].example;\n\t\treturn example;\n\t},\n\tgetTestTypeDescription: (test_type_in) => { \n\t\t// Filter \n\t\tvar params =  Test_Types_Cache.data.filter(function (el) {\n  \t\treturn el.test_type == test_type_in;\n\t\t});\n\t\tvar tooltip = params.length == 0 ? ' ' : params[0].description;\n\t\treturn tooltip;\n\t}\n}",
         "variables": [],
         "userPermissions": []
       },
