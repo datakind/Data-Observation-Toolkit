@@ -72,7 +72,8 @@ def prepare_test_parameters(test_type: str, params) -> dict:
     Adapt stored test_parameters for DBT/GE artifact generation.
 
     Stores may use bare entity_ids; legacy rows may still use ref()/dot_model__
-    prefixes. Also aliases legacy keys (reference→to, form_name→data_table).
+    prefixes. Also aliases legacy keys (reference→to, form_name→data_table,
+    table_specific_*→generic names for possible_duplicate_forms).
     """
     if params in ("", None, "null") or not isinstance(params, dict):
         return params
@@ -91,6 +92,19 @@ def prepare_test_parameters(test_type: str, params) -> dict:
         for key in ("data_table", "target_table"):
             if key in prepared and prepared[key] not in ("", None):
                 prepared[key] = to_dbt_table(prepared[key])
+
+    elif test_type == "possible_duplicate_forms":
+        _LEGACY_DUPLICATE_KEYS = {
+            "table_specific_reported_date": "date_column",
+            "table_specific_patient_uuid": "group_column",
+            "table_specific_uuid": "id_column",
+            "table_specific_period": "period",
+        }
+        for legacy_key, new_key in _LEGACY_DUPLICATE_KEYS.items():
+            if new_key not in prepared and legacy_key in prepared:
+                prepared[new_key] = prepared.pop(legacy_key)
+            elif legacy_key in prepared:
+                prepared.pop(legacy_key)
 
     return prepared
 

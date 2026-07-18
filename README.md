@@ -413,7 +413,7 @@ generated one.
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
     '', '', 'ancview_pregnancy', 'possible_duplicate_forms', '', '', 
-    $${"table_specific_reported_date": "delivery_date", "table_specific_patient_uuid": "patient_id", "table_specific_uuid": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    $${"date_column": "delivery_date", "group_column": "patient_id", "id_column": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 7. `associated_columns_not_null`
     <br><br>

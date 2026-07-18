@@ -27644,17 +27644,17 @@
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`Select a key field`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('key')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
-                                    "possible_duplicate_forms___table_specific_uuid": {
+                                    "possible_duplicate_forms___id_column": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_uuid\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.id_column\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "uuid",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_uuid",
-                                      "identifier": "possible_duplicate_forms___table_specific_uuid",
+                                      "accessor": "id_column",
+                                      "identifier": "possible_duplicate_forms___id_column",
                                       "position": 12.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_uuid",
+                                      "originalIdentifier": "possible_duplicate_forms%%%id_column",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -27662,11 +27662,11 @@
                                       "isFilterable": false,
                                       "isRequired": false,
                                       "isVisible": "{{((sourceData, formData, fieldState) => (formData.test_type == 'possible_duplicate_forms'))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "label": "UUID",
+                                      "label": "ID column",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined) }}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_uuid')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('id_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expect_similar_means_across_reporters___quantity": {
                                       "children": {},
@@ -27693,17 +27693,17 @@
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`Select a numeric field`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('quantity')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
-                                    "possible_duplicate_forms___table_specific_period": {
+                                    "possible_duplicate_forms___period": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_period\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.period\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "day",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_period",
-                                      "identifier": "possible_duplicate_forms___table_specific_period",
+                                      "accessor": "period",
+                                      "identifier": "possible_duplicate_forms___period",
                                       "position": 10.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_period",
+                                      "originalIdentifier": "possible_duplicate_forms%%%period",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -27716,7 +27716,7 @@
                                       "serverSideFiltering": false,
                                       "options": "[\n  {\n    \"label\": \"hour\",\n    \"value\": \"hour\"\n  },\n  {\n    \"label\": \"day\",\n    \"value\": \"day\"\n  },\n  {\n    \"label\": \"week\",\n    \"value\": \"week\"\n  }\n]",
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`hour, day or week`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_period')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('period')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expect_similar_means_across_reporters___form_name": {
                                       "children": {},
@@ -27767,17 +27767,17 @@
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('id_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "placeholderText": ""
                                     },
-                                    "possible_duplicate_forms___table_specific_patient_uuid": {
+                                    "possible_duplicate_forms___group_column": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_patient_uuid\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.group_column\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "patient_id",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_patient_uuid",
-                                      "identifier": "possible_duplicate_forms___table_specific_patient_uuid",
+                                      "accessor": "group_column",
+                                      "identifier": "possible_duplicate_forms___group_column",
                                       "position": 13.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_patient_uuid",
+                                      "originalIdentifier": "possible_duplicate_forms%%%group_column",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -27785,24 +27785,24 @@
                                       "isFilterable": false,
                                       "isRequired": false,
                                       "isVisible": "{{((sourceData, formData, fieldState) => (formData.test_type == 'possible_duplicate_forms'))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "label": "Patient UUID",
+                                      "label": "Group column",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined) }}",
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`Patient id column`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_patient_uuid')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('group_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
-                                    "possible_duplicate_forms___table_specific_reported_date": {
+                                    "possible_duplicate_forms___date_column": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_reported_date\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.date_column\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "reported",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_reported_date",
-                                      "identifier": "possible_duplicate_forms___table_specific_reported_date",
+                                      "accessor": "date_column",
+                                      "identifier": "possible_duplicate_forms___date_column",
                                       "position": 11.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_reported_date",
+                                      "originalIdentifier": "possible_duplicate_forms%%%date_column",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -27810,12 +27810,12 @@
                                       "isFilterable": false,
                                       "isRequired": false,
                                       "isVisible": "{{((sourceData, formData, fieldState) => (formData.test_type == 'possible_duplicate_forms'))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "label": "Reported Date",
+                                      "label": "Date column",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined, \"timestamp with time zone\").concat(JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined, \"date\").concat(JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined, \"datetime\"))) }}",
-                                      "placeholderText": "{{((sourceData, formData, fieldState) => (sourceData.test_params_all_json[\"table_specific_reported_date\"]))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_reported_date')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "placeholderText": "{{((sourceData, formData, fieldState) => (sourceData.test_params_all_json[\"date_column\"]))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('date_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     }
                                   },
                                   "dataType": "object",
@@ -27833,13 +27833,13 @@
                                     "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                     "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                     "expect_similar_means_across_reporters%%%key": "reported_by",
-                                    "possible_duplicate_forms%%%table_specific_uuid": "uuid",
+                                    "possible_duplicate_forms%%%id_column": "uuid",
                                     "expect_similar_means_across_reporters%%%quantity": "temperature",
-                                    "possible_duplicate_forms%%%table_specific_period": "day",
+                                    "possible_duplicate_forms%%%period": "day",
                                     "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                     "expect_similar_means_across_reporters%%%id_column": "reported_by",
-                                    "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
-                                    "possible_duplicate_forms%%%table_specific_reported_date": "reported"
+                                    "possible_duplicate_forms%%%group_column": "patient_id",
+                                    "possible_duplicate_forms%%%date_column": "reported"
                                   },
                                   "isCustomField": false,
                                   "accessor": "form_test_parameters",
@@ -27965,13 +27965,13 @@
                                   "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                   "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                   "expect_similar_means_across_reporters%%%key": "reported_by",
-                                  "possible_duplicate_forms%%%table_specific_uuid": "uuid",
+                                  "possible_duplicate_forms%%%id_column": "uuid",
                                   "expect_similar_means_across_reporters%%%quantity": "temperature",
-                                  "possible_duplicate_forms%%%table_specific_period": "day",
+                                  "possible_duplicate_forms%%%period": "day",
                                   "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                   "expect_similar_means_across_reporters%%%id_column": "reported_by",
-                                  "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
-                                  "possible_duplicate_forms%%%table_specific_reported_date": "reported"
+                                  "possible_duplicate_forms%%%group_column": "patient_id",
+                                  "possible_duplicate_forms%%%date_column": "reported"
                                 },
                                 "customColumn2": ""
                               },
@@ -28037,16 +28037,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___quantity.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.isVisible"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_activated.defaultValue"
@@ -28135,22 +28135,22 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.defaultValue"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___id_column.borderRadius"
@@ -28177,16 +28177,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___form_name.defaultValue"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.defaultValue"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___quantity.borderRadius"
@@ -28198,16 +28198,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___quantity.defaultValue"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.defaultValue"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___key.borderRadius"
@@ -28531,28 +28531,28 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___form_name.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.placeholderText"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.placeholderText"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.options"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.placeholderText"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.placeholderText"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.defaultValue"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.options"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.options"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.placeholderText"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.placeholderText"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.relationships___field.options"
@@ -28597,16 +28597,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___form_name.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.tooltip"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.custom_sql___query.placeholderText"
@@ -31785,17 +31785,17 @@
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`Select a key field`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('key')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
-                                    "possible_duplicate_forms___table_specific_uuid": {
+                                    "possible_duplicate_forms___id_column": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_uuid\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.id_column\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "uuid",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_uuid",
-                                      "identifier": "possible_duplicate_forms___table_specific_uuid",
+                                      "accessor": "id_column",
+                                      "identifier": "possible_duplicate_forms___id_column",
                                       "position": 12.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_uuid",
+                                      "originalIdentifier": "possible_duplicate_forms%%%id_column",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -31803,11 +31803,11 @@
                                       "isFilterable": false,
                                       "isRequired": false,
                                       "isVisible": "{{((sourceData, formData, fieldState) => (formData.test_type == 'possible_duplicate_forms'))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "label": "UUID",
+                                      "label": "ID column",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined) }}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_uuid')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('id_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expect_similar_means_across_reporters___quantity": {
                                       "children": {},
@@ -31834,17 +31834,17 @@
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`Select a numeric field`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('quantity')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
-                                    "possible_duplicate_forms___table_specific_period": {
+                                    "possible_duplicate_forms___period": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_period\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.period\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "day",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_period",
-                                      "identifier": "possible_duplicate_forms___table_specific_period",
+                                      "accessor": "period",
+                                      "identifier": "possible_duplicate_forms___period",
                                       "position": 10.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_period",
+                                      "originalIdentifier": "possible_duplicate_forms%%%period",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -31857,7 +31857,7 @@
                                       "serverSideFiltering": false,
                                       "options": "[\n  {\n    \"label\": \"hour\",\n    \"value\": \"hour\"\n  },\n  {\n    \"label\": \"day\",\n    \"value\": \"day\"\n  },\n  {\n    \"label\": \"week\",\n    \"value\": \"week\"\n  }\n]",
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`hour, day or week`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_period')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('period')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
                                     "expect_similar_means_across_reporters___form_name": {
                                       "children": {},
@@ -31908,17 +31908,17 @@
                                       "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('id_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "placeholderText": ""
                                     },
-                                    "possible_duplicate_forms___table_specific_patient_uuid": {
+                                    "possible_duplicate_forms___group_column": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_patient_uuid\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.group_column\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "patient_id",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_patient_uuid",
-                                      "identifier": "possible_duplicate_forms___table_specific_patient_uuid",
+                                      "accessor": "group_column",
+                                      "identifier": "possible_duplicate_forms___group_column",
                                       "position": 13.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_patient_uuid",
+                                      "originalIdentifier": "possible_duplicate_forms%%%group_column",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -31926,24 +31926,24 @@
                                       "isFilterable": false,
                                       "isRequired": false,
                                       "isVisible": "{{((sourceData, formData, fieldState) => (formData.test_type == 'possible_duplicate_forms'))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "label": "Patient UUID",
+                                      "label": "Group column",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined) }}",
                                       "placeholderText": "{{((sourceData, formData, fieldState) => (`Patient id column`))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_patient_uuid')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('group_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     },
-                                    "possible_duplicate_forms___table_specific_reported_date": {
+                                    "possible_duplicate_forms___date_column": {
                                       "children": {},
                                       "dataType": "string",
-                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.table_specific_reported_date\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "defaultValue": "{{((sourceData, formData, fieldState) => ( configured_tests.selectedRow.test_parameters == undefined ? '' : configured_tests.selectedRow.test_parameters.date_column\n))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
                                       "fieldType": "Select",
                                       "sourceData": "reported",
                                       "isCustomField": false,
-                                      "accessor": "table_specific_reported_date",
-                                      "identifier": "possible_duplicate_forms___table_specific_reported_date",
+                                      "accessor": "date_column",
+                                      "identifier": "possible_duplicate_forms___date_column",
                                       "position": 11.0,
-                                      "originalIdentifier": "possible_duplicate_forms%%%table_specific_reported_date",
+                                      "originalIdentifier": "possible_duplicate_forms%%%date_column",
                                       "accentColor": "{{appsmith.theme.colors.primaryColor}}",
                                       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
                                       "boxShadow": "none",
@@ -31951,12 +31951,12 @@
                                       "isFilterable": false,
                                       "isRequired": false,
                                       "isVisible": "{{((sourceData, formData, fieldState) => (formData.test_type == 'possible_duplicate_forms'))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "label": "Reported Date",
+                                      "label": "Date column",
                                       "labelTextSize": "0.875rem",
                                       "serverSideFiltering": false,
                                       "options": "{{JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined, \"timestamp with time zone\").concat(JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined, \"date\").concat(JSFunctions.getEntityColumns(Edit_Add_Test_Form.formData.project_id,Edit_Add_Test_Form.formData.entity_id, undefined, \"datetime\"))) }}",
-                                      "placeholderText": "{{((sourceData, formData, fieldState) => (sourceData.test_params_all_json[\"table_specific_reported_date\"]))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
-                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('table_specific_reported_date')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
+                                      "placeholderText": "{{((sourceData, formData, fieldState) => (sourceData.test_params_all_json[\"date_column\"]))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}",
+                                      "tooltip": "{{((sourceData, formData, fieldState) => (JSFunctions.getTestParameterDescription('date_column')))(Edit_Add_Test_Form.sourceData, Edit_Add_Test_Form.formData, Edit_Add_Test_Form.fieldState)}}"
                                     }
                                   },
                                   "dataType": "object",
@@ -31974,13 +31974,13 @@
                                     "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                     "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                     "expect_similar_means_across_reporters%%%key": "reported_by",
-                                    "possible_duplicate_forms%%%table_specific_uuid": "uuid",
+                                    "possible_duplicate_forms%%%id_column": "uuid",
                                     "expect_similar_means_across_reporters%%%quantity": "temperature",
-                                    "possible_duplicate_forms%%%table_specific_period": "day",
+                                    "possible_duplicate_forms%%%period": "day",
                                     "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                     "expect_similar_means_across_reporters%%%id_column": "reported_by",
-                                    "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
-                                    "possible_duplicate_forms%%%table_specific_reported_date": "reported"
+                                    "possible_duplicate_forms%%%group_column": "patient_id",
+                                    "possible_duplicate_forms%%%date_column": "reported"
                                   },
                                   "isCustomField": false,
                                   "accessor": "form_test_parameters",
@@ -32106,13 +32106,13 @@
                                   "expression_is_true%%%condition": "(patient_age_in_months<24) and (malaria_give_act is not null)",
                                   "expression_is_true%%%expression": "malaria_act_dosage is not null",
                                   "expect_similar_means_across_reporters%%%key": "reported_by",
-                                  "possible_duplicate_forms%%%table_specific_uuid": "uuid",
+                                  "possible_duplicate_forms%%%id_column": "uuid",
                                   "expect_similar_means_across_reporters%%%quantity": "temperature",
-                                  "possible_duplicate_forms%%%table_specific_period": "day",
+                                  "possible_duplicate_forms%%%period": "day",
                                   "expect_similar_means_across_reporters%%%form_name": "iccmview_assessment",
                                   "expect_similar_means_across_reporters%%%id_column": "reported_by",
-                                  "possible_duplicate_forms%%%table_specific_patient_uuid": "patient_id",
-                                  "possible_duplicate_forms%%%table_specific_reported_date": "reported"
+                                  "possible_duplicate_forms%%%group_column": "patient_id",
+                                  "possible_duplicate_forms%%%date_column": "reported"
                                 },
                                 "customColumn2": ""
                               },
@@ -32178,16 +32178,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___quantity.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.isVisible"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_activated.defaultValue"
@@ -32276,22 +32276,22 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.defaultValue"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___id_column.borderRadius"
@@ -32318,16 +32318,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___form_name.defaultValue"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.defaultValue"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___quantity.borderRadius"
@@ -32339,16 +32339,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___quantity.defaultValue"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.borderRadius"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.borderRadius"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.accentColor"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.accentColor"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.defaultValue"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___key.borderRadius"
@@ -32678,28 +32678,28 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___form_name.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.placeholderText"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.placeholderText"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.options"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.placeholderText"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.placeholderText"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.isVisible"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.isVisible"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.defaultValue"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.defaultValue"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.options"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.options"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.options"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.placeholderText"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.placeholderText"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.relationships___field.options"
@@ -32744,16 +32744,16 @@
                               "key": "schema.__root_schema__.children.test_params_all_json.children.expect_similar_means_across_reporters___form_name.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_period.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___period.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_reported_date.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___date_column.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_uuid.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___id_column.tooltip"
                             },
                             {
-                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___table_specific_patient_uuid.tooltip"
+                              "key": "schema.__root_schema__.children.test_params_all_json.children.possible_duplicate_forms___group_column.tooltip"
                             },
                             {
                               "key": "schema.__root_schema__.children.test_params_all_json.children.custom_sql___query.placeholderText"
