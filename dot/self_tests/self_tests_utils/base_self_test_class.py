@@ -136,13 +136,12 @@ class BaseSelfTestClass(unittest.TestCase):
         -------
 
         """
-        # TODO drop self_tests_public and self_test_public_tests
         if debug:
             return
 
-        if schema is None or conn is None:
+        if conn is None:
             (
-                schema,
+                _,
                 _,
                 conn,
             ) = self.get_self_tests_db_conn(project_id=project_id)  # pylint: disable=no-value-for-parameter
@@ -150,11 +149,26 @@ class BaseSelfTestClass(unittest.TestCase):
         if cursor is None:
             cursor = conn.cursor()
 
-        query_drop = sql.SQL("drop schema if exists {name} cascade").format(
-            name=sql.Identifier(schema)
-        )
-        cursor.execute(query_drop)
-        conn.commit()
+        if schema is None:
+            schemas = []
+            for member in list(DbParamsConnection.__members__):
+                (sch, _, _) = self.get_self_tests_db_conn(
+                    connection=DbParamsConnection[member],
+                    project_id=project_id,
+                )
+                schemas.append(sch)
+            schemas_to_drop = {sch for sch in schemas if sch != "public"}
+        elif schema == "public":
+            return
+        else:
+            schemas_to_drop = {schema}
+
+        for sch in schemas_to_drop:
+            query_drop = sql.SQL("drop schema if exists {name} cascade").format(
+                name=sql.Identifier(sch)
+            )
+            cursor.execute(query_drop)
+            conn.commit()
 
     @staticmethod
     def get_queries_from_file(f, dot_schema, public_schema):
