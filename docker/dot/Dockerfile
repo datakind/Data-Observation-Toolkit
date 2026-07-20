@@ -1,5 +1,11 @@
 FROM python:3.8-slim-buster
 
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i '/buster-updates/d' /etc/apt/sources.list \
+ && printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99no-check-valid-until \
+ && apt-get update
+
 WORKDIR app/
 
 RUN apt-get update
