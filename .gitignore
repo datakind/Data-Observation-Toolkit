@@ -17,3 +17,4 @@ docker/cookie
 
 .idea*
 __pycache__
+.ge_store_backend_id
