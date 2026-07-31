@@ -66,9 +66,20 @@ class RunDotTestsTest(DbtBaseSelfTestClass):
         expected_test_results_summary = pd.read_csv(
             "self_tests/data/expected/integration/test_results_summary.csv", index_col=0
         )
+        # pg_get_viewdef formatting varies across Postgres versions
+        summary_skip = ["run_id", "failed_tests_view_sql"]
         pd.testing.assert_frame_equal(
-            test_results_summary.drop(columns=["run_id"]),
-            expected_test_results_summary.drop(columns=["run_id"]),
+            test_results_summary.drop(columns=summary_skip),
+            expected_test_results_summary.drop(columns=summary_skip),
+        )
+        self.assertIn("failed_tests_view_sql", test_results_summary.columns)
+        self.assertTrue(
+            test_results_summary["failed_tests_view_sql"]
+            .fillna("")
+            .astype(str)
+            .str.len()
+            .gt(0)
+            .any()
         )
 
         test_results = pd.read_sql(f"SELECT * FROM {schema_dot}.test_results", conn_dot)
