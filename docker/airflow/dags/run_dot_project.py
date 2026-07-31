@@ -25,7 +25,8 @@ def get_object(
         date_field,
         source_conn_in,
         columns_to_exclude,
-):
+        source_schema_in,
+        ):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -49,7 +50,7 @@ def get_object(
 
     sql_stmt = (
             "SELECT * FROM "
-            + connection.schema
+            + source_schema_in
             + "."
             + object_name_in
     )
@@ -71,7 +72,7 @@ def get_object(
             + object_name_in
             + "'"
             + "AND table_schema = '"
-            + connection.schema
+            + source_schema_in
             + "' "
             + " ORDER BY ordinal_position "
     )
@@ -93,7 +94,7 @@ def get_object(
                 + " WHERE a.attnum > 0 "
                 + "  AND NOT a.attisdropped "
                 + " AND t.relname = '" + object_name_in + "' "
-                + " AND s.nspname = '" + connection.schema + "' "
+                + " AND s.nspname = '" + source_schema_in + "' "
                 + " ORDER BY a.attnum; "
         )
         print(sql_stmt)
@@ -136,8 +137,8 @@ def get_object(
 
 
 def save_object(
-        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
-):
+        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in, source_schema_in
+        ):
     """
 
     Saves data to target DOT database in data schema.
@@ -156,7 +157,8 @@ def save_object(
        List of table column types for target table
     source_db_in: String
        Name of source database (same as source connid string)
-
+    source_schema_in: String
+       Name of source schema
     """
 
     # Temporary, replace existing data. TODO support delta loads
@@ -184,7 +186,7 @@ def save_object(
         executemany_batch_page_size=200,
     )
 
-    schema = "data_" + source_db_in.replace("-", "_")
+    schema = "data_" + source_db_in.replace("-", "_") + '_' + source_schema_in.replace("-", "_")
 
     # Cascade drop target table if in replace mode.
     # This will also drop any DOT model views onto this data
@@ -234,7 +236,8 @@ def sync_object(
         source_conn_in,
         target_conn_in,
         columns_to_exclude,
-):
+        source_schema_in,
+        ):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -262,11 +265,12 @@ def sync_object(
         date_field,
         source_conn_in,
         columns_to_exclude,
+        source_schema_in,
     )
 
     # Save the data
     save_object(
-        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
+        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in, source_schema_in
     )
 
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
@@ -364,7 +368,7 @@ with DAG(
         schedule_interval="@weekly",
         start_date=datetime(year=2022, month=3, day=1),
         catchup=False,
-) as dag:
+        ) as dag:
     config = json.loads(Variable.get("dot_config", default_var=default_config().read()))
 
     """
@@ -389,13 +393,14 @@ with DAG(
         objects_to_sync = project["objects"]
         earliest_date_to_sync = project["earliest_date_to_sync"]
         source_conn = project["source_connid"]
+        source_schema = project.get("source_schema", "public")
 
         # Drop the tables in the DOT tests schema, so we can import new data, columns and types
-        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_tests"
+        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_" + source_schema.replace("-", "_") + "_tests"
         print(schema_to_drop_from)
         af_tasks.append(
             PythonOperator(
-                task_id=f"drop_tables_from_schema__{schema_to_drop_from}",
+                task_id=f"drop_tables_from_schema_{project_id}_{schema_to_drop_from}",
                 python_callable=drop_tables_in_dot_tests_schema,
                 op_kwargs={
                     "target_conn_in": target_conn,
@@ -432,6 +437,7 @@ with DAG(
                         "source_conn_in": source_conn,
                         "target_conn_in": target_conn,
                         "columns_to_exclude": columns_to_exclude,
+                        "source_schema_in": source_schema,
                     },
                     dag=dag,
                 )
