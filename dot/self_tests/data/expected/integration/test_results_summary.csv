@@ -60,22 +60,22 @@
     dot_model__all_flight_data.price
    FROM self_tests_public_tests.dot_model__all_flight_data
   WHERE dot_model__all_flight_data.origin_airport IS NULL;",1001,53,948
-5,51479924-b5ff-4efc-9ba0-97cbd021b39f,59b7fabd-acb8-3a38-8cbf-91736a214cab,all_flight_data,possible_duplicate_forms,,"{'table_specific_uuid': 'uuid', 'table_specific_period': 'day', 'table_specific_patient_uuid': 'airline', 'table_specific_reported_date': 'departure_time'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_possible_duplicate_f," WITH records_per_patient_period AS (
+5,51479924-b5ff-4efc-9ba0-97cbd021b39f,35711eb0-7eda-3f7b-b61b-314332a10fc2,all_flight_data,possible_duplicate_forms,,"{'id_column': 'uuid', 'period': 'day', 'group_column': 'airline', 'date_column': 'departure_time'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_possible_duplicate_f," WITH records_per_group_period AS (
          SELECT date_trunc('day'::text, dot_model__all_flight_data.departure_time::timestamp without time zone) AS date_period,
-            dot_model__all_flight_data.airline AS patient_uuid_to_flag,
+            dot_model__all_flight_data.airline AS group_key_to_flag,
             count(dot_model__all_flight_data.uuid) AS number_of_records
            FROM self_tests_public_tests.dot_model__all_flight_data
           GROUP BY (date_trunc('day'::text, dot_model__all_flight_data.departure_time::timestamp without time zone)), dot_model__all_flight_data.airline
         ), possible_duplicate_combinations AS (
-         SELECT records_per_patient_period.date_period,
-            records_per_patient_period.patient_uuid_to_flag,
-            records_per_patient_period.number_of_records
-           FROM records_per_patient_period
-          WHERE records_per_patient_period.number_of_records > 1
+         SELECT records_per_group_period.date_period,
+            records_per_group_period.group_key_to_flag,
+            records_per_group_period.number_of_records
+           FROM records_per_group_period
+          WHERE records_per_group_period.number_of_records > 1
         )
  SELECT array_agg(m.uuid) AS uuid_list
    FROM possible_duplicate_combinations pdc
-     LEFT JOIN self_tests_public_tests.dot_model__all_flight_data m ON date_trunc('day'::text, m.departure_time::timestamp without time zone) = pdc.date_period AND m.airline::text = pdc.patient_uuid_to_flag::text
+     LEFT JOIN self_tests_public_tests.dot_model__all_flight_data m ON date_trunc('day'::text, m.departure_time::timestamp without time zone) = pdc.date_period AND m.airline::text = pdc.group_key_to_flag::text
  HAVING count(*) > 0;",1001,274,727
 6,51479924-b5ff-4efc-9ba0-97cbd021b39f,2ba7f3e8-cd62-37ac-854f-01f704489130,all_flight_data,relationships,origin_airport,"{'to': ""ref('dot_model__all_airports_data')"", 'name': 'flight_with_no_airport', 'field': 'airport'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_flight_with_no_a," SELECT array_agg(from_model.from_uuid) AS uuid_list
    FROM ( SELECT dot_model__all_flight_data.uuid AS from_uuid,

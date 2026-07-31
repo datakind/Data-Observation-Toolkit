@@ -147,9 +147,9 @@ class UtilsTest(BaseSelfTestClass):
                 "'adc007dd-2407-3dc2-95a7-002067e741f9',"
                 "'possible_duplicate_forms', '', '',"
                 """$${
-                   'table_specific_uuid': 'uuid',
-                   'table_specific_patient_uuid': 'patient_id',
-                   'table_specific_reported_date': 'delivery_date',
+                   'id_column': 'uuid',
+                   'group_column': 'patient_id',
+                   'date_column': 'delivery_date',
                 }$$
                 ,"""
                 "'2021-12-23 19:00:00.000 -0500',"
@@ -200,10 +200,10 @@ class UtilsTest(BaseSelfTestClass):
                 project_id="ScanProject1",
                 test_parameters="""
                 {
-                   'table_specific_uuid': 'uuid',
-                   'table_specific_period': 'day',
-                   'table_specific_patient_uuid': 'patient_id',
-                   'table_specific_reported_date': 'delivery_date',
+                   'id_column': 'uuid',
+                   'period': 'day',
+                   'group_column': 'patient_id',
+                   'date_column': 'delivery_date',
                 }
                 """,
             )

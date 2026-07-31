@@ -108,6 +108,33 @@ class TestPrepareTestParameters:
         assert "form_name" not in result
         assert result["data_table"] == "dot_model__iccmview_assessment"
 
+    def test_possible_duplicate_forms_legacy_keys(self):
+        result = prepare_test_parameters(
+            "possible_duplicate_forms",
+            {
+                "table_specific_reported_date": "departure_time",
+                "table_specific_patient_uuid": "airline",
+                "table_specific_uuid": "uuid",
+                "table_specific_period": "day",
+            },
+        )
+        assert result == {
+            "date_column": "departure_time",
+            "group_column": "airline",
+            "id_column": "uuid",
+            "period": "day",
+        }
+        assert "table_specific_reported_date" not in result
+
+    def test_possible_duplicate_forms_new_keys_unchanged(self):
+        params = {
+            "date_column": "departure_time",
+            "group_column": "airline",
+            "id_column": "uuid",
+            "period": "day",
+        }
+        assert prepare_test_parameters("possible_duplicate_forms", params) == params
+
     def test_other_test_type_unchanged(self):
         params = {"values": ["a", "b"]}
         assert prepare_test_parameters("accepted_values", params) == params
