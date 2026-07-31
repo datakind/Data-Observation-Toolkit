@@ -1,7 +1,9 @@
 CREATE SCHEMA dot;
 -- CREATE SCHEMA data;
 
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- uuid-ossp lives in public; some DOT DBs omit public, so create it first
+CREATE SCHEMA IF NOT EXISTS public;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 CREATE TABLE IF NOT EXISTS dot.scenarios(
     scenario_id VARCHAR(300) PRIMARY KEY,
@@ -188,7 +190,8 @@ declare
 BEGIN
    -- If you change how this UUID is generated, be sure to also change how it is created in get_test_id in /utils/utils.py
    KEY_STRING := new.project_id || new.test_type || new.entity_id || new.column_name || COALESCE(CAST(new.test_parameters AS VARCHAR),'');
-   NEW.test_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
+   -- Qualify uuid-ossp functions so triggers work even when search_path omits public
+   NEW.test_id := public.uuid_generate_v3(public.uuid_ns_oid(), KEY_STRING);
    new.date_added := NOW();
    new.date_modified := NOW();
    RETURN NEW;
@@ -203,7 +206,7 @@ declare
    KEY_STRING text;
 BEGIN
    KEY_STRING := new.project_id || new.test_type || new.entity_id || new.column_name || COALESCE(CAST(new.test_parameters AS VARCHAR),'');
-   NEW.test_id := uuid_generate_v3(uuid_ns_oid(), KEY_STRING);
+   NEW.test_id := public.uuid_generate_v3(public.uuid_ns_oid(), KEY_STRING);
    new.date_modified := NOW();
    RETURN NEW;
 END;
