@@ -137,7 +137,8 @@ def get_object(
 
 
 def save_object(
-        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in, source_schema_in
+        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in, source_schema_in,
+        date_field=None, id_field=None
         ):
     """
 
@@ -161,8 +162,10 @@ def save_object(
        Name of source schema
     """
 
-    # Temporary, replace existing data. TODO support delta loads
-    MODE = "replace"
+    if date_field:
+        MODE = "append"
+    else:
+        MODE = "replace"
 
     connection = BaseHook.get_connection(target_conn_in)
     connection_string = (
@@ -198,6 +201,29 @@ def save_object(
             query = f"DROP TABLE IF EXISTS {schema}.{object_name_in} CASCADE;"
             print(query)
             cur.execute(query)
+    elif MODE == "append":
+        with PostgresHook(
+                postgres_conn_id=target_conn_in, schema=target_conn_in
+        ).get_conn() as conn:
+            cur = conn.cursor()
+            # Check if target table exists first
+            cur.execute(f"SELECT to_regclass('{schema}.{object_name_in}');")
+            if cur.fetchone()[0] is not None:
+                if id_field and not data_in.empty:
+                    # Delete overlapping rows by ID before appending
+                    ids = tuple(data_in[id_field].tolist())
+                    if len(ids) > 0:
+                        print(f"Deleting {len(ids)} overlapping rows from {schema}.{object_name_in}")
+                        # Chunk the IDs to avoid hitting max parameters limit in Postgres
+                        chunk_size = 1000
+                        for i in range(0, len(ids), chunk_size):
+                            chunk = ids[i:i + chunk_size]
+                            if len(chunk) == 1:
+                                query = f"DELETE FROM {schema}.{object_name_in} WHERE {id_field} = %s"
+                                cur.execute(query, (chunk[0],))
+                            else:
+                                query = f"DELETE FROM {schema}.{object_name_in} WHERE {id_field} IN %s"
+                                cur.execute(query, (chunk,))
 
     print(data_in.info())
     print(type_list_in)
@@ -213,7 +239,7 @@ def save_object(
 
     print("Saving data to: " + schema + "." + object_name_in)
     data_in.to_sql(
-        object_name_in, engine, index=False, if_exists="replace", schema=schema
+        object_name_in, engine, index=False, if_exists=MODE, schema=schema
     )
 
     for i in range(len(column_list_in)):
@@ -237,6 +263,7 @@ def sync_object(
         target_conn_in,
         columns_to_exclude,
         source_schema_in,
+        id_field=None,
         ):
     """
 
@@ -270,7 +297,8 @@ def sync_object(
 
     # Save the data
     save_object(
-        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in, source_schema_in
+        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in, source_schema_in,
+        date_field=date_field, id_field=id_field
     )
 
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
@@ -438,6 +466,7 @@ with DAG(
                         "target_conn_in": target_conn,
                         "columns_to_exclude": columns_to_exclude,
                         "source_schema_in": source_schema,
+                        "id_field": id_field,
                     },
                     dag=dag,
                 )
