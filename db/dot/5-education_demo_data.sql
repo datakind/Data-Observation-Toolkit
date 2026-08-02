@@ -1,14 +1,14 @@
-CREATE SCHEMA education;
+CREATE SCHEMA IF NOT EXISTS education;
 
 CREATE TABLE education.courses (
-    course_id text,
+    course_id text PRIMARY KEY,
     course_name text,
     credits bigint,
     max_capacity bigint
 );
 
 CREATE TABLE education.enrollments (
-    enrollment_id text,
+    enrollment_id text PRIMARY KEY,
     student_id text,
     course_id text,
     semester text,
@@ -16,13 +16,13 @@ CREATE TABLE education.enrollments (
 );
 
 CREATE TABLE education.excel_grades (
-    grade_id text,
+    grade_id text PRIMARY KEY,
     enrollment_id text,
     score double precision
 );
 
 CREATE TABLE education.students (
-    student_id text,
+    student_id text PRIMARY KEY,
     first_name text,
     last_name text,
     enrollment_date timestamp without time zone,

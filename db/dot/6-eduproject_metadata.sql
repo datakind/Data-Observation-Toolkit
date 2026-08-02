@@ -21,7 +21,7 @@ where project_id = 'EduProject'
 -- 2. Ensure base projects and categories exist (using ON CONFLICT to prevent
 -- duplicates)
 INSERT INTO dot.projects (project_id, description, active, project_schema, date_added, date_modified, last_updated_by) 
-VALUES ('EduProject', 'Educational Data System', 'true', 'public', NOW(), NOW(), 'admin')
+VALUES ('EduProject', 'Educational Data System', 'true', 'data_dot_data_education', NOW(), NOW(), 'admin')
 ON CONFLICT (project_id) DO NOTHING;
 
 INSERT INTO dot.entity_categories VALUES('EDU','Education')
