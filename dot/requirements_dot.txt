@@ -1,4 +1,5 @@
 black==21.12b0
+click>=8.0,<8.1
 dbt-core==1.0.0
 dbt-extractor==0.4.0
 dbt-postgres==1.0.0
