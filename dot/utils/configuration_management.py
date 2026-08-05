@@ -21,7 +21,8 @@ from utils.configuration_utils import (
     GE_GREAT_EXPECTATIONS_FINAL_FILENAME,
     GE_CONFIG_VARIABLES_FINAL_FILENAME,
     load_config_file,
-    DBT_MODELNAME_PREFIX
+    DBT_MODELNAME_PREFIX,
+    prepare_test_parameters,
 )
 from utils.dbt import create_core_entities
 
@@ -330,7 +331,9 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
             column_name = row["column_name"]
             description = row["description"]
             test_type = row["test_type"]
-            test_parameters = row["test_parameters"]
+            test_parameters = prepare_test_parameters(
+                test_type, row["test_parameters"]
+            )
             # if test_parameters != None:
             #    test_parameters = "| ".join([f"{k}={test_parameters[k]}" for k in test_parameters])
             # else:
@@ -433,7 +436,10 @@ def generate_tests_from_db(project_id, logger=logging.Logger):
                 # "kwargs": add_ge_schema_parameters(
                 #    json.loads(row["test_parameters"]), project_id
                 # ),
-                "kwargs": add_ge_schema_parameters(row["test_parameters"], project_id),
+                "kwargs": add_ge_schema_parameters(
+                    prepare_test_parameters(row["test_type"], row["test_parameters"]),
+                    project_id,
+                ),
                 "meta": {},
             }
 
