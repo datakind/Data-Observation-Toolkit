@@ -245,7 +245,7 @@ def get_configured_tests_row(
     test_params_clause = ""
     if test_parameters != "":
         test_params_clause = (
-            f" AND regexp_replace(LOWER(CAST(test_parameters AS VARCHAR)), '\W+', '', 'g') = "
+            f" AND regexp_replace(LOWER(CAST(REPLACE(test_parameters::text, '\\r', '') AS VARCHAR)), '\\W+', '', 'g') = "
             f"'{prefix}{test_parameters.lower()}';"
         )
 
