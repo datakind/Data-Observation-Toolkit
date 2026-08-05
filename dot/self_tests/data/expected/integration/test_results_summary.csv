@@ -60,7 +60,7 @@
     dot_model__all_flight_data.price
    FROM self_tests_public_tests.dot_model__all_flight_data
   WHERE dot_model__all_flight_data.origin_airport IS NULL;",1001,53,948
-5,51479924-b5ff-4efc-9ba0-97cbd021b39f,b36e2d54-2d43-36de-8c07-74e14c8a2aee,all_flight_data,possible_duplicate_forms,,"{'id_column': 'uuid', 'period': 'day', 'group_column': 'airline', 'date_column': 'departure_time'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_possible_duplicate_f," WITH records_per_group_period AS (
+5,51479924-b5ff-4efc-9ba0-97cbd021b39f,b36e2d54-2d43-36de-8c07-74e14c8a2aee,all_flight_data,possible_duplicate_forms,,"{'period': 'day', 'id_column': 'uuid', 'date_column': 'departure_time', 'group_column': 'airline'}",fail,"got 1 result, configured to fail if != 0",tr_dot_model__all_flight_data_possible_duplicate_f," WITH records_per_group_period AS (
          SELECT date_trunc('day'::text, dot_model__all_flight_data.departure_time::timestamp without time zone) AS date_period,
             dot_model__all_flight_data.airline AS group_key_to_flag,
             count(dot_model__all_flight_data.uuid) AS number_of_records
