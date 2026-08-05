@@ -1,5 +1,8 @@
 """Tests for bare entity_id normalization in test_parameters."""
 
+# Test method names already describe behavior; keep assertions uncluttered.
+# pylint: disable=missing-function-docstring
+
 from utils.configuration_utils import (
     prepare_test_parameters,
     to_bare_entity_id,
@@ -39,10 +42,7 @@ class TestToDbtFormats:
     """Wrap bare/legacy values into DBT artifact forms."""
 
     def test_to_dbt_ref_from_bare(self):
-        assert (
-            to_dbt_ref("all_airports_data")
-            == "ref('dot_model__all_airports_data')"
-        )
+        assert to_dbt_ref("all_airports_data") == "ref('dot_model__all_airports_data')"
 
     def test_to_dbt_ref_from_legacy_ref(self):
         assert (
