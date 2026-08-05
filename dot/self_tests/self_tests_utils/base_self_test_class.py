@@ -26,6 +26,12 @@ from utils.configuration_utils import (  # pylint: disable=wrong-import-position
     DBT_PROJECT_FINAL_FILENAME,
 )
 
+_DEFAULT_ADDITIONAL_FILEPATHS = [
+    "../db/dot/2-upload_static_data.sql",
+    "../db/dot/3-demo_data.sql",
+    "../db/dot/4-upload_sample_dot_data.sql",
+]
+
 
 class BaseSelfTestClass(unittest.TestCase):
     """
@@ -72,21 +78,16 @@ class BaseSelfTestClass(unittest.TestCase):
         """drops the DB schema for the demo dataset by default"""
         self.drop_self_tests_db_schema(debug=debug)
 
-    @patch("utils.configuration_utils._get_filename_safely")
     def get_self_tests_db_conn(
         self,
-        mock_get_filename_safely,
         connection: DbParamsConnection = DbParamsConnection["dot"],
         project_id: Optional[str] = None,
-    ) -> Tuple[
-        str, sa.engine.base.Engine, pg.extensions.connection
-    ]:  # pylint: disable=no-value-for-parameter
+    ) -> Tuple[str, sa.engine.base.Engine, pg.extensions.connection]:
         """
         Obtains the db connection for the self tests db
 
         Parameters
         ----------
-        mock_get_filename_safely
         connection: DbParamsConnection
             enum for the connection to dot
         project_id: Optional[str]
@@ -98,16 +99,19 @@ class BaseSelfTestClass(unittest.TestCase):
             engine: sa.engine.base.Engine
             conn: pg.extensions.connection
         """
-        mock_get_filename_safely.side_effect = self.mock_get_filename_safely
-        schema, engine, conn = get_db_params_from_config(
-            DbParamsConfigFile["dot_config.yml"],
-            connection,
-            project_id or self.project_id,
-        )
+        with patch(
+            "utils.configuration_utils._get_filename_safely",
+            side_effect=self.mock_get_filename_safely,
+        ):
+            schema, engine, conn = get_db_params_from_config(
+                DbParamsConfigFile["dot_config.yml"],
+                connection,
+                project_id or self.project_id,
+            )
 
         return schema, engine, conn
 
-    def drop_self_tests_db_schema(
+    def drop_self_tests_db_schema(  # pylint: disable=too-many-arguments
         self,
         schema: str = None,
         conn: Optional[pg.extensions.connection] = None,
@@ -144,7 +148,7 @@ class BaseSelfTestClass(unittest.TestCase):
                 _,
                 _,
                 conn,
-            ) = self.get_self_tests_db_conn(project_id=project_id)  # pylint: disable=no-value-for-parameter
+            ) = self.get_self_tests_db_conn(project_id=project_id)
 
         if cursor is None:
             cursor = conn.cursor()
@@ -171,13 +175,13 @@ class BaseSelfTestClass(unittest.TestCase):
             conn.commit()
 
     @staticmethod
-    def get_queries_from_file(f, dot_schema, public_schema):
+    def get_queries_from_file(file_obj, dot_schema, public_schema):
         """
         Gets queries from file
 
         Parameters
         ----------
-        f: file
+        file_obj: file
             file object
         schema: str
             schema for self tests
@@ -187,7 +191,7 @@ class BaseSelfTestClass(unittest.TestCase):
             transformed query lines
         """
         all_query_lines = []
-        lines = f.readlines()
+        lines = file_obj.readlines()
         for line in lines:
             if "create schema" in line.lower():
                 continue
@@ -201,15 +205,11 @@ class BaseSelfTestClass(unittest.TestCase):
             all_query_lines.append(line)
         return all_query_lines
 
-    def create_self_tests_db_schema(
+    def create_self_tests_db_schema(  # pylint: disable=too-many-arguments,too-many-locals
         self,
         additional_query: str = None,
         schema_filepath: str = "../db/dot/1-schema.sql",
-        additional_filepaths: Iterable[str] = [
-            "../db/dot/2-upload_static_data.sql",
-            "../db/dot/3-demo_data.sql",
-            "../db/dot/4-upload_sample_dot_data.sql",
-        ],
+        additional_filepaths: Optional[Iterable[str]] = None,
         do_recreate_schema: bool = True,
         project_id: Optional[str] = None,
     ):
@@ -234,6 +234,9 @@ class BaseSelfTestClass(unittest.TestCase):
         -------
         None
         """
+        if additional_filepaths is None:
+            additional_filepaths = list(_DEFAULT_ADDITIONAL_FILEPATHS)
+
         schema_list = []
         for member in list(DbParamsConnection.__members__):
             (schema, _, _) = self.get_self_tests_db_conn(
@@ -246,13 +249,9 @@ class BaseSelfTestClass(unittest.TestCase):
             schema_dot,
             _,
             conn,
-        ) = self.get_self_tests_db_conn(project_id=project_id)  # pylint: disable=no-value-for-parameter
+        ) = self.get_self_tests_db_conn(project_id=project_id)
 
-        (
-            schema_project,
-            _,
-            conn,
-        ) = self.get_self_tests_db_conn(
+        (schema_project, _, conn,) = self.get_self_tests_db_conn(
             connection=DbParamsConnection.project,
             project_id=project_id,
         )
@@ -269,7 +268,8 @@ class BaseSelfTestClass(unittest.TestCase):
             try:
                 # Move if it was previously installed into another schema (e.g. dot)
                 cursor.execute('ALTER EXTENSION "uuid-ossp" SET SCHEMA public')
-            except Exception:
+            except pg.Error:
+                # Extension may already be in public, or the statement is unsupported.
                 pass
             cursor.execute(
                 sql.SQL("SET search_path TO public, {}, {}").format(
@@ -284,7 +284,9 @@ class BaseSelfTestClass(unittest.TestCase):
                     # Never drop public — uuid-ossp and system objects live there
                     if sch == "public":
                         continue
-                    self.drop_self_tests_db_schema(sch, conn, cursor, project_id=project_id)
+                    self.drop_self_tests_db_schema(
+                        sch, conn, cursor, project_id=project_id
+                    )
 
                     query_create = sql.SQL(
                         """
@@ -295,9 +297,9 @@ class BaseSelfTestClass(unittest.TestCase):
                     conn.commit()
 
             if schema_filepath is not None:
-                with open(schema_filepath, "r") as f:
+                with open(schema_filepath, "r", encoding="utf-8") as schema_file:
                     all_query_lines = self.get_queries_from_file(
-                        f, schema_dot, schema_project
+                        schema_file, schema_dot, schema_project
                     )
 
                     # execute all queries
@@ -306,9 +308,11 @@ class BaseSelfTestClass(unittest.TestCase):
 
             if additional_filepaths is not None:
                 for additional_filepath in additional_filepaths:
-                    with open(additional_filepath, "r") as f:
+                    with open(
+                        additional_filepath, "r", encoding="utf-8"
+                    ) as additional_file:
                         all_query_lines = self.get_queries_from_file(
-                            f, schema_dot, schema_project
+                            additional_file, schema_dot, schema_project
                         )
 
                         # execute all queries
@@ -319,6 +323,6 @@ class BaseSelfTestClass(unittest.TestCase):
                 cursor.execute(additional_query)
                 conn.commit()
 
-        except Exception as e:
+        except Exception:  # pylint: disable=broad-except
             conn.rollback()
-            raise e
+            raise
