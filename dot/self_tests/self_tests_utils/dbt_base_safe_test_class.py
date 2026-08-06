@@ -61,7 +61,7 @@ class DbtBaseSelfTestClass(BaseSelfTestClass):
 
         # Rewrite profiles so dbt does not use leftover production schemas
         # (e.g. data_dot_data_education from a prior DOT run in this container).
-        project_db_config = load_config_file()["ScanProject1_db"]
+        project_db_config = load_config_file()[f"{self.project_id}_db"]
         logger = setup_custom_logger("self_tests/output/test.log", logging.INFO)
         write_config_from_template(
             Environment(loader=FileSystemLoader("./config/templates/")),
