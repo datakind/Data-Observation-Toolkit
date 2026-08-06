@@ -1,3 +1,12 @@
+<div align="center">
+
+<br />
+<a href="https://digitalpublicgoods.net/r/dpg-slug" target="_blank" rel="noopener noreferrer"><img src="https://github.com/DPGAlliance/dpg-resources/blob/main/docs/assets/dpg-badge.png?raw=true" width="100" alt="Digital Public Goods Badge"></a>
+
+</div>
+
+> Verified as a **Digital Public Good** by the Digital Public Goods Alliance.
+
 # Sample data
 You are free to use [these rich datasets](https://drive.google.com/drive/folders/12tyTqYNNNpDZxQKMQqv7FVOCq18LCurQ?usp=sharing) ranging from global COVID-19 patients to United States childhood obesity records, from 1000 records to over a million patients, as well as a synthetic dataset showcasing DOT’s capabilities on frontline health data.
 

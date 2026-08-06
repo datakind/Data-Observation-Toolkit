@@ -1,28 +1,28 @@
 
 -- dot.scenarios
-INSERT INTO dot.scenarios VALUES('MISSING-1', 'Missing fields', 'Data entry error', 'Form data entry error', 'Null fields', 'Blank fields');
-INSERT INTO dot.scenarios VALUES('INCONSISTENT-1', 'Inconsistent data', 'Data entry error', 'Form data entry error', 'Outliers', 'Jaundice alert=No when fever+jaundice; Incorrect LMP, wrong visit dates');
-INSERT INTO dot.scenarios VALUES('INCONSISTENT-2', 'Inconsistent data', 'Data entry error', 'Time/Date incorrect on phone', 'Date logic issues, outliers', '');
-INSERT INTO dot.scenarios VALUES('FAKE-1', 'Fake data', 'Data entry error', 'Fake data entered into forms', 'Outliers', '');
-INSERT INTO dot.scenarios VALUES('DUPLICATE-1', 'Duplicate data', 'Data entry error', 'Duplicate data entered', 'Duplicate records', 'Multiple person records for the same person');
-INSERT INTO dot.scenarios VALUES('BIAS-1', 'Miscalibrated instruments', 'Data entry error', 'Measurement bias', 'Outliers', 'Thermometer bias');
-INSERT INTO dot.scenarios VALUES('BIAS-2', 'CHW Training issues', 'Data entry error', 'Measurement bias', 'Outliers', 'Breath counts not measured correctly');
-INSERT INTO dot.scenarios VALUES('BUGS-1', 'Foreign keys errors', 'Software bugs', 'Database bugs', 'Foreign key errors', '');
-INSERT INTO dot.scenarios VALUES('BUGS-2', 'Inconsistent field formats ', 'Software bugs', 'Database bugs', 'Inconsistent field formats ', 'During form updates/modifications the app developer changes the  response type of a field');
-INSERT INTO dot.scenarios VALUES('BUGS-3', 'Data category errors ', 'Software bugs', 'Database bugs', 'Category distribution changes over time', '‘Male’ mixed with ‘man’ instead of all ‘Male''');
-INSERT INTO dot.scenarios VALUES('BUGS-4', 'Field name changes', 'Software bugs', 'Application bugs', 'Field data changes over time', 'During form updates/modifications the app developer renames a form field name or changes the  response type of a field');
-INSERT INTO dot.scenarios VALUES('BUGS-5', 'Incorrect metrics/indicators calculation/aggregation', 'Software bugs', 'Reporting bugs', 'Errors in calculated metrics', 'Technical debt complexity in pregnancy national metrics');
-INSERT INTO dot.scenarios VALUES('MISSED-1', 'Missed person or patient', 'Process errors', 'Missed task', 'Houses in district not included', 'Unvisited household');
-INSERT INTO dot.scenarios VALUES('MISSED-2', 'Missed assessment/report', 'Process errors', 'Missed task', 'Missed follow-up forms', 'Missed pregnancy; Missed delivery report');
-INSERT INTO dot.scenarios VALUES('MISSED-3', 'Missed followup', 'Process errors', 'Missed task', 'Inconsistent patterns in follow-up data', '');
-INSERT INTO dot.scenarios VALUES('MISSED-4', 'Missed referral visit', 'Process errors', 'Missed task', 'Missing referral visits', 'Patient referred but doesn''t attend');
-INSERT INTO dot.scenarios VALUES('MISSED-5', 'Missed treatment', 'Process errors', 'Missed task', 'Inconsistencies in treatment data, outliers', 'No Malaria treatment after diagnosis; Underreporting immunization');
-INSERT INTO dot.scenarios VALUES('MISSED-6', 'Missed CHW supervision', 'Process errors', 'Missed task', 'Missed supervision forms', '');
-INSERT INTO dot.scenarios VALUES('MISSED-7', 'Missed family planning', 'Process errors', 'Missed task', 'No FP for relevant househould, outliers', '');
-INSERT INTO dot.scenarios VALUES('FOLLOWUP-1', 'Unrealistically fast followup', 'Process errors', 'Incorrect followup', 'Unrealistically fast followups', '');
-INSERT INTO dot.scenarios VALUES('MULTIEVENTS-1', 'Mutiple same day events', 'Process errors', 'Multiple events', 'Mutiple same day events', '');
-INSERT INTO dot.scenarios VALUES('ASSESS-1', 'Inconsistent data', 'Process errors', 'Incorrect assessment', 'Outliers', 'Jaundice alert=No when fever+jaundice; ');
-INSERT INTO dot.scenarios VALUES('TREAT-1', 'Incorrect treatment', 'Process errors', 'Incorrect treatment', 'Outliers', 'Drug protocol not followed for Malaria treatment; FP for people on tubal ligation, pregnant or had vasectomy');
+INSERT INTO dot.scenarios VALUES('MISSING-1', 'Missing fields', 'Data entry error', 'Form data entry error', 'Null fields', 'Blank fields') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('INCONSISTENT-1', 'Inconsistent data', 'Data entry error', 'Form data entry error', 'Outliers', 'Jaundice alert=No when fever+jaundice; Incorrect LMP, wrong visit dates') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('INCONSISTENT-2', 'Inconsistent data', 'Data entry error', 'Time/Date incorrect on phone', 'Date logic issues, outliers', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('FAKE-1', 'Fake data', 'Data entry error', 'Fake data entered into forms', 'Outliers', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('DUPLICATE-1', 'Duplicate data', 'Data entry error', 'Duplicate data entered', 'Duplicate records', 'Multiple person records for the same person') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BIAS-1', 'Miscalibrated instruments', 'Data entry error', 'Measurement bias', 'Outliers', 'Thermometer bias') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BIAS-2', 'CHW Training issues', 'Data entry error', 'Measurement bias', 'Outliers', 'Breath counts not measured correctly') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BUGS-1', 'Foreign keys errors', 'Software bugs', 'Database bugs', 'Foreign key errors', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BUGS-2', 'Inconsistent field formats ', 'Software bugs', 'Database bugs', 'Inconsistent field formats ', 'During form updates/modifications the app developer changes the  response type of a field') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BUGS-3', 'Data category errors ', 'Software bugs', 'Database bugs', 'Category distribution changes over time', '‘Male’ mixed with ‘man’ instead of all ‘Male''') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BUGS-4', 'Field name changes', 'Software bugs', 'Application bugs', 'Field data changes over time', 'During form updates/modifications the app developer renames a form field name or changes the  response type of a field') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('BUGS-5', 'Incorrect metrics/indicators calculation/aggregation', 'Software bugs', 'Reporting bugs', 'Errors in calculated metrics', 'Technical debt complexity in pregnancy national metrics') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-1', 'Missed person or patient', 'Process errors', 'Missed task', 'Houses in district not included', 'Unvisited household') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-2', 'Missed assessment/report', 'Process errors', 'Missed task', 'Missed follow-up forms', 'Missed pregnancy; Missed delivery report') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-3', 'Missed followup', 'Process errors', 'Missed task', 'Inconsistent patterns in follow-up data', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-4', 'Missed referral visit', 'Process errors', 'Missed task', 'Missing referral visits', 'Patient referred but doesn''t attend') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-5', 'Missed treatment', 'Process errors', 'Missed task', 'Inconsistencies in treatment data, outliers', 'No Malaria treatment after diagnosis; Underreporting immunization') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-6', 'Missed CHW supervision', 'Process errors', 'Missed task', 'Missed supervision forms', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MISSED-7', 'Missed family planning', 'Process errors', 'Missed task', 'No FP for relevant househould, outliers', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('FOLLOWUP-1', 'Unrealistically fast followup', 'Process errors', 'Incorrect followup', 'Unrealistically fast followups', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('MULTIEVENTS-1', 'Mutiple same day events', 'Process errors', 'Multiple events', 'Mutiple same day events', '') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('ASSESS-1', 'Inconsistent data', 'Process errors', 'Incorrect assessment', 'Outliers', 'Jaundice alert=No when fever+jaundice; ') ON CONFLICT (scenario_id) DO NOTHING;
+INSERT INTO dot.scenarios VALUES('TREAT-1', 'Incorrect treatment', 'Process errors', 'Incorrect treatment', 'Outliers', 'Drug protocol not followed for Malaria treatment; FP for people on tubal ligation, pregnant or had vasectomy') ON CONFLICT (scenario_id) DO NOTHING;
 
 -- dot.test_types
 INSERT INTO dot.test_types VALUES('relationships', 'dbt', 'Test missing relationships between records', 'multi_table',  true, true);
