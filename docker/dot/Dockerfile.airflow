@@ -1,7 +1,7 @@
-# Start with the exact same Airflow image you are already using
+# Start with the exact same Airflow image from Docker Hub
 FROM apache/airflow:2.2.4-python3.8
 
-# Switch to the root user to install system-level dependencies if needed
+# Switch to the root user to install system-level dependencies
 USER root
 
 RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
@@ -18,9 +18,9 @@ RUN apt-get -y install postgresql-client
 # Switch back to the 'airflow' user (best practice for Airflow images)
 USER airflow
 
-# Copy your DOT requirements and install script
+# Copy DOT requirements and install script
 COPY --chown=airflow:root ./dot/requirements_dot.txt /tmp/requirements_dot.txt
 COPY --chown=airflow:root ./dot/install_dot.sh /tmp/install_dot.sh
 
-# Run your install script
+# Run install script
 RUN chmod +x /tmp/install_dot.sh && cd /tmp && ./install_dot.sh
