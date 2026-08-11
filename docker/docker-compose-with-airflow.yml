@@ -201,7 +201,7 @@ services:
     image: dot-airflow-worker:latest
     build:
       context: ..
-      dockerfile: ./docker/dot/Dockerfile
+      dockerfile: ./docker/dot/Dockerfile.airflow
     command: celery worker
     restart: always
 
