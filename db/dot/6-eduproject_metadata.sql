@@ -35,19 +35,19 @@ ON CONFLICT (test_type) DO NOTHING;
 insert into dot.configured_entities values('EduProject', 'students_data', 'EDU', 
 '{{  config(materialized=''view'')  }}
 {% set schema = <schema> %}
-select * 
+select student_id as uuid, first_name, last_name, enrollment_date, status
 from {{  schema  }}.students ', NOW(), NOW(), 'admin');
 
 insert into dot.configured_entities values('EduProject', 'enrollments_data', 'EDU', 
 '{{  config(materialized=''view'')  }}
 {% set schema = <schema> %}
-select * 
+select enrollment_id as uuid, student_id, course_id, semester, dropped
 from {{  schema  }}.enrollments ', NOW(), NOW(), 'admin');
 
 insert into dot.configured_entities values('EduProject', 'excel_grades', 'EDU', 
 '{{  config(materialized=''view'')  }}
 {% set schema = <schema> %}
-select * 
+select grade_id as uuid, enrollment_id, score
 from {{  schema  }}.excel_grades ', NOW(), NOW(), 'admin');
 
 -- 4. Insert Tests
@@ -74,5 +74,5 @@ true,
 -- dbt custom sql test (conflict detection)
 insert into dot.configured_tests values (
 true, 'EduProject', '11111111-1111-1111-1111-111111111111', 'TREAT-1', 5, 'Custom sql test to check course', '', '', 'enrollments_data', 'custom_sql', '', '',
-format('{%s:%s}', to_json('query'::text), to_json($query$ SELECT e.enrollment_id, 'dot_model__enrollments_data' as primary_table, 'enrollment_id' as primary_table_id_field, e.student_id, e.course_id, e.semester, e.dropped FROM {{ ref('dot_model__enrollments_data') }} e INNER JOIN ( SELECT student_id, course_id, semester FROM {{ ref('dot_model__enrollments_data') }} e WHERE dropped = FALSE GROUP BY student_id, course_id, semester HAVING COUNT(*) > 1 ) AS duplicates ON e.student_id = duplicates.student_id AND e.course_id = duplicates.course_id AND e.semester = duplicates.semester WHERE e.dropped = false $query$::text) )::json,
+format('{%s:%s}', to_json('query'::text), to_json($query$ SELECT e.uuid, 'dot_model__enrollments_data' as primary_table, 'uuid' as primary_table_id_field, e.student_id, e.course_id, e.semester, e.dropped FROM {{ ref('dot_model__enrollments_data') }} e INNER JOIN ( SELECT student_id, course_id, semester FROM {{ ref('dot_model__enrollments_data') }} e WHERE dropped = FALSE GROUP BY student_id, course_id, semester HAVING COUNT(*) > 1 ) AS duplicates ON e.student_id = duplicates.student_id AND e.course_id = duplicates.course_id AND e.semester = duplicates.semester WHERE e.dropped = false $query$::text) )::json,
 NOW(), NOW(), 'admin');
