@@ -1,5 +1,5 @@
 #version: '3.1'
-version: '2.1'
+# version: '2.1'
 
 #
 # https://airflow.apache.org/docs/apache-airflow/2.2.1/start/docker.html
@@ -44,7 +44,8 @@ version: '2.1'
 
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.2.4}
+  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.2.4}
+  image: apache/airflow:2.2.4-python3.8
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -53,7 +54,7 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    # AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
     PYTHON_BASE_IMAGE: "python:3:8-slim-buster"
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -90,6 +91,15 @@ services:
       volumes:
           - .:/db_dumps
           - ../db/dot:/docker-entrypoint-initdb.d
+
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./appsmith/stacks:/appsmith-stacks
 
   # Not needed here, because we deploy DOT to airflow worker
   #dot:
@@ -188,6 +198,10 @@ services:
 
   airflow-worker:
     <<: *airflow-common
+    image: dot-airflow-worker:latest
+    build:
+      context: ..
+      dockerfile: ./docker/dot/Dockerfile.airflow
     command: celery worker
     restart: always
 
