@@ -1,4 +1,4 @@
-INSERT INTO dot.projects SELECT 'ScanProject1', 'Scan 1 project', true, 'public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
+INSERT INTO dot.projects SELECT 'ScanProject1', 'Scan 1 project', true, 'data_dot_data_public', null, '2021-12-07 00:00:00+00','2021-12-07 00:00:00+00','Matt';
 
 -- entity categories
 INSERT INTO dot.entity_categories VALUES('ALL', 'All flights');

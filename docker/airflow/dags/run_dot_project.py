@@ -25,7 +25,8 @@ def get_object(
         date_field,
         source_conn_in,
         columns_to_exclude,
-):
+        source_schema_in,
+        ):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -49,7 +50,7 @@ def get_object(
 
     sql_stmt = (
             "SELECT * FROM "
-            + connection.schema
+            + source_schema_in
             + "."
             + object_name_in
     )
@@ -71,7 +72,7 @@ def get_object(
             + object_name_in
             + "'"
             + "AND table_schema = '"
-            + connection.schema
+            + source_schema_in
             + "' "
             + " ORDER BY ordinal_position "
     )
@@ -93,7 +94,7 @@ def get_object(
                 + " WHERE a.attnum > 0 "
                 + "  AND NOT a.attisdropped "
                 + " AND t.relname = '" + object_name_in + "' "
-                + " AND s.nspname = '" + connection.schema + "' "
+                + " AND s.nspname = '" + source_schema_in + "' "
                 + " ORDER BY a.attnum; "
         )
         print(sql_stmt)
@@ -136,8 +137,9 @@ def get_object(
 
 
 def save_object(
-        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in
-):
+        object_name_in, target_conn_in, data_in, column_list_in, type_list_in, source_db_in, source_schema_in,
+        date_field=None, id_field=None
+        ):
     """
 
     Saves data to target DOT database in data schema.
@@ -156,11 +158,14 @@ def save_object(
        List of table column types for target table
     source_db_in: String
        Name of source database (same as source connid string)
-
+    source_schema_in: String
+       Name of source schema
     """
 
-    # Temporary, replace existing data. TODO support delta loads
-    MODE = "replace"
+    if date_field:
+        MODE = "append"
+    else:
+        MODE = "replace"
 
     connection = BaseHook.get_connection(target_conn_in)
     connection_string = (
@@ -184,7 +189,7 @@ def save_object(
         executemany_batch_page_size=200,
     )
 
-    schema = "data_" + source_db_in.replace("-", "_")
+    schema = "data_" + source_db_in.replace("-", "_") + '_' + source_schema_in.replace("-", "_")
 
     # Cascade drop target table if in replace mode.
     # This will also drop any DOT model views onto this data
@@ -196,6 +201,29 @@ def save_object(
             query = f"DROP TABLE IF EXISTS {schema}.{object_name_in} CASCADE;"
             print(query)
             cur.execute(query)
+    elif MODE == "append":
+        with PostgresHook(
+                postgres_conn_id=target_conn_in, schema=target_conn_in
+        ).get_conn() as conn:
+            cur = conn.cursor()
+            # Check if target table exists first
+            cur.execute(f"SELECT to_regclass('{schema}.{object_name_in}');")
+            if cur.fetchone()[0] is not None:
+                if id_field and not data_in.empty:
+                    # Delete overlapping rows by ID before appending
+                    ids = tuple(data_in[id_field].tolist())
+                    if len(ids) > 0:
+                        print(f"Deleting {len(ids)} overlapping rows from {schema}.{object_name_in}")
+                        # Chunk the IDs to avoid hitting max parameters limit in Postgres
+                        chunk_size = 1000
+                        for i in range(0, len(ids), chunk_size):
+                            chunk = ids[i:i + chunk_size]
+                            if len(chunk) == 1:
+                                query = f"DELETE FROM {schema}.{object_name_in} WHERE {id_field} = %s"
+                                cur.execute(query, (chunk[0],))
+                            else:
+                                query = f"DELETE FROM {schema}.{object_name_in} WHERE {id_field} IN %s"
+                                cur.execute(query, (chunk,))
 
     print(data_in.info())
     print(type_list_in)
@@ -211,7 +239,7 @@ def save_object(
 
     print("Saving data to: " + schema + "." + object_name_in)
     data_in.to_sql(
-        object_name_in, engine, index=False, if_exists="replace", schema=schema
+        object_name_in, engine, index=False, if_exists=MODE, schema=schema
     )
 
     for i in range(len(column_list_in)):
@@ -234,7 +262,9 @@ def sync_object(
         source_conn_in,
         target_conn_in,
         columns_to_exclude,
-):
+        source_schema_in,
+        id_field=None,
+        ):
     """
 
     Extracts data from object in source Postgres DB and saves to target DOT database in data schema.
@@ -262,46 +292,73 @@ def sync_object(
         date_field,
         source_conn_in,
         columns_to_exclude,
+        source_schema_in,
     )
 
     # Save the data
     save_object(
-        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in
+        object_name_in, target_conn_in, data, column_list, type_list, source_conn_in, source_schema_in,
+        date_field=date_field, id_field=id_field
     )
 
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
     """
-    We are syncing new data where new columns and columns types might change.
-    Postgres will prevent ALTER TABLE if any views exist, so we will drop all tables in the dot test schema.
-    These will be recreated in the dot run.
-    This assumes the dot tests schema is dot_data_tests (defined as variable "schema_to_drop_from").
+    Clear the DOT tests schema before syncing source data.
+
+    New columns / column types can change on sync. Postgres blocks ALTER TABLE
+    while dependent views exist, so this drops views first, then any leftover
+    base tables. dbt recreates the views on the next DOT run.
 
     Input
     -----
     target_conn_in: Target database
-    schema_to_drop_from: Schema to, err, drop
+    schema_to_drop_from: Schema to clear (e.g. data_dot_data_public_tests)
 
     Action
     ------
-    1) Select schema that holds the tables which will be dropped
-    2) All tables of the selected schema are dropped from the dot_db database.
+    1) Set search_path to the tests schema
+    2) DROP VIEW for every view in that schema
+    3) DROP TABLE for every BASE TABLE in that schema
     """
 
     with PostgresHook(
             postgres_conn_id=target_conn_in, schema=target_conn_in
     ).get_conn() as conn:
         cur = conn.cursor()
-        query1 = f"SET search_path TO {schema_to_drop_from}"
-        query2 = f"DO $$ DECLARE " \
-                 f"r RECORD; " \
-                 f"BEGIN " \
-                 f"FOR r IN (SELECT table_name FROM information_schema.tables WHERE table_schema = current_schema()) " \
-                 f"LOOP	" \
-                 f"EXECUTE 'DROP TABLE IF EXISTS ' || QUOTE_IDENT(r.table_name) || ' CASCADE'; " \
-                 f"END LOOP; " \
-                 f"END $$; "
-        cur.execute(query1)
-        cur.execute(query2)
+        cur.execute(f"SET search_path TO {schema_to_drop_from}")
+        # information_schema.tables includes both views and base tables; use
+        # the matching DROP statement for each object type.
+        cur.execute(
+            """
+            DO $$
+            DECLARE
+                r RECORD;
+            BEGIN
+                FOR r IN (
+                    SELECT table_name
+                    FROM information_schema.views
+                    WHERE table_schema = current_schema()
+                )
+                LOOP
+                    EXECUTE 'DROP VIEW IF EXISTS '
+                        || quote_ident(r.table_name)
+                        || ' CASCADE';
+                END LOOP;
+
+                FOR r IN (
+                    SELECT table_name
+                    FROM information_schema.tables
+                    WHERE table_schema = current_schema()
+                      AND table_type = 'BASE TABLE'
+                )
+                LOOP
+                    EXECUTE 'DROP TABLE IF EXISTS '
+                        || quote_ident(r.table_name)
+                        || ' CASCADE';
+                END LOOP;
+            END $$;
+            """
+        )
 
 def run_dot_app(project_id_in):
     """
@@ -339,7 +396,7 @@ with DAG(
         schedule_interval="@weekly",
         start_date=datetime(year=2022, month=3, day=1),
         catchup=False,
-) as dag:
+        ) as dag:
     config = json.loads(Variable.get("dot_config", default_var=default_config().read()))
 
     """
@@ -364,13 +421,14 @@ with DAG(
         objects_to_sync = project["objects"]
         earliest_date_to_sync = project["earliest_date_to_sync"]
         source_conn = project["source_connid"]
+        source_schema = project.get("source_schema", "public")
 
         # Drop the tables in the DOT tests schema, so we can import new data, columns and types
-        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_tests"
+        schema_to_drop_from = "data_" + source_conn.replace("-", "_") + "_" + source_schema.replace("-", "_") + "_tests"
         print(schema_to_drop_from)
         af_tasks.append(
             PythonOperator(
-                task_id=f"drop_tables_from_schema__{schema_to_drop_from}",
+                task_id=f"drop_tables_from_schema_{project_id}_{schema_to_drop_from}",
                 python_callable=drop_tables_in_dot_tests_schema,
                 op_kwargs={
                     "target_conn_in": target_conn,
@@ -407,6 +465,8 @@ with DAG(
                         "source_conn_in": source_conn,
                         "target_conn_in": target_conn,
                         "columns_to_exclude": columns_to_exclude,
+                        "source_schema_in": source_schema,
+                        "id_field": id_field,
                     },
                     dag=dag,
                 )
