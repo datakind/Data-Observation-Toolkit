@@ -6,6 +6,7 @@ Could be better solved as a class with methods to read logs and get row but
 we have not used classes extensively in DOT for now
 """
 import json
+import re
 from dataclasses import dataclass
 from utils.configuration_utils import _get_filename_safely
 from utils.configuration_utils import get_dbt_config_test_paths
@@ -143,7 +144,8 @@ def process_dbt_logs_row(row: dict) -> dict:
     test_parameters = _get_test_parameters(node, test_type)
 
     # For custom sql tests the view name has "id_XX" at the end, needs to be stripped
-    entity_id = entity_id.split("_id")[0]
+    if test_type == "custom_sql":
+        entity_id = re.sub(r"_id\d+$", "", entity_id)
 
     _, short_test_name = get_short_test_name(node)
 
