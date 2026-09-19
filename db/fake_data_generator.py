@@ -1,3 +1,20 @@
+import subprocess
+import sys
+
+# Required Libraries
+required_libraries = [
+    "pandas",
+    "faker",
+    "faker_airtravel",
+    "flatten_json",
+    "numpy"
+]
+for library in required_libraries:
+    try:
+        __import__(library)
+    except ImportError:
+        print(f"Installing {library}...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", library])
 """
 This script will generate fake data which can be used to demo DOT. See below
 for code to generate each test type scenario. Script saves a sql file in ./dot which
