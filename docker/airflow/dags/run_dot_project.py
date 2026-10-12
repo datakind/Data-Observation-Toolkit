@@ -271,37 +271,62 @@ def sync_object(
 
 def drop_tables_in_dot_tests_schema(target_conn_in, schema_to_drop_from):
     """
-    We are syncing new data where new columns and columns types might change.
-    Postgres will prevent ALTER TABLE if any views exist, so we will drop all tables in the dot test schema.
-    These will be recreated in the dot run.
-    This assumes the dot tests schema is dot_data_tests (defined as variable "schema_to_drop_from").
+    Clear the DOT tests schema before syncing source data.
+
+    New columns / column types can change on sync. Postgres blocks ALTER TABLE
+    while dependent views exist, so this drops views first, then any leftover
+    base tables. dbt recreates the views on the next DOT run.
 
     Input
     -----
     target_conn_in: Target database
-    schema_to_drop_from: Schema to, err, drop
+    schema_to_drop_from: Schema to clear (e.g. data_dot_data_public_tests)
 
     Action
     ------
-    1) Select schema that holds the tables which will be dropped
-    2) All tables of the selected schema are dropped from the dot_db database.
+    1) Set search_path to the tests schema
+    2) DROP VIEW for every view in that schema
+    3) DROP TABLE for every BASE TABLE in that schema
     """
 
     with PostgresHook(
             postgres_conn_id=target_conn_in, schema=target_conn_in
     ).get_conn() as conn:
         cur = conn.cursor()
-        query1 = f"SET search_path TO {schema_to_drop_from}"
-        query2 = f"DO $$ DECLARE " \
-                 f"r RECORD; " \
-                 f"BEGIN " \
-                 f"FOR r IN (SELECT table_name FROM information_schema.tables WHERE table_schema = current_schema()) " \
-                 f"LOOP	" \
-                 f"EXECUTE 'DROP TABLE IF EXISTS ' || QUOTE_IDENT(r.table_name) || ' CASCADE'; " \
-                 f"END LOOP; " \
-                 f"END $$; "
-        cur.execute(query1)
-        cur.execute(query2)
+        cur.execute(f"SET search_path TO {schema_to_drop_from}")
+        # information_schema.tables includes both views and base tables; use
+        # the matching DROP statement for each object type.
+        cur.execute(
+            """
+            DO $$
+            DECLARE
+                r RECORD;
+            BEGIN
+                FOR r IN (
+                    SELECT table_name
+                    FROM information_schema.views
+                    WHERE table_schema = current_schema()
+                )
+                LOOP
+                    EXECUTE 'DROP VIEW IF EXISTS '
+                        || quote_ident(r.table_name)
+                        || ' CASCADE';
+                END LOOP;
+
+                FOR r IN (
+                    SELECT table_name
+                    FROM information_schema.tables
+                    WHERE table_schema = current_schema()
+                      AND table_type = 'BASE TABLE'
+                )
+                LOOP
+                    EXECUTE 'DROP TABLE IF EXISTS '
+                        || quote_ident(r.table_name)
+                        || ' CASCADE';
+                END LOOP;
+            END $$;
+            """
+        )
 
 def run_dot_app(project_id_in):
     """
