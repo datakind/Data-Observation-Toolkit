@@ -20,7 +20,93 @@ GE_CONFIG_VARIABLES_FINAL_FILENAME = (
 )
 DBT_MODELNAME_PREFIX = "dot_model__"
 
+# Matches ref('dot_model__entity') or ref("dot_model__entity")
+_DBT_REF_PATTERN = re.compile(
+    r"""^ref\(\s*['"]""" + re.escape(DBT_MODELNAME_PREFIX) + r"""([^'"]+)['"]\s*\)$"""
+)
+
 DBT_PROJECT_SEPARATOR = "/"
+
+
+def to_bare_entity_id(value) -> Optional[str]:
+    """
+    Normalize a stored entity reference to a bare entity_id.
+
+    Accepts bare ids, `dot_model__{id}`, or `ref('dot_model__{id}')`.
+    Returns None for empty/non-string values.
+    """
+    if value is None or not isinstance(value, str):
+        return None
+    value = value.strip()
+    if not value:
+        return None
+
+    ref_match = _DBT_REF_PATTERN.match(value)
+    if ref_match:
+        return ref_match.group(1)
+
+    if value.startswith(DBT_MODELNAME_PREFIX):
+        return value[len(DBT_MODELNAME_PREFIX) :]
+
+    return value
+
+
+def to_dbt_ref(value) -> Optional[str]:
+    """Convert an entity reference to `ref('dot_model__{entity_id}')`."""
+    entity_id = to_bare_entity_id(value)
+    if entity_id is None:
+        return value if isinstance(value, str) else value
+    return f"ref('{DBT_MODELNAME_PREFIX}{entity_id}')"
+
+
+def to_dbt_table(value) -> Optional[str]:
+    """Convert an entity reference to a physical `dot_model__{entity_id}` table name."""
+    entity_id = to_bare_entity_id(value)
+    if entity_id is None:
+        return value if isinstance(value, str) else value
+    return f"{DBT_MODELNAME_PREFIX}{entity_id}"
+
+
+def prepare_test_parameters(test_type: str, params) -> dict:
+    """
+    Adapt stored test_parameters for DBT/GE artifact generation.
+
+    Stores may use bare entity_ids; legacy rows may still use ref()/dot_model__
+    prefixes. Also aliases legacy keys (reference→to, form_name→data_table,
+    table_specific_*→generic names for possible_duplicate_forms).
+    """
+    if params in ("", None, "null") or not isinstance(params, dict):
+        return params
+
+    prepared = dict(params)
+
+    if test_type == "relationships":
+        if "to" not in prepared and "reference" in prepared:
+            prepared["to"] = prepared.pop("reference")
+        if "to" in prepared and prepared["to"] not in ("", None):
+            prepared["to"] = to_dbt_ref(prepared["to"])
+
+    elif test_type == "expect_similar_means_across_reporters":
+        if "data_table" not in prepared and "form_name" in prepared:
+            prepared["data_table"] = prepared.pop("form_name")
+        for key in ("data_table", "target_table"):
+            if key in prepared and prepared[key] not in ("", None):
+                prepared[key] = to_dbt_table(prepared[key])
+
+    elif test_type == "possible_duplicate_forms":
+        _LEGACY_DUPLICATE_KEYS = {
+            "table_specific_reported_date": "date_column",
+            "table_specific_patient_uuid": "group_column",
+            "table_specific_uuid": "id_column",
+            "table_specific_period": "period",
+        }
+        for legacy_key, new_key in _LEGACY_DUPLICATE_KEYS.items():
+            if new_key not in prepared and legacy_key in prepared:
+                prepared[new_key] = prepared.pop(legacy_key)
+            elif legacy_key in prepared:
+                prepared.pop(legacy_key)
+
+    return prepared
 
 
 def _get_filename_safely(path: str) -> str:

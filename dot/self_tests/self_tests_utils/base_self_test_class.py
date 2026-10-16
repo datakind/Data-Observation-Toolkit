@@ -33,6 +33,8 @@ class BaseSelfTestClass(unittest.TestCase):
     db connection
     """
 
+    project_id = "ScanProject1"
+
     @classmethod
     def setUpClass(cls):
         # prepare dir for output files
@@ -75,6 +77,7 @@ class BaseSelfTestClass(unittest.TestCase):
         self,
         mock_get_filename_safely,
         connection: DbParamsConnection = DbParamsConnection["dot"],
+        project_id: Optional[str] = None,
     ) -> Tuple[
         str, sa.engine.base.Engine, pg.extensions.connection
     ]:  # pylint: disable=no-value-for-parameter
@@ -86,6 +89,8 @@ class BaseSelfTestClass(unittest.TestCase):
         mock_get_filename_safely
         connection: DbParamsConnection
             enum for the connection to dot
+        project_id: Optional[str]
+            project id to use for connection, falls back to self.project_id
 
         Returns
         -------
@@ -97,7 +102,7 @@ class BaseSelfTestClass(unittest.TestCase):
         schema, engine, conn = get_db_params_from_config(
             DbParamsConfigFile["dot_config.yml"],
             connection,
-            "ScanProject1",  # TODO maybe should be a parameter; at least configurable somehow
+            project_id or self.project_id,
         )
 
         return schema, engine, conn
@@ -108,6 +113,7 @@ class BaseSelfTestClass(unittest.TestCase):
         conn: Optional[pg.extensions.connection] = None,
         cursor: Optional[pg.extensions.cursor] = None,
         debug: bool = False,
+        project_id: Optional[str] = None,
     ) -> None:
         """
         Drops the self tests' schema
@@ -123,30 +129,46 @@ class BaseSelfTestClass(unittest.TestCase):
             cursor within `conn`, if not provided will figure out
         debug:
             if True, it does not drop the schemas
+        project_id: Optional[str]
+            project id to use for connection, falls back to self.project_id
 
         Returns
         -------
 
         """
-        # TODO drop self_tests_public and self_test_public_tests
         if debug:
             return
 
-        if schema is None or conn is None:
+        if conn is None:
             (
-                schema,
+                _,
                 _,
                 conn,
-            ) = self.get_self_tests_db_conn()  # pylint: disable=no-value-for-parameter
+            ) = self.get_self_tests_db_conn(project_id=project_id)  # pylint: disable=no-value-for-parameter
 
         if cursor is None:
             cursor = conn.cursor()
 
-        query_drop = sql.SQL("drop schema if exists {name} cascade").format(
-            name=sql.Identifier(schema)
-        )
-        cursor.execute(query_drop)
-        conn.commit()
+        if schema is None:
+            schemas = []
+            for member in list(DbParamsConnection.__members__):
+                (sch, _, _) = self.get_self_tests_db_conn(
+                    connection=DbParamsConnection[member],
+                    project_id=project_id,
+                )
+                schemas.append(sch)
+            schemas_to_drop = {sch for sch in schemas if sch != "public"}
+        elif schema == "public":
+            return
+        else:
+            schemas_to_drop = {schema}
+
+        for sch in schemas_to_drop:
+            query_drop = sql.SQL("drop schema if exists {name} cascade").format(
+                name=sql.Identifier(sch)
+            )
+            cursor.execute(query_drop)
+            conn.commit()
 
     @staticmethod
     def get_queries_from_file(f, dot_schema, public_schema):
@@ -169,8 +191,13 @@ class BaseSelfTestClass(unittest.TestCase):
         for line in lines:
             if "create schema" in line.lower():
                 continue
+            # Preserve public schema refs for uuid-ossp (extension + function calls)
+            line = line.replace("WITH SCHEMA public", "@@UUID_SCHEMA@@")
+            line = line.replace("public.uuid_", "@@UUID_OSSP@@")
             line = line.replace("dot.", f"{dot_schema}.")
             line = line.replace("public.", f"{public_schema}.")
+            line = line.replace("@@UUID_OSSP@@", "public.uuid_")
+            line = line.replace("@@UUID_SCHEMA@@", "WITH SCHEMA public")
             all_query_lines.append(line)
         return all_query_lines
 
@@ -184,6 +211,7 @@ class BaseSelfTestClass(unittest.TestCase):
             "../db/dot/4-upload_sample_dot_data.sql",
         ],
         do_recreate_schema: bool = True,
+        project_id: Optional[str] = None,
     ):
         """
         Creates the self tests' schema and runs the queries in `additional_query`
@@ -199,6 +227,8 @@ class BaseSelfTestClass(unittest.TestCase):
             list of paths of the files that e.g. uploads the static data, creates project, etc
         do_recreate_schema
             drops and recreates the schema, True by default
+        project_id
+            project id to use for connection, falls back to self.project_id
 
         Returns
         -------
@@ -207,7 +237,8 @@ class BaseSelfTestClass(unittest.TestCase):
         schema_list = []
         for member in list(DbParamsConnection.__members__):
             (schema, _, _) = self.get_self_tests_db_conn(
-                connection=DbParamsConnection[member]
+                connection=DbParamsConnection[member],
+                project_id=project_id,
             )
             schema_list.append(schema)
 
@@ -215,20 +246,45 @@ class BaseSelfTestClass(unittest.TestCase):
             schema_dot,
             _,
             conn,
-        ) = self.get_self_tests_db_conn()  # pylint: disable=no-value-for-parameter
+        ) = self.get_self_tests_db_conn(project_id=project_id)  # pylint: disable=no-value-for-parameter
 
         (
             schema_project,
             _,
             conn,
-        ) = self.get_self_tests_db_conn(connection=DbParamsConnection.project)
+        ) = self.get_self_tests_db_conn(
+            connection=DbParamsConnection.project,
+            project_id=project_id,
+        )
 
         cursor = conn.cursor()
 
         try:
+            # This DB may not have a public schema; triggers call public.uuid_*
+            # Note: get_queries_from_file skips CREATE SCHEMA lines, so do this here.
+            cursor.execute("CREATE SCHEMA IF NOT EXISTS public")
+            cursor.execute(
+                'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public'
+            )
+            try:
+                # Move if it was previously installed into another schema (e.g. dot)
+                cursor.execute('ALTER EXTENSION "uuid-ossp" SET SCHEMA public')
+            except Exception:
+                pass
+            cursor.execute(
+                sql.SQL("SET search_path TO public, {}, {}").format(
+                    sql.Identifier(schema_dot),
+                    sql.Identifier(schema_project),
+                )
+            )
+            conn.commit()
+
             if do_recreate_schema:
                 for sch in set(schema_list):
-                    self.drop_self_tests_db_schema(sch, conn, cursor)
+                    # Never drop public — uuid-ossp and system objects live there
+                    if sch == "public":
+                        continue
+                    self.drop_self_tests_db_schema(sch, conn, cursor, project_id=project_id)
 
                     query_create = sql.SQL(
                         """

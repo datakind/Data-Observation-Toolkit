@@ -1,12 +1,18 @@
 FROM python:3.8-slim-buster
 
 WORKDIR app/
+# Switch to the root user to install system-level dependencies if needed
+USER root
 
-RUN apt-get update
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i '/buster-updates/d' /etc/apt/sources.list \
+ && printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99no-check-valid-until \
+ && rm -f /etc/apt/sources.list.d/pgdg.list \
+ && rm -f /etc/apt/sources.list.d/mssql-release.list \
+ && apt-get update
 
 RUN pip install --upgrade pip
-
-RUN apt-get update && apt-get install -y gcc build-essential
 
 # This uses the requirements as defined in the dot directory
 COPY ./dot/requirements_dot.txt requirements_dot.txt
