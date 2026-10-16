@@ -2,18 +2,15 @@
     "target_connid": "dot_db",
     "dot_projects":[
         {
-            "project_id":"ScanProject1",
-            "source_connid": "dot_data",
+            "source_type": "BigQuery",
+            "project_id":"UDTSProject",
+            "source_connid": "staging-udts-01",
+            "source_schema": "synth_demo_gold_dhss_demo01_static",
             "earliest_date_to_sync":"2021-10-02",
             "objects":[
                 {
-                    "object":"airport_data",
-                    "id_field":"uuid"
-                },
-                {
-                    "object":"flight_data",
-                    "id_field":"uuid",
-                    "date_field":"departure_time"
+                    "object":"Enrollment",
+                    "id_field":"OrganizationIdentifier"
                 }
             ]
         }

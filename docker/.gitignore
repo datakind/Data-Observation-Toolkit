@@ -4,3 +4,8 @@
 
 # Airflow stuff:
 airflow/logs
+airflow/dags/.ipynb_checkpoints/
+# Local exploration notebook; it contains connection details
+airflow/dags/*.ipynb
+# Schema dump produced while inspecting a BigQuery table
+airflow/dags/schema.jsonl

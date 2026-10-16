@@ -16,4 +16,13 @@ docker/cookie
 .DS_Store
 
 .idea*
-__pycache__
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+
+# Great Expectations local store id, wherever a run creates it
+.ge_store_backend_id
+
+# Local DBeaver scripts, not part of the toolkit
+db/dot/Scripts

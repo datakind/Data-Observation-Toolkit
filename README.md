@@ -377,7 +377,7 @@ generated one.
     ```
     'INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'ASSESS-1', 3, '', '', 
     '', 'ancview_pregnancy', 'relationships', 'uuid', '', 
-    $${"name": "danger_signs_with_no_pregnancy", "to": "ref('dot_model__ancview_danger_sign')", "field": "pregnancy_uuid"}$$, 
+    $${"name": "danger_signs_with_no_pregnancy", "to": "ancview_danger_sign", "field": "pregnancy_uuid"}$$, 
     '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 2. `unique`
@@ -413,7 +413,7 @@ generated one.
     ```
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '7f78de0e-8268-3da6-8845-9a445457cc9a', 'DUPLICATE-1', 3, '', 
     '', '', 'ancview_pregnancy', 'possible_duplicate_forms', '', '', 
-    $${"table_specific_reported_date": "delivery_date", "table_specific_patient_uuid": "patient_id", "table_specific_uuid": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
+    $${"date_column": "delivery_date", "group_column": "patient_id", "id_column": "uuid"}$$, '2021-12-23 19:00:00.000 -0500', '2021-12-23 19:00:00.000 -0500', 'your-name');
     ```
 7. `associated_columns_not_null`
     <br><br>
@@ -429,7 +429,7 @@ generated one.
     INSERT INTO dot.configured_tests VALUES(TRUE, 'ScanProject1', '0cdc9702-91e0-3499-b6f0-4dec12ad0f08', 'BIAS-1', 3, 
     'Test for miscalibrated thermometer', '', '', 'ancview_pregnancy', 'expect_similar_means_across_reporters', 
     'child_temperature_pre_chw', '', '{"key": "reported_by","quantity": "child_temperature_pre_chw",
-    "form_name": "dot_model__iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', 
+    "data_table": "iccmview_assessment","id_column": "reported_by"}', '2022-01-19 20:00:00.000 -0500', 
     '2022-01-19 20:00:00.000 -0500', 'your-name');
     ```
 9. `expression_is_true`
