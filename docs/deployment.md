@@ -6,6 +6,8 @@ This guide covers all deployment and setup instructions for the Data Observation
 - [The Not-So-Quick Start: Manual Docker Build](#the-not-so-quick-start-manual-docker-build)
 - [Setting up the DOT User Interface (Appsmith)](#setting-up-the-dot-user-interface-appsmith)
 - [Deploying with Apache Airflow](#deploying-with-apache-airflow)
+  - [Incremental Data Synchronization](#incremental-data-synchronization)
+- [Connecting Airflow to an External Database](#connecting-airflow-to-an-external-database)
 - [Migrating to AWS EC2](#migrating-to-aws-ec2)
 
 ---
@@ -167,7 +169,52 @@ The central registry for all Airflow extractions is `docker/airflow/dags/dot_pro
 - `project_id`: The project identifier (e.g., `ScanProject1`).
 - `source_connid`: Must match the Conn Id you just created in Airflow.
 - `source_schema`: The specific schema to extract data from (defaults to `public`).
-- `earliest_date_to_sync`: Used for incremental append loads.
+- `earliest_date_to_sync`: Fixed date cutoff. Required on every project. It is applied only to objects that set `date_field`.
+- `objects`: The tables or views to copy. Each entry needs `object` and `id_field`. Add `date_field` on an entry to load that object incrementally.
+
+#### Incremental Data Synchronization
+
+Each object defines its own load mode independently. The `earliest_date_to_sync` field does not determine the mode — the presence or absence of `date_field` on each object does.
+
+**Full replace (no `date_field`):**
+Airflow copies the entire source object, drops the existing target table (`DROP TABLE ... CASCADE`), and loads the fresh copy in its place. In the demo, `airport_data` is loaded this way.
+
+**Incremental append (`date_field` set):**
+Airflow extracts only rows on or after the project cutoff:
+
+```sql
+SELECT * FROM <source_schema>.<object>
+WHERE <date_field> >= '<earliest_date_to_sync>'
+```
+
+The cutoff is always the `earliest_date_to_sync` value defined in `dot_projects.json` — it is not dynamically updated to the latest timestamp already stored in the target. The comparison is inclusive (rows on that date are included).
+
+Before appending, if the target table already exists, Airflow deletes any rows in the target whose `id_field` value appears in the incoming batch, then appends the new batch. This means a source row that was updated and still falls on or after the cutoff date will be replaced in the target. However, a row that was deleted from the source, or a correction made to a row older than the cutoff, will remain in the target unchanged. Use full replace when your source data deletes rows or corrects older records.
+
+> **Note:** `date_field` and `id_field` are set per object in `dot_projects.json`. They are not read from `dot.configured_entities`.
+
+**Example `dot_projects.json` entry:**
+```json
+{
+  "project_id": "ScanProject1",
+  "source_connid": "dot_data",
+  "source_schema": "public",
+  "earliest_date_to_sync": "2021-10-02",
+  "objects": [
+    {
+      "object": "airport_data",
+      "id_field": "uuid"
+    },
+    {
+      "object": "flight_data",
+      "id_field": "uuid",
+      "date_field": "departure_time"
+    }
+  ]
+}
+```
+
+In this example, `airport_data` is fully replaced on every run. `flight_data` is loaded incrementally: only rows with a `departure_time` on or after `2021-10-02` are extracted, and any existing target rows with matching `uuid` values are deleted before the new batch is appended.
 
 ### 5. Define the Database Connections (`dot_config.yml`)
 
@@ -182,6 +229,39 @@ For full details on the registry, see the [Database Connection Registry](./archi
 *(To learn how to execute this DAG, refer to [execution.md](./execution.md)).*
 
 ---
+
+## Connecting Airflow to an External Database
+
+The demo copies data from `dot_data`, a database created inside the DOT Postgres container. To sync from your own Postgres database, including a Postgres-compatible host such as Supabase, point the Airflow **source** connection at that database. The sync path uses Postgres.
+
+> **Note:** Keep the Airflow UI off the public internet. Use a firewall, a strong password, or a VPN or SSH tunnel before connecting Airflow to a database outside your machine.
+
+### Steps
+
+1. **Create the Airflow source connection.** In the Airflow UI (**Admin > Connections**), add a new connection for your external database. Enter the external host, port, and credentials here. Leave the **Schema** and **Database** fields blank — the schema is read from `source_schema` in `dot_projects.json` at runtime by the `get_object` task.
+
+2. **Point `dot_projects.json` at that connection.** Set `source_connid` to the Conn Id you created in step 1, and set `source_schema` to the schema you want to copy from (for example, `public`). Copy the file to `./docker/airflow/dags/` if it is not already there.
+
+3. **Keep the `{project_id}_db` block pointed at the DOT database.** In `./docker/dot/dot_config.yml`, this block is used by dbt and Great Expectations after the data has been copied. Its `host` should remain the DOT Postgres instance, and its `schema` should be the destination schema Airflow created, formatted as `data_<source_connid>_<source_schema>`. Do not set the external host or source schema in this block. For details, see the [Database Connection Registry](./architecture_and_troubleshooting.md#database-connection-registry-dot_configyml).
+
+4. **Start Airflow.** From `./docker`, initialize and start the stack:
+   ```bash
+   docker compose -f docker-compose-with-airflow.yml up airflow-init
+   docker compose -f docker-compose-with-airflow.yml up -d
+   ```
+
+5. **Add another project.** To add a second project, add a new entry under `dot_projects` in `dot_projects.json` and a corresponding `{project_id}_db` block in `dot_config.yml`.
+
+### What to set on the Airflow source connection
+
+| Field | What to use |
+| :--- | :--- |
+| **Conn Id** | Must match `source_connid` in `dot_projects.json` |
+| **Conn Type** | `Postgres` |
+| **Host** | The external database hostname or IP |
+| **Login / Password** | Credentials for that database |
+| **Port** | The database port (default `5432` for Postgres) |
+| **Schema / Database** | Leave **blank**. DOT applies `source_schema` at runtime. |
 
 ## Migrating to AWS EC2
 
