@@ -10,6 +10,7 @@ This document provides a deep dive into the internal architecture of DOT (dbt an
   - [Database Schema](#database-schema)
 - [How to Visualize Results Using Superset](#how-to-visualize-results-using-superset)
 - [How DOT Works](#how-dot-works)
+- [Developing DOT](#developing-dot)
 - [Troubleshooting Port Conflicts](#troubleshooting-port-conflicts)
 - [Useful Database Queries](#useful-database-queries)
 
@@ -288,6 +289,36 @@ The DOT works with a few assumptions about what an expectation should accept and
 
 </details>
 
+
+---
+
+## Developing DOT
+
+DOT is open source. All contributions — whether fixing a bug, adding a new test type, or improving the UI — should follow the code quality standards and self-test guidelines maintained in [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+Key topics covered there:
+
+- **Getting started** — how to open issues and submit pull requests via GitHub.
+- **Self-tests** — how to run the DOT self-test suite (via Docker or locally), guidelines for writing new tests, and how the test base class works.
+- **Code quality** — enforced via [`black`](https://pypi.org/project/black/) (formatter) and [`pylint`](https://pylint.org/) (linter), with a minimum pylint score of 7. Both tools are integrated as a pre-commit hook via `setup_hooks.sh`.
+- **GitHub workflow** — the gitflow branching model, PR process, and commit tips.
+- **Continuous Integration** — GitHub Actions configuration (`.github/workflows/lint.yml`).
+
+### Quick Reference: Running Self-Tests
+
+If you already have the Docker containers running and just need the commands:
+
+```bash
+# Enter the DOT container
+docker exec -it dot /bin/bash
+
+# Run all self-tests
+pytest dot/self_tests/unit
+```
+
+For the full local setup (conda environment, local Postgres, config file), see [Running DOT without using Docker](../CONTRIBUTING.md#running-dot-without-using-docker) in `CONTRIBUTING.md`.
+
+---
 
 ## Troubleshooting Port Conflicts
 

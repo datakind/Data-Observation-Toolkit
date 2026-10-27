@@ -74,4 +74,4 @@ If you want to move beyond the Quick Start, please refer to our detailed documen
 - 🚀 **[Deployment Guide](./docs/deployment.md)**: Instructions for manual Docker builds, Airflow orchestration, EC2 setup, and manual Appsmith setup.
 - ⚙️ **[Configuration Guide](./docs/configuration.md)**: Instructions for adding entities and configuring tests (via the UI or Raw SQL).
 - 🏃 **[Execution Guide](./docs/execution.md)**: Instructions on how to manually trigger pipelines or execute Airflow DAGs.
-- 🏗️ **[Architecture & Troubleshooting](./docs/architecture_and_troubleshooting.md)**: Deep dive into dbt/Great Expectations internals, the full DB schema, Superset visualization, port troubleshooting, and useful database queries.
+- 🏗️ **[Architecture & Troubleshooting](./docs/architecture_and_troubleshooting.md)**: Deep dive into dbt/Great Expectations internals, the full DB schema, Superset visualization, port troubleshooting, useful database queries, and contributing/development guidelines.
