@@ -8,9 +8,9 @@ This document provides a deep dive into the internal architecture of DOT (dbt an
   - [dbt Integration](#dbt-integration)
   - [Great Expectations Integration](#great-expectations-integration)
   - [Database Schema](#database-schema)
-- [How to Visualize Results Using Superset](#how-to-visualize-results-using-superset)
-- [How DOT Works](#how-dot-works)
 - [Developing DOT](#developing-dot)
+  - [Self-Tests](#self-tests)
+  - [Code Quality](#code-quality)
 - [Troubleshooting Port Conflicts](#troubleshooting-port-conflicts)
 - [Useful Database Queries](#useful-database-queries)
 
@@ -77,246 +77,109 @@ Most dbt files are **dynamically written** by DOT based on the `dot.configured_e
 
 ### Database Schema
 
-The DOT database schema is defined as follows:
-
-![DOT DB Schema](../images/db_schema.png)
-
 | Table | Description |
 | :--- | :--- |
-| `projects` | Defines the projects DOT can be run for. Typically a project maps to a single source database. |
-| `configured_entities` | Holds entities: the views onto underlying data that DOT will test. |
-| `entity_categories` | Category of each entity (e.g., "Pre-natal care"). Useful for segmenting results. |
+| `projects` | Defines active projects associated with source databases. |
+| `configured_entities` | Holds views onto underlying data that DOT will test. |
 | `configured_tests` | Defines what tests to run for each project. |
-| `scenarios` | The DOT Taxonomy scenario for each test. |
 | `test_types` | Available test types (e.g., `not_null`, `unique`, `custom_sql`). |
-| `scenario_test_types` | The test types that apply for any given scenario. |
-| `test_parameters_interface` | JSON object defining interface parameters required for each test type. |
-| `run_log` | Log of DOT runs, with stop/start times and failure messages. |
-| `test_results` | Main test results table, indicating test failures at the row level. |
-| `test_results_summary` | Aggregated test results for each run. |
-| `remediation_log` | Record of remediation actions (not yet implemented). |
-
-The `test_results` table includes fields to link back to the data tested. A useful Postgres function retrieves a JSON record for the data tested — see [Viewing Raw Data for Failed Tests](#2-viewing-raw-data-for-failed-tests) below.
-
----
-
-## How to Visualize Results Using Superset
-
-At time of writing, Superset setup is not fully automated. Once your Docker containers are running for the first time, run these initialization commands:
-
-```bash
-docker exec -it superset superset fab create-admin \
-  --username admin \
-  --firstname Superset \
-  --lastname Admin \
-  --email admin@superset.com \
-  --password admin
-
-docker exec -it superset superset db upgrade
-docker exec -it superset superset init
-```
-
-You can ignore any warnings about `CACHE_TYPE` being null. Once complete, open Superset at [http://localhost:8080/login/](http://localhost:8080/login/) and log in with **admin / admin**.
-
-> **Note:** Google Chrome is recommended over Safari.
-
-### Connect to the DOT Database
-
-1. In Superset, select **Data > Databases** from the top menu.
-2. Click the **+ Database** button on the right.
-3. Choose **PostgreSQL** and enter these parameters:
-   - **Host**: `dot_db`
-   - **Database**: `dot_db`
-   - **Display name**: `dot_db`
-   - **Port**: `5432`
-   - **User**: `postgres`
-   - **Password**: `<Your POSTGRES_PASSWORD>`
-
-### Create Datasets and Charts
-
-1. Select **Data > Datasets** and click **+ DATASET**.
-2. Select the table(s) you want from the DOT database (e.g., `test_results`).
-3. Once a dataset exists, you can [create charts and dashboards](https://superset.apache.org/docs/creating-charts-dashboards/first-dashboard#adding-a-new-table).
-
-> ⚠️ **Important:** If using Superset with Docker, be sure to **export your dashboard** before rebuilding your Docker environment — you will lose it otherwise.
-
----
-
-## How DOT Works
-
-The Data Observation Toolkit uses [dbt](https://docs.getdbt.com/docs/introduction/) and [Great Expectations](https://greatexpectations.io/) as its test execution framework.
-
-Most tests are built on **dbt**, leveraging its support for base tests (not null, foreign key checks, accepted values, etc.) expressible as YAML entries, plus custom SQL tests using Jinja. **Great Expectations** adds Python-based checks for anything that cannot be expressed in SQL. For example, tests that inspect the statistical distribution of data.
-
-The sections below are detailed reference material. Click to expand.
-
----
-
-<details>
-<summary><strong>dbt: Directory Structure, Running Tests & Writing New Tests</strong></summary>
-
-### Directory Structure
-
-The [`dot/dbt`](dot/dbt) folder contains dbt models, macros, custom tests, and project files. Most of these files are dynamically written by DOT from the configured entities and tests in the `dot` schema, but note that any dbt command needs the actual files as inputs.
-
-**Core subdirectories:**
-- **`macros/`** — Jinja macros to support organized code and custom schema tests.
-- **`models/`** — The core of the dbt project. Contains both SQL for models and `.yml` files for schema tests, written from `dot.configured_entities` (models) and `dot.configured_tests` (test yml files).
-- **`tests/`** — Custom SQL tests, written from `dot.configured_tests` for tests of type `custom_sql`.
-
-**Non-version-controlled directories** (created at runtime via dbt runs):
-- **`target/`** — Compiled SQL used to create models and tests.
-- **`dbt_modules/`** — dbt plugins (e.g. `dbt_utils`) installed via `dbt deps`.
-- **`logs/`** — Logs created by dbt (not used elsewhere in the stack).
-
-**Scripts:**
-- [**`dbt.py`**](dot/utils/dbt.py) — Utilities that manage dbt job execution, create views of failing rows, generate test coverage reports, and update results to the DB.
-
-**Config files:**
-- **`dbt_project.yml`** — Defines paths to dbt assets and project-specific variables. Not in version control; it is either generated by the tool or copied from project-specific configuration.
-- **`packages.yml`** — Lists dbt plugins used.
-
-### Running Tests
-
-These commands are run by the tool internally, but useful as reference:
-
-```bash
-# Run all tests
-dbt test -m core
-
-# Run all tests for patients only
-dbt test -m patient
-
-# Run schema tests for patients only
-dbt test --schema -m patient
-
-# Run data tests for patients only
-dbt test --data -m patient
-```
-
-### Updating Models
-
-The models in the `core` folder are a dump of `dot.configured_entities`. Reference commands:
-
-```bash
-# Update all models
-dbt run -m core
-```
-
-### Writing New Tests
-
-Wherever possible, schema tests should be implemented with simple test types in `dot.configured_tests` (such as `not_null`, `unique`, `relationships`, `accepted_values`, etc.) because it minimises the need for additional SQL. The [`dbt_utils` extension](https://github.com/fishtown-analytics/dbt-utils) (already set up on this project) is useful for writing more complex versions of these kinds of tests.
-
-For tests requiring custom SQL, a new `custom_sql` row should be created in `dot.configured_tests`, which in turn creates a file in `tests/core`. For more details, refer to the [dbt section README](dot/dbt/README.md).
-
-### Making Sense of Failed Test Results
-
-The DOT runs a number of steps for generating test results:
-1. Runs `dbt test` to execute tests.
-2. Autogenerates model code only for tests that have failed; these models produce views when run.
-3. The end result is a new set of data sources (prefixed with `tr_`) containing all the rows violating a test.
-4. These failing rows are also loaded into `dot.test_results`.
-
-Use `run_everything.sh` as a quick way to run the right dbt commands in sequence and guarantee the right dependencies are in place.
-
-> **Note:** The code generated for these models is gitignored because it contains compiled SQL with specific database names instead of dbt references.
-
-dbt does support auto-generated documentation via `dbt docs generate`, viewable with `dbt docs serve`. However, these docs are limited for this project since they don't surface the specific rows causing test failures.
-
-### Boilerplate Resources
-These were listed automatically by dbt init and are helpful general resources for learning more about DBT
-- [dbt documentation](https://docs.getdbt.com/docs/introduction/)
-- [dbt Discourse](https://discourse.getdbt.com/): for commonly asked questions and answers
-- [dbt Slack](http://slack.getdbt.com/): live discussions and support
-- [dbt Events](https://events.getdbt.com)
-- [dbt Blog](https://blog.getdbt.com/): latest news and best practices
-
-</details>
-
----
-
-<details>
-<summary><strong>Great Expectations: Directory Structure, Terminology & Structuring Tests</strong></summary>
-
-### Directory Structure
-
-The [`dot/great_expectations`](dot/great_expectations) folder is a [Great Expectations](https://greatexpectations.io/) project.
-
-**Core directories:**
-- **`expectations/`**: JSON files indicating the tests to be run (similar to dbt schema test yml files). Not in version control; generated by the tool from `dot.configured_tests`.
-- **`notebooks/`**: Jupyter notebooks automatically created by Great Expectations during setup. See the [Great Expectations documentation](https://docs.greatexpectations.io/en/latest/how_to_guides/creating_and_editing_expectations/how_to_edit_an_expectation_suite_using_a_disposable_notebook.html) for details.
-- **`plugins/`**: Additional customisation code. The most important file is `custom_expectations.py`, where tests requiring arbitrary Python should be added as methods under the `CustomSqlAlchemyDataset` class.
-
-**Non-version-controlled directories** (automatically created by Great Expectations):
-- **`uncommitted/`**: A generic place to capture all files that should not be version controlled, including logs and database connection details.
-
-**Scripts:**
-- [**`great_expectations.py`**](dot/utils/great_expectations.py): Utility script to automatically run GE tests and create coverage reports.
-
-**Config files** (not in version control; managed by the tool or set per project):
-- **`batch_config.json`**: Defines datasources, test suites, and tables to include when running Great Expectations.
-- **`great_expectations.yml`**: Main config file for Great Expectations (analogous to `dbt_project.yml`).
-
-### Terminology
-
-- An **expectation** is a particular function accepting one or multiple parameters (defined in Python).
-- A **test** is an instance of an expectation with a specific set of parameters (defined in a JSON file).
-- **Out Of The Box (OOTB) expectations** are provided by Great Expectations and built into the library's codebase.
-
-### Structuring Tests
-
-Tests are defined in JSON, similar to dbt schema tests in YAML. They live in a suite at `great_expectations/expectations/<FILE>.json`.
-
-- Tests could be used OOTB, but most of the time they are written custom.
-- Custom expectations can operate on any tables passed as a parameter, but OOTB expectations will only be applied on the selected table in `batch_config.json`.
-- OOTB tests can use views defined in dbt and can be defined directly in the JSON file.
-- Custom expectations must be added as decorated methods in `plugins/custom_expectations.py`. Custom tests can run arbitrary Python/Pandas. Once added, they can be defined in the JSON file similarly to OOTB tests.
-- OOTB tests have a variety of outputs and may not conform to the format expected by the DOT framework: wherever possible, use dbt tests instead.
-
-If a mix of OOTB and custom expectations is needed, keep them in two separate suites to manage their differences efficiently.
-
-### Extra Notes
-
-The DOT works with a few assumptions about what an expectation should accept and return:
-
-1. DOT creates views from results using PostgreSQL-specific syntax. If using a different database engine, adapt the query in [`great_expectations.py`](dot/utils/great_expectations.py).
-
-2. An expectation accepts both column names and table names as arguments. Because data integrity queries often depend on more than one table, a default empty dataset is added in `batch_config.json` for all custom expectations as a placeholder: it won't be read at runtime.
-
-3. Custom expectations are found in `plugins/custom_expectations.py`. Follow the existing format and add your own custom expectations as methods of the same class.
-
-4. The toolkit's post-processing step expects specific fields in the output of each expectation. Refer to the example custom expectations for the correct implementation pattern.
-
-</details>
-
+| `test_results` | Main test results table tracking individual row failures. |
 
 ---
 
 ## Developing DOT
 
-DOT is open source. All contributions — whether fixing a bug, adding a new test type, or improving the UI — should follow the code quality standards and self-test guidelines maintained in [CONTRIBUTING.md](../CONTRIBUTING.md).
+DOT is open source. We encourage all development to be done as part of that initiative. This includes following the code quality standards and self-test guidelines described below.
 
-Key topics covered there:
+### Self-Tests
 
-- **Getting started** — how to open issues and submit pull requests via GitHub.
-- **Self-tests** — how to run the DOT self-test suite (via Docker or locally), guidelines for writing new tests, and how the test base class works.
-- **Code quality** — enforced via [`black`](https://pypi.org/project/black/) (formatter) and [`pylint`](https://pylint.org/) (linter), with a minimum pylint score of 7. Both tools are integrated as a pre-commit hook via `setup_hooks.sh`.
-- **GitHub workflow** — the gitflow branching model, PR process, and commit tips.
-- **Continuous Integration** — GitHub Actions configuration (`.github/workflows/lint.yml`).
+The DOT runs self-tests to verify that its core functions are working correctly. If you are contributing to the project by adding a new feature or fixing a bug, please follow these guidelines:
 
-### Quick Reference: Running Self-Tests
+- Find the existing tests applicable to the area you are modifying.
+- Add a few more relevant tests for your bugfix or improvement.
+- Implement your changes until all tests pass.
 
-If you already have the Docker containers running and just need the commands:
+#### Running Self-Tests
+
+<details>
+<summary><strong>Using Docker</strong></summary>
+
+The Docker build used to run DOT also includes the self-test suite. Once you have the container running, all you need to do is:
 
 ```bash
-# Enter the DOT container
 docker exec -it dot /bin/bash
-
-# Run all self-tests
 pytest dot/self_tests/unit
 ```
 
-For the full local setup (conda environment, local Postgres, config file), see [Running DOT without using Docker](../CONTRIBUTING.md#running-dot-without-using-docker) in `CONTRIBUTING.md`.
+</details>
+
+<details>
+<summary><strong>On your local machine</strong></summary>
+
+To run the tests locally, complete the following preparation steps first:
+
+- Create a local Python environment via `venv` or `conda`.
+- Make sure your Python version matches the one specified in `.github/workflows/lint.yml`.
+- Create a conda environment using the `environment.yml` file at the root directory.
+- Prepare a PostgreSQL database that the tests can use (e.g., a local Postgres instance or a Docker container used as a database only).
+- Create a `dot_config.yml` file at `dot/self_tests/data/base_self_test/` with the same structure as [dot/config/example/dot_config.yml](../dot/config/example/dot_config.yml). It should look like the following (note this config points to the DB in the Docker container):
+
+```yaml
+dot:
+  save_passed_tests: False
+  output_schema_suffix: tests
+dot_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5433
+  dbname: dot_db
+  schema: self_tests_dot
+  threads: 4
+ScanProject1_db:
+  type: postgres
+  host: localhost
+  user: postgres
+  pass: "{{ env_var('POSTGRES_PASSWORD') }}"
+  port: 5433
+  dbname: dot_db
+  schema: self_tests_public
+  threads: 4
+```
+
+Then run the tests from your terminal:
+
+```bash
+pytest dot/self_tests/unit
+```
+
+</details>
+
+#### Guidelines for Adding New Tests
+
+- Existing tests are located in [dot/self_tests/unit](../dot/self_tests/unit).
+- All tests extend the [test base class](../dot/self_tests/unit/base_self_test_class.py), which:
+  - Facilitates the import of modules under test.
+  - Recreates a directory in the file system for test outputs.
+  - Provides a set of helper functions for tests that access the database — mocking the config files to point to the test `dot_config.yml`, (re)creating a schema for DOT configuration, and loading it with test data.
+
+---
+
+### Code Quality
+
+Two tools are used to ensure the codebase remains at an acceptable quality as it is shared and developed in the community:
+
+1. **[black](https://pypi.org/project/black/)** — a deterministic Python formatter. We use the default settings, most notably formatting to a character limit of 88 per line.
+2. **[pylint](https://pylint.org/)** — a code linter following the [PEP8](https://peps.python.org/pep-0008/) style standard. PEP8 formatting is handled by black, with the exception that the default pylint line length is 80. We use a standard set of exclusions (found [here](https://github.com/datakind/medic_data_integrity/blob/main/.pylintrc)) and require a minimum pylint score of **7** before code can be shared.
+
+Both tools can be incorporated into your git workflow as a pre-commit hook by running:
+
+```bash
+./setup_hooks.sh
+```
+
+> **Note:** See [CONTRIBUTING.md](../CONTRIBUTING.md) for the full contributor guide, including the GitHub workflow (gitflow branching model, PR process) and Continuous Integration setup.
 
 ---
 
