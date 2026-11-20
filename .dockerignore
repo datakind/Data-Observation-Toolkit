@@ -1,0 +1,8 @@
+# Ignore appsmith container volumes/data
+docker/appsmith/stacks/
+
+# Ignore other things that don't need to be in the Docker image
+.git/
+venv/
+__pycache__/
+*.pyc
