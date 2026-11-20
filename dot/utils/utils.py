@@ -483,9 +483,11 @@ def get_test_rows(
         id_column_name = row.get("id_column_name")
         test_parameters = row["test_parameters"]
 
+        if test_type == "custom_sql":
+            entity_id_or_primary_table = re.sub(r"_id\d+$", "", entity_id_or_primary_table)
+
         # Get entity data from the DB
         if not entity_id_or_primary_table in entity_data:
-            entity_id_or_primary_table = entity_id_or_primary_table.split("_id")[0]
             entity_data[entity_id_or_primary_table] = pd.read_sql(
                 f"SELECT * FROM {schema_core}.{entity_id_or_primary_table.replace(DBT_MODELNAME_PREFIX+DBT_MODELNAME_PREFIX, DBT_MODELNAME_PREFIX)}", conn_core
             )
@@ -803,10 +805,13 @@ def set_summary_stats(
         failed_tests_view = row["failed_tests_view"]
         entity_id_or_primary_table = row["entity_id"]
         test_status = row["test_status"]
+        test_type = row["test_type"]
+
+        if test_type == "custom_sql":
+            entity_id_or_primary_table = re.sub(r"_id\d+$", "", entity_id_or_primary_table)
 
         # Get entity row count
         if not entity_id_or_primary_table in entity_count_map:
-            entity_id_or_primary_table = entity_id_or_primary_table.split("_id")[0]
             c = pd.read_sql(
                 f"SELECT count(*) FROM {schema_core}.{DBT_MODELNAME_PREFIX}{entity_id_or_primary_table.replace(DBT_MODELNAME_PREFIX,'')}",
                 conn_data,
