@@ -3,11 +3,20 @@ import os
 import logging
 import shutil
 
+from jinja2 import Environment, FileSystemLoader
 from mock import patch
 from ..self_tests_utils.base_self_test_class import BaseSelfTestClass
 
 from utils.utils import setup_custom_logger  # pylint: disable=wrong-import-order
 
+from utils.configuration_management import (  # pylint: disable=wrong-import-order
+    extract_dbt_config_env_variable,
+    write_config_from_template,
+)
+from utils.configuration_utils import (  # pylint: disable=wrong-import-order
+    DBT_PROFILES_FINAL_FILENAME,
+    load_config_file,
+)
 from utils.dbt import (  # pylint: disable=wrong-import-order
     run_dbt_core,
     archive_previous_dbt_results,
@@ -43,10 +52,28 @@ class DbtBaseSelfTestClass(BaseSelfTestClass):
         setup for dbt tests
 
         - dbt_project config file
+        - ~/.dbt/profiles.yml pointed at self-test schemas
         - entities to be tested
         """
         shutil.copy(
             "./config/example/self_tests/dbt/dbt_project.yml", "./dbt/dbt_project.yml"
+        )
+
+        # Rewrite profiles so dbt does not use leftover production schemas
+        # (e.g. data_dot_data_education from a prior DOT run in this container).
+        project_db_config = load_config_file()[f"{self.project_id}_db"]
+        logger = setup_custom_logger("self_tests/output/test.log", logging.INFO)
+        write_config_from_template(
+            Environment(loader=FileSystemLoader("./config/templates/")),
+            "dbt/profiles.yml",
+            DBT_PROFILES_FINAL_FILENAME,
+            logger,
+            host=project_db_config["host"],
+            user=project_db_config["user"],
+            password=extract_dbt_config_env_variable(project_db_config["pass"]),
+            port=project_db_config["port"],
+            dbname=project_db_config["dbname"],
+            schema=project_db_config["schema"],
         )
 
         # copy the models
