@@ -16,6 +16,31 @@
                     "date_field":"departure_time"
                 }
             ]
+        },
+        {
+            "project_id":"EduProject",
+            "source_connid": "dot_data",
+            "source_schema": "education",
+            "earliest_date_to_sync":"2023-01-01",
+            "objects":[
+                {
+                    "object":"students",
+                    "id_field":"student_id",
+                    "date_field":"enrollment_date"
+                },
+                {
+                    "object":"courses",
+                    "id_field":"course_id"
+                },
+                {
+                    "object":"enrollments",
+                    "id_field":"enrollment_id"
+                },
+                {
+                    "object":"excel_grades",
+                    "id_field":"grade_id"
+                }
+            ]
         }
     ]
 }
