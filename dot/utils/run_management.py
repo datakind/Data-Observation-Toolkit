@@ -141,7 +141,7 @@ def run_dot_stages(project_id, logger, run_id):
 
 def run_dot_tests(project_id, logger, run_id):
     """Wrapper around the DOT pipeline which will set status, start and end
-    times in dot.run_status. Also catches exception and updates dot.run_log
+    times in dot.run_log. Also catches exception and updates dot.run_log
     to set status='Failed'
 
        Parameters

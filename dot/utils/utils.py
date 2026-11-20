@@ -329,7 +329,7 @@ def generate_row_results_df(
         List of values for id_column in the test results view (or entity for
         passing rows not in this view)
     run_id: str
-        ID of the current run, as found in dot.run_status
+        ID of the current run, as found in dot.run_log
     test_id: str
         ID of the tests, as found in dot.configured_tests
     entity_id: str
